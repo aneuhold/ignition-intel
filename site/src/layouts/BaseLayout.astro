@@ -1,0 +1,78 @@
+---
+import { Font } from 'astro:assets';
+import { ClientRouter } from 'astro:transitions';
+import Seo from '@jdevalk/astro-seo-graph/Seo.astro';
+import '../styles/global.css';
+import Footer from '$components-astro/Footer.astro';
+import Nav from '$components-astro/Nav.astro';
+import { globalConstants } from '$util/globalConstants';
+import seoGraphService from '$util/SeoGraph.service';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+
+if (!Astro.site) {
+  throw new Error('Astro.site must be configured for canonical/OG/JSON-LD URLs.');
+}
+
+// With `build.format: 'file'` Astro reports `Astro.url.pathname` as
+// `/menu.html`, but the host serves it at `/menu` — strip the extension so
+// canonical, OG URL, and JSON-LD all agree on the slashless form. Astro
+// does not provide a built-in helper for this; the official guidance is to
+// derive the public URL yourself:
+//   https://docs.astro.build/en/reference/configuration-reference/#buildformat
+// `/index.html` collapses to `/`.
+const canonicalUrl = new URL(Astro.url);
+canonicalUrl.pathname = canonicalUrl.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+
+const ogImage = new URL('/og-image.png', Astro.site).href;
+const graph = await seoGraphService.buildGraph({
+  site: Astro.site,
+  pageUrl: canonicalUrl,
+  pageName: title,
+  description,
+  ogImage
+});
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <Seo
+      title={title}
+      description={description}
+      canonical={canonicalUrl}
+      ogType="website"
+      ogImage={ogImage}
+      ogImageAlt={globalConstants.siteName}
+      ogImageWidth={1200}
+      ogImageHeight={630}
+      siteName={globalConstants.siteName}
+      locale="en_US"
+      twitter={{ card: 'summary_large_image' }}
+      graph={graph}
+      extraLinks={[
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
+        { rel: 'manifest', href: '/site.webmanifest' }
+      ]}
+      extraMeta={[{ name: 'theme-color', content: globalConstants.webManifestThemeColor }]}
+    />
+    <Font cssVariable="--font-zilla-slab" preload />
+    <Font cssVariable="--font-inter" preload />
+    <ClientRouter />
+    <slot name="head" />
+  </head>
+  <body class="bg-background font-body text-foreground">
+    <Nav />
+    <div class="h-px bg-foreground/10"></div>
+    <slot />
+    <Footer />
+  </body>
+</html>

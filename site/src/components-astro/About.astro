@@ -1,0 +1,31 @@
+---
+import { render } from 'astro:content';
+import Container from '$components-astro/ui/Container.astro';
+import Section from '$components-astro/ui/Section.astro';
+import siteContentService from '$util/SiteContent.service';
+
+const entry = await siteContentService.about();
+const { Content } = await render(entry);
+const { highlights } = entry.data;
+---
+
+<Section>
+  <Container size="narrow">
+    <div class="text-lg leading-relaxed text-foreground/80 [&_a]:text-primary [&_img]:h-auto [&_img]:max-w-full [&_img]:rounded-md [&_p:first-of-type::first-letter]:float-left [&_p:first-of-type::first-letter]:mr-3 [&_p:first-of-type::first-letter]:mt-1 [&_p:first-of-type::first-letter]:font-display [&_p:first-of-type::first-letter]:text-6xl [&_p:first-of-type::first-letter]:leading-[0.85] [&_p:first-of-type::first-letter]:text-foreground [&_p:not(:first-of-type)]:mt-5">
+      <Content />
+    </div>
+
+    {highlights.length > 0 && (
+      <div class="reveal mt-16 grid gap-10 border-t border-foreground/10 pt-10 md:grid-cols-3">
+        {highlights.map((highlight) => (
+          <div>
+            <p class="font-display text-3xl tracking-tight text-foreground md:text-4xl">
+              {highlight.headline}
+            </p>
+            <p class="mt-2 text-foreground/60">{highlight.body}</p>
+          </div>
+        ))}
+      </div>
+    )}
+  </Container>
+</Section>

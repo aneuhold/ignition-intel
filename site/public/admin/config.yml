@@ -1,0 +1,200 @@
+backend:
+  name: github
+  repo: aneuhold/ignition-intel
+  branch: main
+  base_url: https://ignition-cms-auth.agneuhold.workers.dev
+  auth_endpoint: auth
+
+# Media uploads go directly to the `ignition-intel-media` R2 bucket via
+# Sveltia's built-in R2 mode (https://sveltiacms.app/en/docs/media/cloudflare-r2).
+# The secret access key is delivered to localStorage by the admin shell's
+# bridge after GitHub OAuth (see site/src/pages/admin/index.astro); only the
+# non-secret access key ID is committed here.
+media_libraries:
+  default:
+    name: cloudflare_r2
+  all:
+    max_file_size: 10485760
+    slugify_filename: true
+  cloudflare_r2:
+    account_id: f5fee77ff79a01ea91f541b825d003a3
+    bucket: ignition-intel-media
+    public_url: https://media.ignitionintel.aneuhold.dev
+    access_key_id: REPLACE_WITH_R2_ACCESS_KEY_ID
+
+collections:
+  - name: siteInfo
+    label: General Site Info
+    description: Site-wide info shown across the home, about, contact, and footer.
+    files:
+      - name: home
+        label: Home
+        file: site/src/content/home.json
+        format: json
+        editor:
+          preview: false
+        fields:
+          - {
+              name: title,
+              label: Title,
+              widget: string,
+              hint: 'Big headline shown at the top of the home page.'
+            }
+          - {
+              name: tagline,
+              label: Tagline,
+              widget: string,
+              required: false,
+              hint: 'One short line shown under the title. Leave blank for none.'
+            }
+          - {
+              name: heroImage,
+              label: Hero image,
+              widget: image,
+              required: false,
+              hint: 'Large background photo at the top of the home page. Upload a wide JPG or PNG; it will be optimized automatically. Leave blank for a plain header.'
+            }
+          - {
+              name: heroImageAlt,
+              label: Hero image description,
+              widget: string,
+              required: false,
+              hint: 'Short, specific description of the hero photo, used by screen readers and search. Write what someone would see.'
+            }
+
+      - name: about
+        label: About
+        file: site/src/content/about.md
+        format: frontmatter
+        fields:
+          - {
+              name: heading,
+              label: Heading,
+              widget: string,
+              hint: 'Heading shown above the About text.'
+            }
+          - {
+              name: body,
+              label: Text,
+              widget: markdown,
+              hint: 'Free-form text. Supports bold, links, headings, and inline images.'
+            }
+          - name: highlights
+            label: Highlights
+            widget: list
+            required: false
+            summary: '{{fields.headline}}'
+            hint: 'Short highlight blocks shown under the About text. Three fits the layout best.'
+            fields:
+              - { name: headline, label: Title, widget: string, hint: 'Short bold title.' }
+              - {
+                  name: body,
+                  label: Blurb,
+                  widget: text,
+                  hint: 'One or two sentences shown under the title.'
+                }
+
+      - name: contact
+        label: Contact Info
+        file: site/src/content/contact.json
+        format: json
+        editor:
+          preview: false
+        fields:
+          - {
+              name: phone,
+              label: Phone,
+              widget: string,
+              required: false,
+              hint: "Phone number, formatted however you'd like it shown. Leave blank to hide it."
+            }
+          - {
+              name: email,
+              label: Email,
+              widget: string,
+              hint: 'Public contact email, also used as a mailto: link.'
+            }
+          - {
+              name: note,
+              label: 'Send a note text',
+              widget: text,
+              hint: 'Short paragraph shown under the "Send a note" heading on the contact page.'
+            }
+
+      - name: socialMediaLinks
+        label: Social Media Links
+        file: site/src/content/social-media-links.json
+        format: json
+        editor:
+          preview: false
+        fields:
+          - name: links
+            label: Links
+            widget: list
+            required: false
+            summary: '{{fields.label}} ({{fields.url}})'
+            hint: 'Each entry becomes one link in the footer, e.g. LinkedIn or Instagram.'
+            fields:
+              - {
+                  name: label,
+                  label: Label,
+                  widget: string,
+                  hint: 'What the link should say, e.g. LinkedIn.'
+                }
+              - { name: url, label: URL, widget: string, hint: 'Full URL including https://.' }
+
+      - name: businessProfiles
+        label: Business Profiles
+        file: site/src/content/business-profiles.json
+        format: json
+        editor:
+          preview: false
+        fields:
+          - name: profiles
+            label: Profiles
+            widget: list
+            required: false
+            summary: '{{fields.label}} ({{fields.url}})'
+            hint: 'Directory and review listings, e.g. Google Business Profile. Not shown on the site; these help search engines confirm this is the same business.'
+            fields:
+              - {
+                  name: label,
+                  label: Label,
+                  widget: string,
+                  hint: 'Which listing this is, e.g. Google Business Profile.'
+                }
+              - {
+                  name: url,
+                  label: URL,
+                  widget: string,
+                  hint: 'Full URL to the listing including https://.'
+                }
+
+  - name: gallery
+    label: Gallery Photos
+    description: Photos shown in the gallery. Lower display order shows first.
+    folder: site/src/content/gallery
+    create: true
+    delete: true
+    slug: '{{fields.alt | slugify}}-{{year}}{{month}}{{day}}'
+    format: json
+    fields:
+      - {
+          name: photo,
+          label: Photo,
+          widget: image,
+          hint: 'Upload a JPG or PNG. It will be optimized automatically.'
+        }
+      - {
+          name: alt,
+          label: Description,
+          widget: string,
+          hint: "Short, specific description of what's in the photo. Used by screen readers and Google image search. Write what someone would see."
+        }
+      - {
+          name: order,
+          label: Display order,
+          widget: number,
+          default: 0,
+          hint: "Lower numbers show first. Leave at 0 if you don't care about order."
+        }

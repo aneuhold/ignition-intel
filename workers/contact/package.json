@@ -1,0 +1,28 @@
+{
+  "name": "@ignition/worker-contact",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --env-file ../../.env",
+    "check": "wrangler types > /dev/null && tsc -b ../../packages/shared ../../packages/workers-shared && tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "vitest run --config vitest.e2e.config.ts",
+    "build": "wrangler deploy --dry-run --outdir=dist",
+    "typegen": "wrangler types",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@ignition/shared": "workspace:*",
+    "@ignition/workers-shared": "workspace:*",
+    "@sentry/cloudflare": "^11.10.0",
+    "he": "^2.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-plugin": "^1.4.11",
+    "@cloudflare/workers-types": "^5.20261108.1",
+    "@types/he": "^1.2.3",
+    "vitest": "^5.0.5",
+    "wrangler": "^4.156.0"
+  }
+}

@@ -1,0 +1,70 @@
+---
+import { Image } from 'astro:assets';
+import Button from '$components-astro/ui/Button.astro';
+import Container from '$components-astro/ui/Container.astro';
+import Heading from '$components-astro/ui/Heading.astro';
+import Section from '$components-astro/ui/Section.astro';
+
+interface Props {
+  title: string;
+  tagline?: string;
+  heroImage?: string;
+  heroImageAlt?: string;
+}
+
+const { title, tagline, heroImage, heroImageAlt = '' } = Astro.props;
+
+// With a hero image the copy sits on a dark scrim over the photo; without one it
+// sits on the page background.
+const onImage = Boolean(heroImage);
+---
+
+<Section
+  padding={onImage ? 'hero' : 'default'}
+  class={
+    onImage ? 'relative flex min-h-[80svh] items-end overflow-hidden pt-28 md:pt-32' : 'md:py-32'
+  }
+>
+  {heroImage && (
+    <>
+      <Image
+        src={heroImage}
+        alt={heroImageAlt}
+        inferSize
+        widths={[768, 1280, 1920, 2560]}
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="absolute inset-0 h-full w-full object-cover"
+      />
+      <div class="absolute inset-0 bg-linear-to-t from-foreground/90 via-foreground/50 to-foreground/10"></div>
+    </>
+  )}
+  <Container size="wide" class:list={[onImage && 'relative px-6 pb-16 text-background md:pb-24']}>
+    <div class="animate-fade-in">
+      <Heading level={0}>{title}</Heading>
+      {tagline && (
+        <p
+          class:list={[
+            'mt-4 font-display text-xl md:text-2xl',
+            onImage ? 'text-background/85' : 'text-foreground/70'
+          ]}
+        >
+          {tagline}
+        </p>
+      )}
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <Button variant="accent" href="/services">
+          See services
+        </Button>
+        <Button
+          variant={onImage ? 'inverted' : 'ghost'}
+          href="/contact"
+          class={onImage ? undefined : 'border border-foreground/20'}
+        >
+          Get in touch
+        </Button>
+      </div>
+    </div>
+  </Container>
+</Section>
