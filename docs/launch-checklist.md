@@ -47,14 +47,26 @@
 
 ## Ask Nicole
 
-- [ ] Which email should receive contact form submissions? Which email should show publicly?
-- [ ] Should a phone number be shown on the site?
-- [ ] Service area or location to list?
+- [x] Which email should receive contact form submissions? Which email should show publicly?
+  - info@ignitionintel.com
+- [x] Should a phone number be shown on the site?
+  - No phone number. Just email.
+- [x] Service area or location to list?
+  - No address to be shown
 - [ ] What services should the Services page list?
+  - The services are basically going to be fire investigation training.
 - [ ] Bio, background, and credentials for the About page
+  - CV is going to be sent over
 - [ ] Photos: headshot, a hero image, anything for a gallery
-- [ ] Existing logo or brand colors?
-- [ ] Tagline wording
-- [ ] Social or directory links (LinkedIn, Google Business Profile, etc.)
-- [ ] Any extra fields on the contact form (phone, case type, etc.)?
+  - Can ask for a headshot or something later
+- [x] Existing logo or brand colors?
+- [x] Social or directory links (LinkedIn, Google Business Profile, etc.)
+  - Not yet.
+- [x] Any extra fields on the contact form (phone, case type, etc.)?
+  - What we have now is good.
 - [ ] Does she want to edit the site herself? If so, her GitHub username
+
+- Questions about the overall look and feel:
+  - Separate pages. Front page could be links to the classes they offer. Those links go to other pages, 1 intro page per course. So this will be editable in Sveltia to add new courses or remove them. Contact me button at the bottom that goes to a separate page with the form if they get past the course links.
+  - So if they click "Get more info on getting this course" on a course page, it takes them to the contact me page with the title pre-filled and possibly the content too for that specific course.
+  - Feel: Serious & Academic. Softer, but charcoal background. The pptx should show a lot of the look and feel that can be done. As far as copy, use the actual presentation named investigator as instrument.pptx.
