@@ -9,10 +9,15 @@ import authService from './services/Auth.service';
  * It was just refactored to be cleaner.
  */
 export default Sentry.withSentry(
-  // Empty DSN keeps Sentry inert. Paste the `ignition-cms-auth` Sentry project's DSN here once it exists.
-  () => sentryWorkerOptions(''),
+  () =>
+    sentryWorkerOptions(
+      'https://04fff2003cafa65e676973b264347955@o4507319328702464.ingest.us.sentry.io/4512444722839552'
+    ),
   {
     async fetch(request, env): Promise<Response> {
+      if (new URL(request.url).pathname === '/sentry-test-error') {
+        throw new Error(`Sentry test error ignition-cms-auth ${Date.now()}`);
+      }
       if (!(await checkIpRateLimit(request, env))) {
         return new Response('Too Many Requests', { status: 429 });
       }
