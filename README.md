@@ -7,14 +7,14 @@ The main website for Ignition Intel.
 
 ## Deployments
 
-| Resource             | Type       | Name                                                                    |
-| -------------------- | ---------- | ----------------------------------------------------------------------- |
-| Frontend site        | Pages      | `ignition-intel-frontend`                                               |
-| Contact form         | Worker     | `ignition-contact`                                                      |
-| CMS auth             | Worker     | `ignition-cms-auth`                                                     |
-| Contact form captcha | Turnstile  | `ignition-turnstile`                                                    |
-| CMS media            | R2 Bucket  | `ignition-intel-media` (public host `media.ignitionintel.aneuhold.dev`) |
-| Domain               | Cloudflare | `ignitionintel.com`                                                     |
+| Resource             | Type       | Dashboard                                                                                                                                                                     |
+| -------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Frontend site        | Pages      | [ignition-intel-frontend](https://dash.cloudflare.com/f5fee77ff79a01ea91f541b825d003a3/pages/view/ignition-intel-frontend)                                                    |
+| Contact form         | Worker     | [ignition-contact](https://dash.cloudflare.com/f5fee77ff79a01ea91f541b825d003a3/workers/services/view/ignition-contact/production)                                            |
+| CMS auth             | Worker     | [ignition-cms-auth](https://dash.cloudflare.com/f5fee77ff79a01ea91f541b825d003a3/workers/services/view/ignition-cms-auth/production)                                          |
+| Contact form captcha | Turnstile  | [ignition-turnstile](https://dash.cloudflare.com/f5fee77ff79a01ea91f541b825d003a3/turnstile/widget/0x4AAAAAAGEZqPgDbZiAJBj8)                                                  |
+| CMS media            | R2 Bucket  | [ignition-intel-media](https://dash.cloudflare.com/f5fee77ff79a01ea91f541b825d003a3/r2/default/buckets/ignition-intel-media) (public host `media.ignitionintel.aneuhold.dev`) |
+| Domain               | Cloudflare | [ignitionintel.com](https://dash.cloudflare.com/f5fee77ff79a01ea91f541b825d003a3/ignitionintel.com)                                                                           |
 
 ## Infrastructure
 

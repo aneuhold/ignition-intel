@@ -8,9 +8,9 @@ import { globalConstants } from '../../site/src/util/globalConstants';
  * mirror the `media_libraries.cloudflare_r2` block in
  * `site/public/admin/config.yml` (kept in sync by hand); the public host comes
  * from the site's `globalConstants`. Uploads go through R2's S3-compatible API
- * authenticated with the same `R2_MEDIA_ACCESS_KEY_ID` /
- * `R2_MEDIA_SECRET_ACCESS_KEY` credentials Sveltia uses, read from the
- * environment. `upload-images-to-r2.ts` is the caller.
+ * authenticated with the same R2 credentials Sveltia uses: the public access
+ * key ID below, plus `R2_MEDIA_SECRET_ACCESS_KEY` read from the environment.
+ * `upload-images-to-r2.ts` is the caller.
  */
 class MediaBucketService {
   /** Bucket name. Mirrors config.yml `media_libraries.cloudflare_r2.bucket`. */
@@ -21,6 +21,13 @@ class MediaBucketService {
    * config.yml `media_libraries.cloudflare_r2.account_id`.
    */
   readonly accountId = 'f5fee77ff79a01ea91f541b825d003a3';
+
+  /**
+   * Access key ID of the bucket-scoped R2 API token. Public; only its paired
+   * secret is sensitive. Mirrors config.yml
+   * `media_libraries.cloudflare_r2.access_key_id`.
+   */
+  readonly accessKeyId = 'e439f39ef86b9436ecbaeda0806773d4';
 
   /** R2's S3 region token — always `auto`. */
   static readonly #REGION = 'auto';
@@ -52,8 +59,8 @@ class MediaBucketService {
 
   /**
    * Uploads an object to the bucket via R2's S3-compatible API, signing the
-   * request with SigV4 using the `R2_MEDIA_*` credentials from the
-   * environment. Overwrites any existing object at the same key.
+   * request with SigV4 using {@link accessKeyId} and
+   * `R2_MEDIA_SECRET_ACCESS_KEY` from the environment. Overwrites any existing object at the same key.
    *
    * @param key Flat bucket key to write
    * @param body Object bytes
@@ -70,7 +77,7 @@ class MediaBucketService {
     /** Failure detail (response body or error message); absent on success. */
     detail?: string;
   }> {
-    const credentials = this.#readCredentials();
+    const secretAccessKey = this.#readSecretAccessKey();
     const host = `${this.accountId}.r2.cloudflarestorage.com`;
     const canonicalUri = `/${this.bucket}/${encodeURIComponent(key)}`;
     const amzDate = this.#amzDate();
@@ -97,10 +104,10 @@ class MediaBucketService {
       createHash('sha256').update(canonicalRequest).digest('hex')
     ].join('\n');
 
-    const signingKey = this.#signingKey(credentials.secretAccessKey, dateStamp);
+    const signingKey = this.#signingKey(secretAccessKey, dateStamp);
     const signature = createHmac('sha256', signingKey).update(stringToSign).digest('hex');
     const authorization =
-      `AWS4-HMAC-SHA256 Credential=${credentials.accessKeyId}/${scope}, ` +
+      `AWS4-HMAC-SHA256 Credential=${this.accessKeyId}/${scope}, ` +
       `SignedHeaders=${signedHeaders}, Signature=${signature}`;
 
     let response: Response;
@@ -147,18 +154,15 @@ class MediaBucketService {
   }
 
   /**
-   * Reads the R2 access-key credentials from the environment, throwing a clear
-   * error if either is missing (they live in the repo-root `.env`).
+   * Reads the R2 secret access key from the environment, throwing a clear
+   * error if it is missing (it lives in the repo-root `.env`).
    */
-  #readCredentials(): { accessKeyId: string; secretAccessKey: string } {
-    const accessKeyId = process.env.R2_MEDIA_ACCESS_KEY_ID;
+  #readSecretAccessKey(): string {
     const secretAccessKey = process.env.R2_MEDIA_SECRET_ACCESS_KEY;
-    if (!accessKeyId || !secretAccessKey) {
-      throw new Error(
-        'R2_MEDIA_ACCESS_KEY_ID and R2_MEDIA_SECRET_ACCESS_KEY must be set (they live in the repo-root .env).'
-      );
+    if (!secretAccessKey) {
+      throw new Error('R2_MEDIA_SECRET_ACCESS_KEY must be set (it lives in the repo-root .env).');
     }
-    return { accessKeyId, secretAccessKey };
+    return secretAccessKey;
   }
 
   /**

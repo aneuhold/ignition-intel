@@ -73,12 +73,11 @@ class GlobalConstants {
     : 'https://ignition-contact.agneuhold.workers.dev';
 
   /**
-   * Cloudflare Turnstile sitekey for the contact form widget. Currently
-   * Cloudflare's "always passes" test sitekey
-   * (https://developers.cloudflare.com/turnstile/troubleshooting/testing/);
-   * swap in the real widget's sitekey once it exists.
+   * Cloudflare Turnstile sitekey for the contact form widget
+   * (`ignition-turnstile`). Public by design; the matching secret lives on the
+   * `contact` worker as `CLOUDFLARE_TURNSTILE_SECRET_KEY`.
    */
-  readonly turnstileSitekey = '1x00000000000000000000AA';
+  readonly turnstileSitekey = '0x4AAAAAAGEZqPgDbZiAJBj8';
 
   /**
    * Public host of the `ignition-intel-media` R2 bucket. Sveltia uploads

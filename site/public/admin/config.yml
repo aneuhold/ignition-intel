@@ -20,7 +20,7 @@ media_libraries:
     account_id: f5fee77ff79a01ea91f541b825d003a3
     bucket: ignition-intel-media
     public_url: https://media.ignitionintel.aneuhold.dev
-    access_key_id: REPLACE_WITH_R2_ACCESS_KEY_ID
+    access_key_id: e439f39ef86b9436ecbaeda0806773d4
 
 collections:
   - name: siteInfo

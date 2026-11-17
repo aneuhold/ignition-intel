@@ -22,8 +22,8 @@
   "ratelimits": [
     {
       "name": "RATE_LIMITER",
-      // This is unique per cloudflare account, so this has to remain the same number from here on out.
-      "namespace_id": "2002",
+      // Bindings with the same namespace_id on the account share counters per key (here, per IP).
+      "namespace_id": "1004",
       "simple": { "limit": 10, "period": 60 }
     }
   ]
