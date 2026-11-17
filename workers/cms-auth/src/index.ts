@@ -15,9 +15,6 @@ export default Sentry.withSentry(
     ),
   {
     async fetch(request, env): Promise<Response> {
-      if (new URL(request.url).pathname === '/sentry-test-error') {
-        throw new Error(`Sentry test error ignition-cms-auth ${Date.now()}`);
-      }
       if (!(await checkIpRateLimit(request, env))) {
         return new Response('Too Many Requests', { status: 429 });
       }

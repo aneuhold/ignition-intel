@@ -10,9 +10,6 @@ export default Sentry.withSentry(
     ),
   {
     async fetch(request, env): Promise<Response> {
-      if (new URL(request.url).pathname === '/sentry-test-error') {
-        throw new Error(`Sentry test error ignition-contact ${Date.now()}`);
-      }
       return contactService.handleRequest(request, env);
     }
   } satisfies ExportedHandler<Env>
