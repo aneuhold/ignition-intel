@@ -25,16 +25,17 @@ class GlobalConstants {
   readonly webManifestShortName = 'Ignition Intel';
 
   /** One-line summary used by the web manifest. */
-  readonly webManifestDescription = 'Fire and arson investigation by Nicole Brewer.';
+  readonly webManifestDescription = 'Fire and arson investigation training by Nicole Brewer.';
 
-  /** Owner's name. Used as the JSON-LD `ProfessionalService.founder`. */
+  /** Owner's name. Used as the JSON-LD `EducationalOrganization.founder`. */
   readonly ownerName = 'Nicole Brewer';
 
-  /** Areas of expertise (schema.org `ProfessionalService.knowsAbout`). */
+  /** Areas of expertise (schema.org `EducationalOrganization.knowsAbout`). */
   readonly knowsAbout: readonly string[] = [
     'Fire investigation',
     'Arson investigation',
-    'Fire origin and cause determination'
+    'Fire origin and cause determination',
+    'Fire investigation training'
   ];
 
   /**

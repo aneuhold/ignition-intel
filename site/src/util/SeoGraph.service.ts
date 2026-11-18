@@ -6,17 +6,17 @@ import {
   type GraphEntity,
   makeIds
 } from '@jdevalk/seo-graph-core';
-import type { ProfessionalService } from 'schema-dts';
+import type { EducationalOrganization } from 'schema-dts';
 import { globalConstants } from './globalConstants';
 import siteContentService from './SiteContent.service';
 
 class SeoGraphService {
-  /** Stable slug for the ProfessionalService `@id` URI. */
+  /** Stable slug for the EducationalOrganization `@id` URI. */
   static readonly #ORGANIZATION_SLUG = 'organization';
 
   /**
    * Builds the JSON-LD `@graph` for the current page: a sitewide `WebSite`
-   * and `ProfessionalService`, plus a per-page `WebPage` linked to both. The result
+   * and `EducationalOrganization`, plus a per-page `WebPage` linked to both. The result
    * is consumed by `<Seo graph={...}>` from `@jdevalk/astro-seo-graph`.
    *
    * @param args - Site, page, and image inputs used to populate the entities
@@ -24,7 +24,7 @@ class SeoGraphService {
    * @param args.pageUrl - Absolute URL of the current page
    * @param args.pageName - Page name used for the WebPage entity
    * @param args.description - Page description, reused on the WebPage
-   * @param args.ogImage - Absolute URL of the share image for the ProfessionalService
+   * @param args.ogImage - Absolute URL of the share image for the EducationalOrganization
    */
   async buildGraph(args: {
     site: URL;
@@ -66,8 +66,8 @@ class SeoGraphService {
       ids
     );
 
-    const organization = buildPiece<ProfessionalService>({
-      '@type': 'ProfessionalService',
+    const organization = buildPiece<EducationalOrganization>({
+      '@type': 'EducationalOrganization',
       '@id': organizationId,
       name: globalConstants.siteName,
       description,

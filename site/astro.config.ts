@@ -30,10 +30,10 @@ export default defineConfig({
       lastmod: new Date(),
       serialize: (item) => {
         const pathname = new URL(item.url).pathname;
-        // Home is the primary entry; services is the second most important page.
+        // Home is the primary entry; courses is the second most important page.
         // The rest stay at the default so the spread carries signal.
         if (pathname === '/') return { ...item, priority: 1.0 };
-        if (pathname === '/services') return { ...item, priority: 0.75 };
+        if (pathname === '/courses') return { ...item, priority: 0.75 };
         return item;
       }
     }),

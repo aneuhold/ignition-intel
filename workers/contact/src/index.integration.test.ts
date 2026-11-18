@@ -49,7 +49,7 @@ const nextIp = createTestIpGenerator();
 const validBody = {
   name: 'Alice Example',
   email: 'alice@example.com',
-  message: 'Hello, I need a fire investigated at a commercial property.',
+  message: 'Hello, I would like more information about your fire investigation course.',
   website: '',
   turnstileToken: 'fake-token'
 };

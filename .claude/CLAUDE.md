@@ -1,6 +1,6 @@
 # Repo-specific instructions for AI coding agents
 
-This repository is the website for Ignition Intel, a fire and arson investigation business run by Nicole Brewer. It is an Astro 5 + Svelte 5 islands site, styled with Tailwind v4, deployed to Cloudflare Pages (static output). Cloudflare Workers live in `/workers/*` and handle the dynamic concerns (contact form, CMS auth). Managed with pnpm workspaces.
+This repository is the website for Ignition Intel, a fire and arson investigation training business run by Nicole Brewer. It is an Astro 5 + Svelte 5 islands site, styled with Tailwind v4, deployed to Cloudflare Pages (static output). Cloudflare Workers live in `/workers/*` and handle the dynamic concerns (contact form, CMS auth). Managed with pnpm workspaces.
 
 ## Quick Commands
 

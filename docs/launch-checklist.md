@@ -37,7 +37,7 @@
 - [ ] Colors and fonts in `site/src/styles/tokens.css` and `site/astro.config.ts`
 - [ ] Sync `webManifestThemeColor` / `webManifestBackgroundColor` in `globalConstants.ts` with the new tokens
 - [ ] Fill in "Brand direction" in `.claude/skills/site-design/SKILL.md`
-- [ ] Replace placeholder copy: page `description`s in `site/src/pages/*.astro`, home section, services page
+- [ ] Replace placeholder copy: page `description`s in `site/src/pages/*.astro`, home section, courses page
 - [ ] Seed content in `site/src/content/` (or via the CMS)
 
 ### After launch
@@ -53,7 +53,7 @@
   - No phone number. Just email.
 - [x] Service area or location to list?
   - No address to be shown
-- [ ] What services should the Services page list?
+- [ ] What courses should the Courses page list?
   - The services are basically going to be fire investigation training.
 - [ ] Bio, background, and credentials for the About page
   - CV is going to be sent over

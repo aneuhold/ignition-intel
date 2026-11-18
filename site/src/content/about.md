@@ -9,4 +9,4 @@ highlights:
     body: A short supporting sentence for the third highlight.
 ---
 
-Ignition Intel is a fire and arson investigation business run by Nicole Brewer. This is placeholder text for the About page; replace it from the CMS.
+Ignition Intel offers fire and arson investigation courses and training, taught by Nicole Brewer. This is placeholder text for the About page; replace it from the CMS.
