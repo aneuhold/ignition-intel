@@ -21,7 +21,7 @@
 
 - [x] Verify the `mail.ignitionintel.com` sending domain in Resend
 - [x] Create a Resend API key and set it on `contact` as `RESEND_API_KEY`
-- [ ] Update `ownerEmail` / `fromEmail` in `workers/contact/src/util/contactWorkerConstants.ts`
+- [x] Update `ownerEmail` / `fromEmail` in `workers/contact/src/util/contactWorkerConstants.ts`
 
 ### Sentry
 

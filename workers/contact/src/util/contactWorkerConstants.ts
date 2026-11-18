@@ -4,7 +4,7 @@
  */
 export const contactWorkerConstants = {
   /** Inbox the form submissions are delivered to. */
-  ownerEmail: 'hello@ignitionintel.com',
+  ownerEmail: 'nicole@ignitionintel.com',
   /** `From` header used on outgoing Resend emails. */
   fromEmail: 'Ignition Intel <noreply@mail.ignitionintel.com>'
 };
