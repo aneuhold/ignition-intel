@@ -22,6 +22,9 @@ media_libraries:
     public_url: https://media.ignitionintel.aneuhold.dev
     access_key_id: e439f39ef86b9436ecbaeda0806773d4
 
+output:
+  omit_empty_optional_fields: true
+
 collections:
   - name: siteInfo
     label: General Site Info
