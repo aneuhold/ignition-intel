@@ -1,4 +1,4 @@
-import { jsonResponse, resolveCors } from '@ignition/workers-shared';
+import { allowedOrigins, jsonResponse, resolveCors } from '@ignition/workers-shared';
 import { SveltiaAuthErrorCode } from '../types/SveltiaAuthErrorCode';
 import gitHubOAuthService from './GitHubOAuth.service';
 import stateCookieService from './StateCookie.service';
@@ -180,6 +180,12 @@ class AuthService {
    * single-use state cookie. Mirrors `outputHTML` in sveltia-cms-auth:
    * https://github.com/sveltia/sveltia-cms-auth/blob/main/src/index.js
    *
+   * The message is posted once per entry in `allowedOrigins`. The browser
+   * only delivers a message whose target origin matches the opener exactly,
+   * so a page on any other origin that opens `/auth` never receives the
+   * token:
+   * https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage#targetorigin
+   *
    * @param outcome `success` with a token, `error` with an error + code
    * @param content Message payload
    * @param status HTTP status code
@@ -192,7 +198,7 @@ class AuthService {
     const message = `authorization:github:${outcome}:${JSON.stringify({ provider: 'github', ...content })}`;
     const html = `<!doctype html><html><head><meta charset="utf-8"><title>Authorizing…</title></head><body><script>(function(){var msg=${JSON.stringify(
       message
-    )};if(window.opener){window.opener.postMessage(msg,'*');}window.close();})();</script></body></html>`;
+    )};var origins=${JSON.stringify(allowedOrigins)};if(window.opener){origins.forEach(function(origin){window.opener.postMessage(msg,origin);});}window.close();})();</script></body></html>`;
     return new Response(html, {
       status,
       headers: {
