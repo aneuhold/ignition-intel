@@ -1,0 +1,31 @@
+/* Colors: 4 base vars + 1 accent. Tints/shades/state colors come from opacity modifiers
+   (e.g. text-foreground/60 for muted, bg-primary/80 for hover, border-foreground/10 for borders).
+   The values below are a starting palette; retune them here and every utility follows.
+   Expand when needed:
+     - Add --color-muted / --color-border if opacity-on-foreground gives the wrong hue.
+     - Add --color-primary-50..-900 numbered shades only if you need a step ramp that
+       color-mix can't express (multi-stop gradients, distinct semantic states).
+     - Add a :root primitives layer (palette -> semantic) when a second theme exists.
+
+   --color-accent is the one fresh hue outside the primary family. Keep it for a small
+   number of high-signal moments (a hero CTA, a highlight chip); primary stays for
+   transactional moments (Contact form submit). */
+@theme {
+  --color-background: oklch(0.98 0.006 80);
+  --color-foreground: oklch(0.2 0.012 60);
+  --color-primary: oklch(0.5 0.13 55);
+  --color-primary-foreground: oklch(0.98 0.006 80);
+  --color-accent: oklch(0.42 0.06 150);
+  --color-accent-foreground: oklch(0.98 0.006 80);
+
+  /* Typography: two roles. Tailwind generates font-display and font-body.
+     The literal font families are configured in astro.config.ts under `fonts`, and the
+     Font components in BaseLayout.astro wire the --font-zilla-slab / --font-inter CSS
+     variables. Swap providers or weights there; this file is the only place to switch
+     which face plays which role.
+       - font-display: headings, buttons, nav, eyebrow labels.
+       - font-body: all long-form copy.
+     Expand when needed: add --font-mono if monospace is required. */
+  --font-display: var(--font-zilla-slab);
+  --font-body: var(--font-inter);
+}

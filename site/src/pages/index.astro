@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Gallery from '$components-astro/Gallery';
+import Hero from '$components-astro/Hero.astro';
+import Container from '$components-astro/ui/Container.astro';
+import Eyebrow from '$components-astro/ui/Eyebrow.astro';
+import Heading from '$components-astro/ui/Heading.astro';
+import Section from '$components-astro/ui/Section.astro';
+import siteContentService from '$util/SiteContent.service';
+
+const home = await siteContentService.home();
+---
+
+<BaseLayout
+  title={`${home.data.title} | Fire & Arson Investigation Training`}
+  description="Ignition Intel offers fire and arson investigation courses and training, taught by Nicole Brewer. Placeholder description: update before launch."
+>
+  <main>
+    <Hero
+      title={home.data.title}
+      tagline={home.data.tagline}
+      heroImage={home.data.heroImage}
+      heroImageAlt={home.data.heroImageAlt}
+    />
+
+    <Section background="muted">
+      <Container size="wide">
+        <Eyebrow class="text-foreground/60">Placeholder</Eyebrow>
+        <Heading level={2} class="mt-3">
+          A section heading goes here.
+        </Heading>
+        <p class="mt-5 max-w-prose text-lg leading-relaxed text-foreground/80">
+          Placeholder copy for the first home-page section.
+        </p>
+      </Container>
+    </Section>
+
+    <Gallery limit={9} />
+  </main>
+</BaseLayout>

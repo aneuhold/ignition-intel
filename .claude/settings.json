@@ -1,0 +1,8 @@
+{
+  "enabledPlugins": {
+    "cloudflare@cloudflare": true
+  },
+  "permissions": {
+    "additionalDirectories": ["../workout", "../portfolio"]
+  }
+}

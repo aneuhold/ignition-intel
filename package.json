@@ -1,0 +1,41 @@
+{
+  "name": "ignition-intel",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.2.1",
+  "scripts": {
+    "dev": "concurrently -n site,contact,cms-auth -c blue,green,cyan \"pnpm --dir site dev\" \"pnpm --dir workers/contact dev\" \"pnpm --dir workers/cms-auth dev\"",
+    "dev:site": "pnpm --dir site dev",
+    "build": "pnpm -r --parallel build",
+    "build:site": "pnpm --filter ./site build",
+    "build:workers": "pnpm -r --parallel --filter \"./workers/*\" build",
+    "preview": "pnpm --dir site preview",
+    "lint": "eslint --cache && pnpm -r --parallel lint",
+    "lint:fix": "tsc -b packages/shared packages/workers-shared && eslint --cache --fix && pnpm -r --parallel lint --fix",
+    "check": "pnpm -r --parallel check",
+    "typegen": "pnpm -r --parallel typegen",
+    "test": "pnpm -r --parallel test",
+    "test:e2e": "pnpm -r --parallel --filter \"./workers/*\" run test:e2e",
+    "deploy:workers": "pnpm -r --parallel --filter \"./workers/*\" run deploy",
+    "upgrade:deps": "pnpm up -r --latest",
+    "upload:images": "tsx scripts/upload-images-to-r2.ts",
+    "generate:assets": "tsx scripts/generate-logos.ts && tsx scripts/generate-og-image.ts"
+  },
+  "devDependencies": {
+    "@aneuhold/eslint-config": "^3.0.3",
+    "@cloudflare/vitest-plugin": "^1.4.11",
+    "@cloudflare/workers-types": "^5.20261108.1",
+    "@types/node": "^26.6.6",
+    "concurrently": "^10.0.6",
+    "eslint": "^10.14.0",
+    "jiti": "^2.7.0",
+    "playwright": "^1.64.1",
+    "prettier": "^3.9.10",
+    "prettier-plugin-astro": "^1.1.2",
+    "prettier-plugin-svelte": "^4.1.1",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.5",
+    "wrangler": "^4.156.0"
+  }
+}
