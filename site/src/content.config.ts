@@ -3,6 +3,7 @@
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { defineCollection } from 'astro:content';
+import coursesService from './util/Courses.service';
 
 const home = defineCollection({
   loader: glob({ pattern: 'home.json', base: 'src/content' }),
@@ -17,15 +18,7 @@ const home = defineCollection({
 const about = defineCollection({
   loader: glob({ pattern: 'about.md', base: 'src/content' }),
   schema: z.object({
-    heading: z.string(),
-    highlights: z
-      .array(
-        z.object({
-          headline: z.string(),
-          body: z.string()
-        })
-      )
-      .default([])
+    heading: z.string()
   })
 });
 
@@ -66,12 +59,18 @@ const businessProfiles = defineCollection({
   })
 });
 
-const gallery = defineCollection({
-  loader: glob({ pattern: '*.json', base: 'src/content/gallery' }),
+const courses = defineCollection({
+  loader: glob({ pattern: '*.md', base: 'src/content/courses' }),
   schema: z.object({
-    photo: z.url(),
-    alt: z.string(),
-    order: z.number().default(0)
+    title: z.string(),
+    description: z.string(),
+    videoUrl: z.url().refine((url) => coursesService.youTubeVideoId(url) !== undefined, {
+      message: 'Must be a YouTube video link'
+    }),
+    /**
+     * Written by Sveltia's drag-and-drop reorder; absent on entries never reordered.
+     */
+    order: z.number().optional()
   })
 });
 
@@ -81,5 +80,5 @@ export const collections = {
   contact,
   socialMediaLinks,
   businessProfiles,
-  gallery
+  courses
 };

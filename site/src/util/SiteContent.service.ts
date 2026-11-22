@@ -31,7 +31,7 @@ class SiteContentService {
   }
 
   /**
-   * Social links shown in the footer.
+   * Social media links (e.g. LinkedIn, Instagram).
    */
   async socialMediaLinks(): Promise<CollectionEntry<'socialMediaLinks'>> {
     return this.#required(

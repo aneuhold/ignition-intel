@@ -1,6 +1,6 @@
 ---
 name: cms-content
-description: Add, update, rename, move, or remove a Sveltia CMS collection or its fields, or upload an image to R2 and point an entry at it. Use whenever the editable content model changes or media is added — e.g. "add an events collection", "rename the gallery 'alt' field to 'caption'", "drop the tagline field", "move about into its own page", "upload these photos to the gallery". Keeps Sveltia config, Astro content collections, and seed files in lockstep.
+description: Add, update, rename, move, or remove a Sveltia CMS collection or its fields, or upload an image to R2 and point an entry at it. Use whenever the editable content model changes or media is added — e.g. "add an events collection", "rename the course 'videoUrl' field to 'trailerUrl'", "drop the tagline field", "move about into its own page", "upload a hero image". Keeps Sveltia config, Astro content collections, and seed files in lockstep.
 argument-hint: '<what to change>'
 ---
 
@@ -35,6 +35,7 @@ Whatever the change, treat Sveltia and Astro as a single transaction. The two si
 - Sveltia `required: false` ↔ Zod `.optional()`
 - Sveltia singleton (`files:` entry) ↔ Astro `glob({ pattern: '<name>.<ext>', base: 'src/content' })`
 - Sveltia folder collection ↔ Astro `glob({ pattern: '*.<ext>', base: 'src/content/<name>' })`
+- Sveltia collection-level `reorder: true` ↔ Zod `order: z.number().optional()`, with `order` left out of the Sveltia `fields` list. Sveltia writes drag-and-drop positions to `order` starting at 1; entries never reordered have none and sort last ([docs](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries)).
 
 Always use `import { z } from 'astro/zod'` in `content.config.ts`. `astro:content`'s `z` is deprecated.
 
@@ -120,21 +121,23 @@ For new singletons, write a seed file with placeholder values matching the schem
 
 ## Step 4 — Update or remove the render component
 
-If the collection is rendered on a page, the component lives under `site/src/components-astro/`. The convention for non-trivial components is the folder form used by `Gallery/`:
+If the collection is rendered on a page, the component lives under `site/src/components-astro/`. The convention for non-trivial components is the folder form:
 
 ```
 <Name>/
   <Name>.astro          # the component
   <Name>.service.ts     # pure logic (sort/filter/group) as a singleton class
   <Name>.service.test.ts
-  index.ts              # barrel — re-exports Gallery.astro as default so callers can `import X from '$components-astro/<Name>'`
+  index.ts              # barrel — re-exports <Name>.astro as default so callers can `import X from '$components-astro/<Name>'`
 ```
 
-A single `.astro` file in `components-astro/` is fine for components that just dump fields into the DOM with no logic worth unit-testing.
+A single `.astro` file in `components-astro/` is fine for components that just dump fields into the DOM with no logic worth unit-testing. Logic for a collection that pages read directly (no component) lives in `site/src/util/<Name>.service.ts`, e.g. `Courses.service.ts` for sorting courses and parsing YouTube links.
+
+A folder collection whose entries each get their own page uses a dynamic route that reads the collection in `getStaticPaths`, keyed by `entry.id` (the file name). See `site/src/pages/courses/[slug].astro`. Give that collection's Sveltia `slug:` no date suffix, since it becomes the URL.
 
 When updating a field, also update the component that reads it (the Astro check usually catches missed renames; missed widget-type changes can sneak through).
 
-When removing a collection, delete the component and every caller — don't leave a dangling `import Gallery from ...` that silently renders nothing.
+When removing a collection, delete the component and every caller — don't leave a dangling import of a component that silently renders nothing.
 
 ## Step 5 — Validate
 
@@ -179,10 +182,10 @@ A `widget: image` field holds a URL, not a file, so adding a photo is two moves:
 
    It uploads each image and prints the public URL of each — the same value Sveltia would store.
 
-2. For each URL, create the entry whose image field is that URL. For the `gallery` folder collection that's a new `site/src/content/gallery/<slug>.json`:
+2. For each URL, set the image field of the entry that should show it. For the home hero image that's `site/src/content/home.json`:
 
    ```json
-   { "photo": "https://media.ignitionintel.aneuhold.dev/<key>.jpg", "alt": "...", "order": 0 }
+   { "heroImage": "https://media.ignitionintel.aneuhold.dev/<key>.jpg", "heroImageAlt": "..." }
    ```
 
 The object must be in R2 before `pnpm build:site` runs, since Astro fetches it to optimize (see Step 5).
