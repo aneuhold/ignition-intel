@@ -46,8 +46,8 @@ class GlobalConstants {
   readonly webManifestThemeColor = '#c9a55c';
 
   /**
-   * Page background, a copy of `--color-background` in
-   * `site/src/styles/tokens.css`. Used by the web manifest's splash-screen
+   * Page background, `--color-background` in `site/src/styles/tokens.css`
+   * converted to sRGB hex. Used by the web manifest's splash-screen
    * `background_color`. Keep in sync when `--color-background` changes.
    */
   readonly webManifestBackgroundColor = '#393e46';

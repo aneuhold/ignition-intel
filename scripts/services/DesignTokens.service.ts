@@ -1,3 +1,4 @@
+import { formatHex } from 'culori';
 import { readFileSync } from 'node:fs';
 
 /**
@@ -19,13 +20,29 @@ class DesignTokensService {
   }
 
   /**
-   * Returns the declared value of a single token, exactly as written in
-   * `tokens.css` (e.g. `#393e46` for `--some-var`). Values that
-   * reference other variables come back unresolved.
+   * Returns a color token as a 6-digit sRGB hex string (e.g. `#393e46`), for
+   * tools that only understand hex. The token must be a literal color in any
+   * CSS format (hex, `oklch()`, …); colors derived from other variables (e.g.
+   * relative color syntax) can't be resolved outside a browser and throw.
    *
    * @param name Custom property name including the leading dashes, e.g. `--color-background`
    */
-  readValue(name: string): string {
+  readHexColor(name: string): string {
+    const value = this.#readValue(name);
+    const hex = formatHex(value);
+    if (!hex) {
+      throw new Error(`${name} (${value}) is not a literal color that can be converted to hex`);
+    }
+    return hex;
+  }
+
+  /**
+   * Returns the declared value of a single token, exactly as written in
+   * `tokens.css`. Values that reference other variables come back unresolved.
+   *
+   * @param name Custom property name including the leading dashes
+   */
+  #readValue(name: string): string {
     const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const withoutComments = this.#readThemeBody().replace(/\/\*[\s\S]*?\*\//g, '');
     const declaration = new RegExp(`(?:^|[\\s;])${escapedName}\\s*:\\s*([^;]+);`).exec(

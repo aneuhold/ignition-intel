@@ -25,7 +25,7 @@ const getConfig = () => ({
   /**
    * Color of the logo background rect: the site's page color.
    */
-  backgroundColor: designTokensService.readValue('--color-background')
+  backgroundColor: designTokensService.readHexColor('--color-background')
 });
 
 const config = getConfig();

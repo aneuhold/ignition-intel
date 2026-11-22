@@ -28,6 +28,9 @@
     "svelte",
     "astro"
   ],
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
   "markdown.copyFiles.destination": {
     "/docs/**/*": "${documentDirName}/images/",
     "/README.md": "docs/images/"
