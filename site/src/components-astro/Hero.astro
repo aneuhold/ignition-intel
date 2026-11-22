@@ -37,17 +37,17 @@ const onImage = Boolean(heroImage);
         fetchpriority="high"
         class="absolute inset-0 h-full w-full object-cover"
       />
-      <div class="absolute inset-0 bg-linear-to-t from-foreground/90 via-foreground/50 to-foreground/10"></div>
+      <div class="absolute inset-0 bg-linear-to-t from-background/90 via-background/50 to-background/10"></div>
     </>
   )}
-  <Container size="wide" class:list={[onImage && 'relative px-6 pb-16 text-background md:pb-24']}>
+  <Container size="wide" class:list={[onImage && 'relative px-6 pb-16 md:pb-24']}>
     <div class="animate-fade-in">
       <Heading level={0}>{title}</Heading>
       {tagline && (
         <p
           class:list={[
             'mt-4 font-display text-xl md:text-2xl',
-            onImage ? 'text-background/85' : 'text-foreground/70'
+            onImage ? 'text-foreground/85' : 'text-foreground/70'
           ]}
         >
           {tagline}

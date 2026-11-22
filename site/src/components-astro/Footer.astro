@@ -2,7 +2,7 @@
 import Container from '$components-astro/ui/Container.astro';
 import SiteInfo from '$components-astro/SiteInfo.astro';
 import siteContentService from '$util/SiteContent.service';
-import Logo from '../assets/logo.svg';
+import Logo from '../assets/logo-gold.svg';
 
 const socialEntry = await siteContentService.socialMediaLinks();
 const { links } = socialEntry.data;
@@ -14,7 +14,7 @@ const currentYear = new Date().getFullYear();
   <Container>
     <div class="grid gap-10 md:grid-cols-3">
       <div>
-        <Logo class="h-12 w-auto text-foreground" />
+        <Logo class="h-12 w-auto" />
         <p class="mt-3 font-display text-xl tracking-tight">{homeEntry.data.title}</p>
       </div>
       <div class="md:text-center">

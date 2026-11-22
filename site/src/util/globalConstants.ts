@@ -1,7 +1,7 @@
 /**
  * A square PNG derived from the logo, used by iOS home-screen icons
  * (apple-touch-icon) and/or the PWA web manifest. Renders are produced by
- * `scripts/generate-logos.ts` from `logo-on-white.svg`.
+ * `scripts/generate-logos.ts` from `favicon.svg`.
  */
 export interface PwaIcon {
   /** Square pixel dimension of the rendered PNG. */
@@ -39,24 +39,18 @@ class GlobalConstants {
   ];
 
   /**
-   * Primary brand color as sRGB hex, equivalent of `--color-primary`
-   * (`oklch(0.5 0.13 55)`) in `site/src/styles/tokens.css`. Used for the
-   * browser theme bar and the web manifest's `theme_color`.
-   *
-   * Keep in sync when `--color-primary` changes: paste the OKLCH literal into
-   * https://oklch.com/#0.5,0.13,55,100 and copy the displayed sRGB hex.
+   * Primary brand color, a copy of `--color-primary` in
+   * `site/src/styles/tokens.css`. Used for the browser theme bar and the web
+   * manifest's `theme_color`. Keep in sync when `--color-primary` changes.
    */
-  readonly webManifestThemeColor = '#994a00';
+  readonly webManifestThemeColor = '#c9a55c';
 
   /**
-   * Page background as sRGB hex, equivalent of `--color-background`
-   * (`oklch(0.98 0.006 80)`) in `site/src/styles/tokens.css`. Used by the
-   * web manifest's splash-screen `background_color`.
-   *
-   * Keep in sync when `--color-background` changes: paste the OKLCH literal
-   * into https://oklch.com/#0.98,0.006,80,100 and copy the displayed sRGB hex.
+   * Page background, a copy of `--color-background` in
+   * `site/src/styles/tokens.css`. Used by the web manifest's splash-screen
+   * `background_color`. Keep in sync when `--color-background` changes.
    */
-  readonly webManifestBackgroundColor = '#fbf8f4';
+  readonly webManifestBackgroundColor = '#393e46';
 
   /**
    * Single source of truth for the PWA / Apple touch icons. Drives both the
