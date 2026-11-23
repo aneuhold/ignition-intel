@@ -136,7 +136,7 @@
           class="flex flex-col gap-1.5 border-l-2 border-accent py-1 pl-5"
         >
           <span
-            class="font-display text-xs font-bold uppercase tracking-[0.2em] text-foreground/55"
+            class="font-display text-xs font-bold uppercase tracking-[0.2em] text-foreground/70"
           >
             {contactFormConstants.courseSubjectLabel}
           </span>
@@ -146,7 +146,7 @@
         </p>
       {/if}
       <label class="flex flex-col gap-2">
-        <span class="font-display text-xs font-bold uppercase tracking-[0.2em] text-foreground/55">
+        <span class="font-display text-xs font-bold uppercase tracking-[0.2em] text-foreground/70">
           Name
         </span>
         <input
@@ -162,7 +162,7 @@
       </label>
 
       <label class="flex flex-col gap-2">
-        <span class="font-display text-xs font-bold uppercase tracking-[0.2em] text-foreground/55">
+        <span class="font-display text-xs font-bold uppercase tracking-[0.2em] text-foreground/70">
           Email
         </span>
         <input
@@ -178,7 +178,7 @@
       </label>
 
       <label class="flex flex-col gap-2">
-        <span class="font-display text-xs font-bold uppercase tracking-[0.2em] text-foreground/55">
+        <span class="font-display text-xs font-bold uppercase tracking-[0.2em] text-foreground/70">
           Message
         </span>
         <textarea
