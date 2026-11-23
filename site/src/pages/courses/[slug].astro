@@ -38,7 +38,7 @@ const others = courses
   .map((entry, position) => ({ entry, code: drawingSheetService.courseCode(position) }))
   .filter(({ entry }) => entry.id !== course.id);
 const label =
-  'block font-display text-[0.65rem] font-bold tracking-[0.22em] text-foreground/60 uppercase';
+  'block font-display text-[0.65rem] font-bold tracking-[0.22em] text-foreground/70 uppercase';
 ---
 
 <BaseLayout title={`${title} | Ignition Intel Courses`} description={description} sheet={sheet}>
@@ -57,7 +57,7 @@ const label =
             <YouTubeEmbed url={videoUrl} title={`${title} video`} />
           </Frame>
           <figcaption
-            class="mt-4 font-display text-[0.7rem] font-bold tracking-[0.2em] text-foreground/60 uppercase"
+            class="mt-4 font-display text-[0.7rem] font-bold tracking-[0.2em] text-foreground/70 uppercase"
           >
             <span class="text-primary">Fig. 1</span>&ensp;Course overview
           </figcaption>
