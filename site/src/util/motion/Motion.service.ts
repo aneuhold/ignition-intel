@@ -2,6 +2,7 @@ import { gsap } from 'gsap';
 import { CustomEase } from 'gsap/CustomEase';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
+import introService from './Intro.service';
 import magneticService from './Magnetic.service';
 import pageTransitionService from './PageTransition.service';
 import revealService from './Reveal.service';
@@ -15,6 +16,12 @@ import revealService from './Reveal.service';
  * asks for them.
  */
 class MotionService {
+  /** Minimum wait, in ms, before loading the heavier effects, so the first reveals paint first. */
+  static readonly #SETTLE_MS = 1000;
+
+  /** Longest further wait, in ms, for an idle moment after that. */
+  static readonly #IDLE_TIMEOUT_MS = 1000;
+
   #initialized = false;
   #cleanups: (() => void)[] = [];
   /** Bumped on every start and stop, so an async start that's been overtaken gives up. */
@@ -38,42 +45,57 @@ class MotionService {
   }
 
   /**
-   * Attaches every effect whose markup is on the current page. The intro, when
-   * it plays, holds back the hero heading, embers, and flicker until the logo
-   * has lit.
+   * Attaches every effect whose markup is on the current page.
    */
   async #start(): Promise<void> {
     this.#stop();
     const generation = this.#generation;
     const has = (selector: string): boolean => document.querySelector(selector) !== null;
-    // Reveals start right away; only the hero heading waits on the intro's cue.
-    let releaseCue = (): void => undefined;
-    const cue = new Promise<void>((resolve) => {
-      releaseCue = resolve;
-    });
-    this.#cleanups = [revealService.attach(cue), magneticService.attach()];
+    // The intro is small and must start at once, so it isn't lazy loaded. The
+    // hero heading, embers, and flicker wait on its cue; everything else starts now.
+    const { cue, detach } = introService.attach();
+    this.#cleanups = [detach, revealService.attach(cue), magneticService.attach()];
 
-    const [intro, embers, flicker, story, courseGrid] = await Promise.all([
-      has('[data-intro-overlay]') ? import('./Intro.service') : undefined,
+    // The rest are decoration: fetch them once the page has settled.
+    await this.#idle();
+    if (generation !== this.#generation) return;
+    const [embers, flicker, story, courseGrid] = await Promise.all([
       has('[data-ember-field]') ? import('./EmberField.service') : undefined,
       has('[data-flicker]') ? import('./FlameFlicker.service') : undefined,
       has('[data-story]') ? import('./Story.service') : undefined,
       has('[data-course-grid]') ? import('./CourseGrid.service') : undefined
     ]);
     if (generation !== this.#generation) return;
-
-    const introHandle = intro?.default.attach();
     this.#cleanups.push(
       ...[
-        introHandle?.detach,
         embers?.default.attach(cue),
         flicker?.default.attach(cue),
         story?.default.attach(),
         courseGrid?.default.attach()
       ].filter((cleanup) => cleanup !== undefined)
     );
-    await introHandle?.cue;
-    releaseCue();
+  }
+
+  /**
+   * Resolves once the page has had a moment to settle and the browser is
+   * idle (where `requestIdleCallback` is supported).
+   */
+  async #idle(): Promise<void> {
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, MotionService.#SETTLE_MS);
+    });
+    await new Promise<void>((resolve) => {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(
+          () => {
+            resolve();
+          },
+          { timeout: MotionService.#IDLE_TIMEOUT_MS }
+        );
+      } else {
+        resolve();
+      }
+    });
   }
 
   /**
