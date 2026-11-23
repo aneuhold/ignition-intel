@@ -1,0 +1,70 @@
+---
+import { MotionEffect } from '$util/motion/MotionEffect';
+
+/**
+ * The hero graphic: a V-shaped burn pattern drawn as nested heat layers (stone smoke stain,
+ * rust, gold, and a hot core) sharing one apex, with dashed diagram lines and an
+ * area-of-origin marker at the apex, like a figure from a scene report. The layers grow up
+ * from the apex on load.
+ */
+interface Props {
+  /** Figure caption. Omit for a purely decorative graphic. */
+  caption?: string;
+  class?: string;
+}
+
+const { caption, class: className } = Astro.props;
+---
+
+<figure class:list={['flex flex-col gap-4', className]} data-motion={MotionEffect.VBurn}>
+  <div class="relative min-h-0 flex-1" aria-hidden="true">
+    <div
+      data-v-layer
+      class="absolute inset-0 bg-linear-to-b from-foreground/0 via-foreground/6 to-foreground/20 clip-v"
+    >
+    </div>
+    <div
+      data-v-layer
+      class="absolute top-[12%] right-[13%] bottom-0 left-[13%] bg-linear-to-b from-accent/0 via-accent/50 to-accent clip-v"
+    >
+    </div>
+    <div
+      data-v-layer
+      class="absolute top-[36%] right-[29%] bottom-0 left-[29%] bg-linear-to-b from-primary/0 via-primary/70 to-primary clip-v"
+    >
+    </div>
+    <div
+      data-v-layer
+      class="absolute top-[64%] right-[41%] bottom-0 left-[41%] bg-linear-to-b from-primary/40 to-foreground clip-v"
+    >
+    </div>
+    <svg
+      class="absolute inset-0 h-full w-full overflow-visible text-foreground/35"
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+    >
+      <path
+        d="M0 0 L50 100 L100 0"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1"
+        stroke-dasharray="6 6"
+        vector-effect="non-scaling-stroke"></path>
+    </svg>
+    <div data-v-origin class="absolute top-full left-1/2 flex -translate-x-1/2 flex-col items-center">
+      <span class="-mt-2.5 size-5 rounded-full bg-foreground ring-8 ring-primary/30"></span>
+      <span
+        class="mt-4 font-display text-[0.65rem] font-bold tracking-[0.24em] whitespace-nowrap text-foreground/70 uppercase"
+      >
+        Area of origin
+      </span>
+    </div>
+  </div>
+  {
+    caption && (
+      <figcaption class="mt-10 font-display text-[0.65rem] tracking-[0.2em] text-foreground/70 uppercase">
+        {caption}
+      </figcaption>
+    )
+  }
+</figure>

@@ -1,0 +1,33 @@
+---
+import { MotionEffect } from '$util/motion/MotionEffect';
+import { HeadingSize } from './HeadingSize';
+
+/**
+ * A Public Sans headline on the site's display scale. Poster and display sizes are set in
+ * heavy uppercase; title size stays in title case. Poster and display headlines reveal line
+ * by line as they scroll in unless `reveal` is false.
+ */
+interface Props {
+  level: 1 | 2 | 3;
+  size: HeadingSize;
+  /** Line-by-line scroll reveal. Defaults to on for poster and display sizes. */
+  reveal?: boolean;
+  class?: string;
+}
+
+const { level, size, reveal = size !== HeadingSize.Title, class: className } = Astro.props;
+const Tag = `h${level}` as const;
+
+const sizeClasses: Record<HeadingSize, string> = {
+  [HeadingSize.Poster]: 'text-poster font-black uppercase',
+  [HeadingSize.Display]: 'text-display font-black uppercase',
+  [HeadingSize.Title]: 'text-title font-bold'
+};
+---
+
+<Tag
+  class:list={['font-display text-balance', sizeClasses[size], className]}
+  data-motion={reveal ? MotionEffect.SplitHeadline : undefined}
+>
+  <slot />
+</Tag>

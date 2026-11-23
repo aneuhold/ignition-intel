@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderSvelteComponent } from '../../../testUtils/renderSvelteComponent';
 import contactFormService from './ContactForm.service';
 import ContactForm from './ContactForm.svelte';
+import { contactFormConstants } from './contactFormConstants';
 
 const installTurnstileMock = (): { triggerToken: (token: string) => void } => {
   let savedCallback: ((token: string) => void) | null = null;
@@ -24,6 +25,47 @@ describe('ContactForm', () => {
   afterEach(() => {
     cleanup();
     vi.restoreAllMocks();
+    window.history.replaceState({}, '', '/');
+  });
+
+  describe('course prefill', () => {
+    const courses = [{ slug: 'origin-and-cause', title: 'Origin and Cause' }];
+
+    it('pre-fills the message for the course in the URL', async () => {
+      installTurnstileMock();
+      window.history.replaceState({}, '', '/contact?course=origin-and-cause');
+      renderSvelteComponent(ContactForm, { props: { courses } });
+
+      await vi.waitFor(() =>
+        expect(screen.getByTestId('contact-form-message')).toHaveValue(
+          contactFormConstants.courseStarterMessage('Origin and Cause')
+        )
+      );
+      expect(screen.getByTestId('contact-form-course')).toHaveTextContent('Origin and Cause');
+    });
+
+    it('leaves the form empty without a matching course', () => {
+      installTurnstileMock();
+      window.history.replaceState({}, '', '/contact?course=unknown');
+      renderSvelteComponent(ContactForm, { props: { courses } });
+
+      expect(screen.getByTestId('contact-form-message')).toHaveValue('');
+      expect(screen.queryByTestId('contact-form-course')).not.toBeInTheDocument();
+    });
+
+    it('lets the visitor edit the pre-filled message', async () => {
+      installTurnstileMock();
+      const user = userEvent.setup();
+      window.history.replaceState({}, '', '/contact?course=origin-and-cause');
+      renderSvelteComponent(ContactForm, { props: { courses } });
+      const message = screen.getByTestId('contact-form-message');
+      await vi.waitFor(() => expect(message).not.toHaveValue(''));
+
+      await user.clear(message);
+      await user.type(message, 'Can you teach this in Spokane?');
+
+      expect(message).toHaveValue('Can you teach this in Spokane?');
+    });
   });
 
   it('renders the name, email, message, and honeypot inputs', () => {

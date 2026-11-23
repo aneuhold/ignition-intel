@@ -31,7 +31,12 @@
      read as text on slate. */
   --color-accent: #b5541f;
 
-  /* Text on accent. Large or bold type only; small text on rust is hard to read. */
+  /* Deeper rust for fills behind small labels (buttons, the header Contact link): the accent
+     with lightness lowered until stone text on it passes 4.5:1. */
+  --color-accent-strong: oklch(from var(--color-accent) calc(l - 0.05) c h);
+
+  /* Text on accent. Large or bold type only; small text on rust is hard to read. Put small
+     labels on accent-strong. */
   --color-accent-foreground: #ece6da;
 
   /* Typography: two roles. Tailwind generates font-display and font-body. The literal
@@ -47,4 +52,25 @@
 
   /* Lora: all long-form copy; italic for subtitles and pull quotes. */
   --font-body: var(--font-lora);
+
+  /* Type scale: three display steps for Public Sans headings, sized against the viewport so
+     headlines read as posters on desktop and still fit a phone. Tailwind generates
+     text-poster, text-display, text-title, each with its own leading and tracking. Body copy
+     keeps Tailwind's default steps.
+     Expand when needed: add a step only when a heading falls between two of these. */
+
+  /* Hero headlines, one per page. */
+  --text-poster: clamp(3rem, 8.5vw, 9.5rem);
+  --text-poster--line-height: 0.84;
+  --text-poster--letter-spacing: -0.035em;
+
+  /* Section headlines. */
+  --text-display: clamp(2.5rem, 6vw, 6rem);
+  --text-display--line-height: 0.88;
+  --text-display--letter-spacing: -0.03em;
+
+  /* Card and list titles. */
+  --text-title: clamp(1.625rem, 2.6vw, 2.5rem);
+  --text-title--line-height: 1;
+  --text-title--letter-spacing: -0.02em;
 }

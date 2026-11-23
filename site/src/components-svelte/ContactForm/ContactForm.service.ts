@@ -3,6 +3,14 @@ import { globalConstants } from '$util/globalConstants';
 import { contactFormConstants } from './contactFormConstants';
 
 /**
+ * A course the form can be pre-filled for: its collection slug and display title.
+ */
+export interface ContactFormCourse {
+  slug: string;
+  title: string;
+}
+
+/**
  * Pure-logic singleton for the ContactForm island. Owns the Turnstile widget
  * lifecycle and the POST-to-worker interpretation so `ContactForm.svelte`
  * stays focused on state and markup.
@@ -64,6 +72,21 @@ class ContactFormService {
    */
   resetTurnstile(widgetId: string): void {
     turnstile.reset(widgetId);
+  }
+
+  /**
+   * Finds the course named by the `course` query parameter, or `undefined` when the
+   * parameter is missing or matches no course.
+   *
+   * @param search A URL query string, e.g. `?course=some-slug`
+   * @param courses Every course the form can be pre-filled for
+   */
+  courseFromSearch(
+    search: string,
+    courses: readonly ContactFormCourse[]
+  ): ContactFormCourse | undefined {
+    const slug = new URLSearchParams(search).get(contactFormConstants.courseQueryParam);
+    return slug === null ? undefined : courses.find((course) => course.slug === slug);
   }
 
   /**

@@ -1,0 +1,50 @@
+---
+import HeatHeadline from './HeatHeadline.astro';
+import Eyebrow from './ui/Eyebrow.astro';
+
+/**
+ * The ideas every course comes back to: a burning headline about bias, then three numbered
+ * principles in Nicole's own imperative headings.
+ */
+const principles = [
+  {
+    heading: 'Trust the Process, Not the Feeling.',
+    body: "Every investigator gets a gut read on a scene. Mine has been wrong. NFPA 921's scientific method is how you find out before your report does."
+  },
+  {
+    heading: 'Undetermined Is an Answer.',
+    body: "When the data doesn't support one cause over the others, saying so is the scientific result. It isn't a failure, and it isn't a guess left unfinished."
+  },
+  {
+    heading: 'Stay in Your Lane!',
+    body: 'Know where your expertise ends and say so, in the report and on the stand. A jury hears confidence as accuracy. It is on us to keep them apart.'
+  }
+];
+---
+
+<div class="flex flex-col gap-16 lg:gap-24">
+  <div class="grid gap-8 lg:grid-cols-[3fr_2fr] lg:items-end lg:gap-16">
+    <div>
+      <Eyebrow class="mb-6">What every course comes back to</Eyebrow>
+      <HeatHeadline text="Throw Out the Anchor." />
+    </div>
+    <p class="text-xl leading-relaxed text-foreground/85 lg:text-2xl">
+      The first theory you hear at a scene is the hardest one to let go of. Bias is a feature of
+      normal cognition, not a character flaw. We all have it, me included. The method is what
+      keeps it out of the report.
+    </p>
+  </div>
+  <ol class="border-t-2 border-foreground/15">
+    {
+      principles.map(({ heading, body }, index) => (
+        <li class="grid gap-4 border-b-2 border-foreground/15 py-10 lg:grid-cols-[8rem_3fr_2fr] lg:items-baseline lg:gap-10 lg:py-14">
+          <span class="font-display text-lg font-black text-primary">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+          <h3 class="font-display text-title font-black text-balance uppercase">{heading}</h3>
+          <p class="text-lg text-foreground/75">{body}</p>
+        </li>
+      ))
+    }
+  </ol>
+</div>

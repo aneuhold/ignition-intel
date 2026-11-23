@@ -3,6 +3,8 @@ import { Font } from 'astro:assets';
 import { ClientRouter } from 'astro:transitions';
 import Seo from '@jdevalk/astro-seo-graph/Seo.astro';
 import '../styles/global.css';
+import SiteFooter from '$components-astro/SiteFooter.astro';
+import SiteHeader from '$components-astro/SiteHeader.astro';
 import { globalConstants } from '$util/globalConstants';
 import seoGraphService from '$util/SeoGraph.service';
 
@@ -68,6 +70,15 @@ const graph = await seoGraphService.buildGraph({
     <slot name="head" />
   </head>
   <body class="bg-background font-body text-foreground">
-    <slot />
+    <SiteHeader currentPath={canonicalUrl.pathname} />
+    <main>
+      <slot />
+    </main>
+    <SiteFooter />
+    <script>
+      import pageMotionService from '$util/motion/PageMotion.service';
+
+      pageMotionService.start();
+    </script>
   </body>
 </html>

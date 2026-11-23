@@ -1,0 +1,41 @@
+---
+import { MotionEffect } from '$util/motion/MotionEffect';
+import Button from './ui/Button.astro';
+import { ButtonVariant } from './ui/ButtonVariant';
+import Container from './ui/Container.astro';
+import Heading from './ui/Heading.astro';
+import { HeadingSize } from './ui/HeadingSize';
+
+/**
+ * The closing call to action above the footer: a gold section with a poster headline and
+ * one button. When it scrolls in, a rust heat band with a V-shaped leading edge sweeps down
+ * through it once. The band is decoration that exists only for the motion, so it stays
+ * invisible until the sweep starts and the text always sits on gold.
+ */
+interface Props {
+  heading: string;
+  body: string;
+  href: string;
+  label: string;
+}
+
+const { heading, body, href, label } = Astro.props;
+---
+
+<section class="relative overflow-hidden bg-primary">
+  <div
+    aria-hidden="true"
+    data-motion={MotionEffect.VSweep}
+    class="invisible absolute inset-x-0 top-0 h-[140%] bg-linear-to-b from-accent/0 via-accent/30 to-accent/70 clip-v-tail"
+  >
+  </div>
+  <Container class="relative flex flex-col gap-8 py-24 text-primary-foreground lg:py-36">
+    <Heading level={2} size={HeadingSize.Poster} class="max-w-[14ch]">{heading}</Heading>
+    <div class="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+      <p class="max-w-xl text-lg lg:text-xl">{body}</p>
+      <Button href={href} variant={ButtonVariant.Inverse} class="self-start lg:self-auto">
+        {label}
+      </Button>
+    </div>
+  </Container>
+</section>

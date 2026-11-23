@@ -1,0 +1,36 @@
+---
+import { ButtonVariant } from './ButtonVariant';
+
+/**
+ * A link styled as a square, uppercase button with a trailing arrow that nudges on hover.
+ */
+interface Props {
+  href: string;
+  variant?: ButtonVariant;
+  class?: string;
+}
+
+const { href, variant = ButtonVariant.Accent, class: className } = Astro.props;
+
+const variantClasses: Record<ButtonVariant, string> = {
+  [ButtonVariant.Accent]: 'bg-accent-strong text-accent-foreground hover:bg-accent-strong/85',
+  [ButtonVariant.Outline]:
+    'border-2 border-foreground/30 text-foreground hover:border-primary hover:text-primary',
+  [ButtonVariant.Inverse]: 'bg-primary-foreground text-foreground hover:bg-primary-foreground/85'
+};
+---
+
+<a
+  href={href}
+  class:list={[
+    'group inline-flex items-center justify-center gap-3 px-6 py-4 font-display text-sm font-bold tracking-[0.16em] uppercase transition-colors duration-(--duration-snap) ease-soft focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:text-base',
+    variantClasses[variant],
+    className
+  ]}
+>
+  <slot />
+  <span
+    aria-hidden="true"
+    class="transition-transform duration-(--duration-snap) ease-soft group-hover:translate-x-1">&rarr;</span
+  >
+</a>

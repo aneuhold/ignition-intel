@@ -1,18 +1,83 @@
 ---
 import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import CtaBand from '$components-astro/CtaBand.astro';
+import PageHero from '$components-astro/PageHero.astro';
+import StatsBand from '$components-astro/StatsBand.astro';
+import Eyebrow from '$components-astro/ui/Eyebrow.astro';
+import { HeadingSize } from '$components-astro/ui/HeadingSize';
+import Prose from '$components-astro/ui/Prose.astro';
+import Section from '$components-astro/ui/Section.astro';
+import { SectionTone } from '$components-astro/ui/SectionTone';
+import VDivider from '$components-astro/ui/VDivider.astro';
+import { globalConstants } from '$util/globalConstants';
 import siteContentService from '$util/SiteContent.service';
 
 const entry = await siteContentService.about();
 const { Content } = await render(entry);
+const quickFacts = [
+  { label: 'Credentials', value: 'DFS, IAAI-CFI(V), CFEI, ECT' },
+  { label: 'Investigating', value: 'Principal Consultant, Envista Forensics' },
+  { label: 'Teaching', value: 'IAAI Certified Instructor, NAFI-CFII' },
+  { label: 'Fire service', value: '30 years, 26 with Portland Fire & Rescue' },
+  { label: 'Based in', value: 'Molalla, Oregon' }
+];
 ---
 
 <BaseLayout
-  title="About Nicole Brewer | Ignition Intel"
-  description="About Ignition Intel and fire investigation instructor Nicole Brewer. Placeholder description: update before launch."
+  title={`About ${globalConstants.ownerName} | Ignition Intel`}
+  description="Nicole Brewer investigates fires and teaches the people who investigate them: 30 years in the fire service, more than 3,500 fire and explosion investigations, and a doctorate in forensic science."
 >
-  <main>
-    <h1>{entry.data.heading}</h1>
-    <Content />
-  </main>
+  <PageHero
+    eyebrow={`About ${globalConstants.ownerName}`}
+    heading={entry.data.heading}
+    size={HeadingSize.Display}
+  >
+    <figure slot="aside" class="relative flex aspect-[4/5] flex-col justify-end overflow-hidden border-2 border-dashed border-foreground/25 bg-muted">
+      <div
+        aria-hidden="true"
+        class="absolute inset-x-0 top-0 h-1/2 bg-linear-to-b from-accent/40 via-primary/20 to-primary/0 clip-v"
+      >
+      </div>
+      <figcaption class="relative p-6 font-display text-xs font-bold tracking-[0.2em] text-foreground/70 uppercase">
+        Photo placeholder: {globalConstants.ownerName}
+      </figcaption>
+    </figure>
+  </PageHero>
+
+  <VDivider below={SectionTone.Muted} />
+  <Section tone={SectionTone.Muted} class="pt-10 lg:pt-14">
+    <div class="grid gap-16 lg:grid-cols-[2fr_3fr] lg:gap-24">
+      <aside class="lg:sticky lg:top-28 lg:self-start">
+        <Eyebrow class="mb-6">Quick facts</Eyebrow>
+        <dl class="border-t-2 border-foreground/15">
+          {
+            quickFacts.map(({ label, value }) => (
+              <div class="flex flex-col gap-1 border-b-2 border-foreground/15 py-5">
+                <dt class="font-display text-xs font-bold tracking-[0.2em] text-foreground/70 uppercase">
+                  {label}
+                </dt>
+                <dd class="font-display text-xl font-bold">{value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </aside>
+      <Prose class="[&>p:first-child]:text-2xl [&>p:first-child]:text-foreground lg:[&>p:first-child]:text-3xl">
+        <Content />
+      </Prose>
+    </div>
+  </Section>
+
+  <Section>
+    <StatsBand />
+  </Section>
+
+  <VDivider />
+  <CtaBand
+    heading="Learn It From Someone Still Working Scenes."
+    body="See what I teach, or send a note about training for you or your agency."
+    href="/courses"
+    label="See the courses"
+  />
 </BaseLayout>

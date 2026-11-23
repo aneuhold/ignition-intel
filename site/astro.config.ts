@@ -45,7 +45,7 @@ export default defineConfig({
       name: 'Public Sans',
       cssVariable: '--font-public-sans',
       provider: fontProviders.google(),
-      weights: [400, 600, 700],
+      weights: [400, 600, 700, 900],
       styles: ['normal'],
       fallbacks: ['ui-sans-serif', 'system-ui', 'sans-serif']
     },

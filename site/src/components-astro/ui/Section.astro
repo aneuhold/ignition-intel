@@ -1,0 +1,30 @@
+---
+import Container from './Container.astro';
+import { SectionTone } from './SectionTone';
+
+/**
+ * A full-width page section with the site's vertical rhythm and a centered container.
+ */
+interface Props {
+  tone?: SectionTone;
+  id?: string;
+  /** Classes for the outer section element. */
+  class?: string;
+  /** Classes for the inner container. */
+  containerClass?: string;
+}
+
+const { tone = SectionTone.Base, id, class: className, containerClass } = Astro.props;
+
+const toneClasses: Record<SectionTone, string> = {
+  [SectionTone.Base]: 'bg-background',
+  [SectionTone.Muted]: 'bg-muted'
+};
+---
+
+<section id={id} class:list={['relative py-20 lg:py-32', toneClasses[tone], className]}>
+  <slot name="backdrop" />
+  <Container class:list={['relative', containerClass]}>
+    <slot />
+  </Container>
+</section>

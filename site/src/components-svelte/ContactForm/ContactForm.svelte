@@ -2,14 +2,23 @@
   @component
   Contact form island. Posts name/email/message + a Turnstile token to the
   ignition-contact Worker. Includes a hidden honeypot the worker checks server-
-  side. All logic (Turnstile lifecycle, fetch, response interpretation) lives
+  side. When the page URL names a course (`?course=<slug>`), the message starts
+  pre-filled with a note about that course, which the visitor can edit. All logic (Turnstile lifecycle, fetch, response interpretation) lives
   in `ContactForm.service.ts`; this file owns state and markup.
 -->
 <script lang="ts">
-  import contactFormService from './ContactForm.service';
+  import { onMount } from 'svelte';
+  import contactFormService, { type ContactFormCourse } from './ContactForm.service';
   import { contactFormConstants } from './contactFormConstants';
 
   type Status = 'idle' | 'submitting' | 'success' | 'error';
+
+  interface Props {
+    /** Courses the `?course=<slug>` query parameter can pre-fill the form for. */
+    courses?: ContactFormCourse[];
+  }
+
+  const { courses = [] }: Props = $props();
 
   let name = $state('');
   let email = $state('');
@@ -20,6 +29,12 @@
   let errorMessage = $state('');
   let turnstileEl = $state<HTMLDivElement | null>(null);
   let widgetId: string | null = null;
+  let course = $state<ContactFormCourse | undefined>(undefined);
+
+  onMount(() => {
+    course = contactFormService.courseFromSearch(window.location.search, courses);
+    if (course) message = contactFormConstants.courseStarterMessage(course.title);
+  });
 
   const canSubmit = $derived(
     status !== 'submitting' &&
@@ -104,12 +119,20 @@
   {#if status === 'success'}
     <p
       data-testid="contact-form-success"
-      class="rounded-md border border-foreground/10 bg-foreground/5 p-4 text-foreground"
+      class="border-l-4 border-primary bg-foreground/5 p-6 text-lg text-foreground"
     >
       {contactFormConstants.successMessage}
     </p>
   {:else}
-    <form class="flex flex-col gap-5" onsubmit={handleSubmit} novalidate>
+    <form class="flex flex-col gap-6" onsubmit={handleSubmit} novalidate>
+      {#if course}
+        <p data-testid="contact-form-course" class="border-l-4 border-primary pl-4">
+          <span class="block font-display text-sm uppercase tracking-[0.18em] text-foreground/70">
+            {contactFormConstants.courseLabel}
+          </span>
+          <span class="font-display text-xl font-bold">{course.title}</span>
+        </p>
+      {/if}
       <label class="flex flex-col gap-2">
         <span class="font-display text-sm uppercase tracking-[0.18em] text-foreground/70">
           Name
@@ -122,7 +145,7 @@
           maxlength={contactFormConstants.maxNameLength}
           autocomplete="name"
           bind:value={name}
-          class="rounded-md border border-foreground/15 bg-background px-3 py-2 text-foreground transition-colors duration-snap ease-soft focus:border-primary focus:outline-none"
+          class="border-2 border-foreground/15 bg-muted px-4 py-3 text-foreground transition-colors duration-(--duration-snap) ease-soft focus:border-primary focus:outline-none"
         />
       </label>
 
@@ -138,7 +161,7 @@
           maxlength={contactFormConstants.maxEmailLength}
           autocomplete="email"
           bind:value={email}
-          class="rounded-md border border-foreground/15 bg-background px-3 py-2 text-foreground transition-colors duration-snap ease-soft focus:border-primary focus:outline-none"
+          class="border-2 border-foreground/15 bg-muted px-4 py-3 text-foreground transition-colors duration-(--duration-snap) ease-soft focus:border-primary focus:outline-none"
         />
       </label>
 
@@ -153,7 +176,7 @@
           rows={contactFormConstants.textareaRows}
           maxlength={contactFormConstants.maxMessageLength}
           bind:value={message}
-          class="rounded-md border border-foreground/15 bg-background px-3 py-2 text-foreground transition-colors duration-snap ease-soft focus:border-primary focus:outline-none"
+          class="border-2 border-foreground/15 bg-muted px-4 py-3 text-foreground transition-colors duration-(--duration-snap) ease-soft focus:border-primary focus:outline-none"
         ></textarea>
       </label>
 
@@ -181,7 +204,7 @@
         data-testid="contact-form-submit"
         type="submit"
         disabled={!canSubmit}
-        class="inline-flex items-center justify-center self-start rounded-md bg-primary px-5 py-2 font-medium text-primary-foreground transition-colors duration-snap ease-soft hover:bg-primary/90 disabled:opacity-50"
+        class="inline-flex items-center justify-center self-start bg-accent-strong px-7 py-4 font-display font-bold uppercase tracking-[0.16em] text-accent-foreground transition-colors duration-(--duration-snap) ease-soft hover:bg-accent-strong/85 disabled:opacity-50"
       >
         {status === 'submitting'
           ? contactFormConstants.submitBusyLabel
