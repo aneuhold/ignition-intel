@@ -46,20 +46,26 @@ class VPatternService {
   }
 
   /**
-   * Slides a `clip-v-tail` panel down over its section, V tail first, once the section
-   * scrolls into view.
+   * Sweeps a hidden `clip-v-tail` band down through its section, V tail first, once the
+   * section scrolls into view: from fully above the section to fully below it. The band is
+   * made visible for the sweep only.
    *
-   * @param panel Element using `clip-v-tail`, inside a section that clips overflow
+   * @param band Element using `clip-v-tail` and `invisible`, inside a section that clips
+   *   overflow
    * @param context Shared motion tokens
    * @param context.tokens Durations and easings from `motion.css`
    */
-  wipe(panel: HTMLElement, { tokens }: MotionContext): void {
-    gsap.from(panel, {
-      yPercent: -100,
-      duration: tokens.slow,
-      ease: tokens.burn,
-      scrollTrigger: { trigger: panel.parentElement ?? panel, start: 'top 80%', once: true }
-    });
+  sweep(band: HTMLElement, { tokens }: MotionContext): void {
+    gsap.fromTo(
+      band,
+      { yPercent: -100, visibility: 'visible' },
+      {
+        yPercent: 100,
+        duration: tokens.slow,
+        ease: tokens.burn,
+        scrollTrigger: { trigger: band.parentElement ?? band, start: 'top 80%', once: true }
+      }
+    );
   }
 
   /**

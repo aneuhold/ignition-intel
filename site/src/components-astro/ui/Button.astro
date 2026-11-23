@@ -13,7 +13,7 @@ interface Props {
 const { href, variant = ButtonVariant.Accent, class: className } = Astro.props;
 
 const variantClasses: Record<ButtonVariant, string> = {
-  [ButtonVariant.Accent]: 'bg-accent text-accent-foreground hover:bg-accent/85',
+  [ButtonVariant.Accent]: 'bg-accent-strong text-accent-foreground hover:bg-accent-strong/85',
   [ButtonVariant.Outline]:
     'border-2 border-foreground/30 text-foreground hover:border-primary hover:text-primary',
   [ButtonVariant.Inverse]: 'bg-primary-foreground text-foreground hover:bg-primary-foreground/85'

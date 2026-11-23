@@ -2,7 +2,7 @@
  * Visual treatments for `Button`.
  */
 export enum ButtonVariant {
-  /** Rust fill: the main action on a slate background. */
+  /** Deep rust fill: the main action on a slate background. */
   Accent = 'accent',
   /** Outlined: secondary actions on slate. */
   Outline = 'outline',

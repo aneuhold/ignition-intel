@@ -31,7 +31,12 @@
      read as text on slate. */
   --color-accent: #b5541f;
 
-  /* Text on accent. Large or bold type only; small text on rust is hard to read. */
+  /* Deeper rust for fills behind small labels (buttons, the header Contact link): the accent
+     with lightness lowered until stone text on it passes 4.5:1. */
+  --color-accent-strong: oklch(from var(--color-accent) calc(l - 0.05) c h);
+
+  /* Text on accent. Large or bold type only; small text on rust is hard to read. Put small
+     labels on accent-strong. */
   --color-accent-foreground: #ece6da;
 
   /* Typography: two roles. Tailwind generates font-display and font-body. The literal

@@ -204,7 +204,7 @@
         data-testid="contact-form-submit"
         type="submit"
         disabled={!canSubmit}
-        class="inline-flex items-center justify-center self-start bg-accent px-7 py-4 font-display font-bold uppercase tracking-[0.16em] text-accent-foreground transition-colors duration-(--duration-snap) ease-soft hover:bg-accent/85 disabled:opacity-50"
+        class="inline-flex items-center justify-center self-start bg-accent-strong px-7 py-4 font-display font-bold uppercase tracking-[0.16em] text-accent-foreground transition-colors duration-(--duration-snap) ease-soft hover:bg-accent-strong/85 disabled:opacity-50"
       >
         {status === 'submitting'
           ? contactFormConstants.submitBusyLabel

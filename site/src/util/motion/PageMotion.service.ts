@@ -37,8 +37,8 @@ class PageMotionService {
     [MotionEffect.VDrop]: (element) => {
       vPatternService.drop(element);
     },
-    [MotionEffect.VWipe]: (element, context) => {
-      vPatternService.wipe(element, context);
+    [MotionEffect.VSweep]: (element, context) => {
+      vPatternService.sweep(element, context);
     },
     [MotionEffect.HeatMask]: (element) => {
       vPatternService.heat(element);

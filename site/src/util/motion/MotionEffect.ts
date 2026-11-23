@@ -9,8 +9,8 @@ export enum MotionEffect {
   VBurn = 'v-burn',
   /** A V divider's apex drops down into the next section, scrubbed by scroll. */
   VDrop = 'v-drop',
-  /** A panel is revealed top to bottom behind a V-shaped edge when it scrolls in. */
-  VWipe = 'v-wipe',
+  /** A band with a V-shaped leading edge sweeps down through its section once. */
+  VSweep = 'v-sweep',
   /** A headline's heat fill burns up through it from the base, scrubbed by scroll. */
   HeatMask = 'heat-mask',
   /** The credentials band scrolls sideways while it is on screen. */

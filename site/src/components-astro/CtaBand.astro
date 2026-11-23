@@ -7,8 +7,10 @@ import Heading from './ui/Heading.astro';
 import { HeadingSize } from './ui/HeadingSize';
 
 /**
- * The closing call to action above the footer: a gold panel with a V-shaped leading edge
- * that slides down over the section, with a poster headline and one button.
+ * The closing call to action above the footer: a gold section with a poster headline and
+ * one button. When it scrolls in, a rust heat band with a V-shaped leading edge sweeps down
+ * through it once. The band is decoration that exists only for the motion, so it stays
+ * invisible until the sweep starts and the text always sits on gold.
  */
 interface Props {
   heading: string;
@@ -20,11 +22,11 @@ interface Props {
 const { heading, body, href, label } = Astro.props;
 ---
 
-<section class="relative overflow-hidden bg-background">
+<section class="relative overflow-hidden bg-primary">
   <div
     aria-hidden="true"
-    data-motion={MotionEffect.VWipe}
-    class="absolute inset-x-0 top-0 h-[140%] bg-linear-to-b from-primary to-primary/75 clip-v-tail"
+    data-motion={MotionEffect.VSweep}
+    class="invisible absolute inset-x-0 top-0 h-[140%] bg-linear-to-b from-accent/0 via-accent/30 to-accent/70 clip-v-tail"
   >
   </div>
   <Container class="relative flex flex-col gap-8 py-24 text-primary-foreground lg:py-36">
