@@ -76,6 +76,15 @@ collections:
               widget: string,
               hint: 'Heading shown above the About text.'
             }
+          - name: facts
+            label: Facts
+            widget: list
+            required: false
+            summary: '{{fields.label}}: {{fields.value}}'
+            hint: 'Short plain facts shown beside the About text. The first four also appear on the home page.'
+            fields:
+              - { name: label, label: Label, widget: string, hint: 'What the fact is about, e.g. Fire service.' }
+              - { name: value, label: Value, widget: string, hint: 'The fact itself, e.g. 30 years.' }
           - {
               name: body,
               label: Text,

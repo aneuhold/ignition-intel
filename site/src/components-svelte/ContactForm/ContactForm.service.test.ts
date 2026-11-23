@@ -10,7 +10,29 @@ const validPayload = {
   turnstileToken: 'tok'
 };
 
+const courses = [
+  { slug: 'fire-origin-and-cause-fundamentals', title: 'Fire Origin and Cause Fundamentals' },
+  { slug: 'report-writing-and-testimony', title: 'Report Writing and Testimony' }
+];
+
 describe('ContactFormService', () => {
+  describe('findCourse', () => {
+    it('returns the course whose slug matches the course query parameter', () => {
+      expect(contactFormService.findCourse('?course=report-writing-and-testimony', courses)).toBe(
+        courses[1]
+      );
+    });
+
+    it('returns undefined when the parameter is missing', () => {
+      expect(contactFormService.findCourse('', courses)).toBeUndefined();
+      expect(contactFormService.findCourse('?other=1', courses)).toBeUndefined();
+    });
+
+    it('returns undefined when no course has that slug', () => {
+      expect(contactFormService.findCourse('?course=unknown', courses)).toBeUndefined();
+    });
+  });
+
   describe('submit', () => {
     afterEach(() => {
       vi.restoreAllMocks();

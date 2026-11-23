@@ -1,0 +1,35 @@
+---
+/**
+ * An inline gold link in the display face whose underline draws in on hover.
+ * Optional trailing arrow for links that move the reader to another page.
+ */
+interface Props {
+  href: string;
+  arrow?: boolean;
+  size?: 'sm' | 'base';
+  class?: string;
+}
+
+const { href, arrow = false, size = 'sm', class: className } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={[
+    'group inline-flex items-baseline gap-2 font-display font-semibold tracking-[0.04em] text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary',
+    size === 'sm' ? 'text-sm' : 'text-base sm:text-lg',
+    className
+  ]}
+>
+  <span class="link-underline pb-0.5"><slot /></span>
+  {
+    arrow && (
+      <span
+        aria-hidden="true"
+        class="transition-transform duration-(--duration-glide) ease-soft group-hover:translate-x-1"
+      >
+        &rarr;
+      </span>
+    )
+  }
+</a>

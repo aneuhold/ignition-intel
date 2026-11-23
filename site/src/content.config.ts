@@ -18,7 +18,15 @@ const home = defineCollection({
 const about = defineCollection({
   loader: glob({ pattern: 'about.md', base: 'src/content' }),
   schema: z.object({
-    heading: z.string()
+    heading: z.string(),
+    facts: z
+      .array(
+        z.object({
+          label: z.string(),
+          value: z.string()
+        })
+      )
+      .default([])
   })
 });
 

@@ -1,0 +1,31 @@
+---
+/**
+ * Small uppercase label in the display face, widely tracked. Use for section
+ * labels, fact labels, and kickers above headings.
+ */
+interface Props {
+  as?: 'p' | 'span' | 'h2' | 'h3' | 'dt';
+  /**
+   * Gold for kickers that lead into a heading, plain for structural labels
+   * such as section titles, muted for quiet labels.
+   */
+  tone?: 'primary' | 'plain' | 'muted';
+  class?: string;
+}
+
+const { as: Tag = 'p', tone = 'primary', class: className } = Astro.props;
+---
+
+<Tag
+  class:list={[
+    'font-display text-xs font-bold tracking-[0.2em] uppercase',
+    {
+      'text-primary': tone === 'primary',
+      'text-foreground/80': tone === 'plain',
+      'text-foreground/70': tone === 'muted'
+    },
+    className
+  ]}
+>
+  <slot />
+</Tag>

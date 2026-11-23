@@ -1,20 +1,110 @@
 ---
 import { Image } from 'astro:assets';
+import logoGold from '../assets/logo-gold.svg';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactCta from '$components-astro/ContactCta.astro';
+import CourseIndex from '$components-astro/CourseIndex.astro';
+import FactList from '$components-astro/FactList.astro';
+import Button from '$components-astro/ui/Button.astro';
+import Container from '$components-astro/ui/Container.astro';
+import DocumentGrid from '$components-astro/ui/DocumentGrid.astro';
+import Eyebrow from '$components-astro/ui/Eyebrow.astro';
+import Lede from '$components-astro/ui/Lede.astro';
+import Section from '$components-astro/ui/Section.astro';
+import TextLink from '$components-astro/ui/TextLink.astro';
+import { globalConstants } from '$util/globalConstants';
 import siteContentService from '$util/SiteContent.service';
 
-const { title, tagline, heroImage, heroImageAlt = '' } = (await siteContentService.home()).data;
+const [home, about, courses] = await Promise.all([
+  siteContentService.home(),
+  siteContentService.about(),
+  siteContentService.courses()
+]);
+const { title, tagline } = home.data;
+const summaryFacts = about.data.facts.slice(0, 4);
+
+const principles = [
+  {
+    title: 'Follow the method.',
+    body: 'NFPA 921 lays out the scientific method for a reason. Every hypothesis gets tested, and the ones that fail get written down too.'
+  },
+  {
+    title: 'Write it down.',
+    body: 'Photos, diagrams, notes, scans. If it isn’t documented, you can’t defend it two years later on the stand.'
+  },
+  {
+    title: 'Undetermined is an answer.',
+    body: 'When the evidence doesn’t support a cause, saying so is the scientific conclusion. It isn’t a failure.'
+  }
+];
 ---
 
 <BaseLayout
   title={`${title} | Fire & Arson Investigation Training`}
-  description="Ignition Intel offers fire and arson investigation courses and training, taught by Nicole Brewer. Placeholder description: update before launch."
+  description="Fire and arson investigation courses taught by Nicole Brewer: origin and cause, the scientific method, cognitive bias, documentation, and testimony."
 >
-  <main>
-    {heroImage && (
-      <Image src={heroImage} alt={heroImageAlt} inferSize loading="eager" fetchpriority="high" />
-    )}
-    <h1>{title}</h1>
-    {tagline && <p>{tagline}</p>}
-  </main>
+  <section class="pt-14 pb-2 sm:pt-24 sm:pb-4">
+    <Container>
+      <DocumentGrid>
+        <div slot="margin" data-reveal class="flex items-center gap-4 lg:flex-col lg:items-start lg:pt-3">
+          <Image src={logoGold} alt="" class="hidden h-24 w-auto lg:block" loading="eager" />
+          <Eyebrow>Taught by {globalConstants.ownerName}</Eyebrow>
+        </div>
+        <h1
+                    class="max-w-[18ch] font-display motion-safe:animate-rise text-4xl leading-[1.06] font-semibold tracking-tight text-balance sm:text-6xl lg:text-7xl"
+        >
+          {tagline ?? title}
+        </h1>
+        <Lede data-reveal class="mt-8 sm:mt-10">
+          I investigate fires, and I’ve trained fire investigators for most of my career. These
+          courses teach what I rely on at every scene: work it by the scientific method, document
+          everything, and say only what the evidence supports.
+        </Lede>
+        <div data-reveal class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-5">
+          <Button href="/courses">See the courses</Button>
+          <TextLink href="/about" arrow>About Nicole</TextLink>
+        </div>
+        {summaryFacts.length > 0 && <FactList facts={summaryFacts} layout="row" class="mt-14 sm:mt-20" />}
+      </DocumentGrid>
+    </Container>
+  </section>
+
+  <Section number="1.0" title="Courses" id="courses">
+    <Lede data-reveal>Each course is built on NFPA 921 and on scenes I’ve worked.</Lede>
+    <CourseIndex courses={courses} class="mt-10" />
+    <div data-reveal class="mt-8">
+      <TextLink href="/courses" arrow>All courses</TextLink>
+    </div>
+  </Section>
+
+  <Section number="2.0" title="Approach">
+    <Lede data-reveal>Confidence is not accuracy. A good investigation is one you can show your work on.</Lede>
+    <ol class="mt-12 grid gap-10 sm:grid-cols-3 sm:gap-8">
+      {
+        principles.map(({ title: principleTitle, body }, index) => (
+          <li data-reveal class="flex flex-col gap-3 border-t border-foreground/15 pt-5">
+            <span class="font-display text-sm font-semibold text-primary tabular-nums">
+              2.{index + 1}
+            </span>
+            <h3 class="font-display text-lg leading-snug font-semibold">{principleTitle}</h3>
+            <p class="text-base leading-relaxed text-foreground/70">{body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
+  <Section number="3.0" title="Instructor">
+    <Lede data-reveal>
+      I’m a Principal Consultant at Envista Forensics, and I spent 26 years with Portland Fire &amp;
+      Rescue, 17 of them as a sworn fire/arson investigator. I’ve worked more than 3,500 fire and
+      explosion scenes, and my first impression still isn’t always right. That’s why I teach the
+      process.
+    </Lede>
+    <div data-reveal class="mt-8">
+      <TextLink href="/about" arrow>Background and credentials</TextLink>
+    </div>
+  </Section>
+
+  <ContactCta number="4.0" />
 </BaseLayout>

@@ -1,0 +1,37 @@
+---
+import Container from './Container.astro';
+import DocumentGrid from './DocumentGrid.astro';
+import Eyebrow from './Eyebrow.astro';
+
+/**
+ * The top of an inner page: a kicker in the margin column, then the page
+ * title and whatever follows it (a lede, actions) in the reading column. The
+ * `margin` slot replaces the kicker's default position for extra margin
+ * content such as a back link.
+ */
+interface Props {
+  kicker: string;
+  title: string;
+}
+
+const { kicker, title } = Astro.props;
+---
+
+<header class="pt-14 pb-6 sm:pt-24 sm:pb-10">
+  <Container>
+    <DocumentGrid>
+      <div slot="margin" data-reveal class="flex flex-col gap-3 lg:pt-3">
+        <Eyebrow>{kicker}</Eyebrow>
+        <slot name="margin" />
+      </div>
+      <h1
+                class="max-w-[22ch] font-display motion-safe:animate-rise text-4xl leading-[1.08] font-semibold tracking-tight text-balance sm:text-5xl lg:text-6xl"
+      >
+        {title}
+      </h1>
+      <div data-reveal class="mt-6 sm:mt-8">
+        <slot />
+      </div>
+    </DocumentGrid>
+  </Container>
+</header>

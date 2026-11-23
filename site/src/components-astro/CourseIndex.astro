@@ -1,0 +1,49 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import siteContentService from '$util/SiteContent.service';
+
+/**
+ * Courses as a numbered table of contents: number, title, one-line
+ * description, and an arrow. Each whole row is the link; the title's
+ * underline draws in and the arrow moves forward on hover.
+ */
+interface Props {
+  courses: CollectionEntry<'courses'>[];
+  /** Draw a hairline above the first row. Leave off when a rule already sits above the list. */
+  topRule?: boolean;
+  class?: string;
+}
+
+const { courses, topRule = true, class: className } = Astro.props;
+---
+
+<ol class:list={[{ 'border-t border-foreground/15': topRule }, className]}>
+  {
+    courses.map((course, index) => (
+      <li data-reveal class="border-b border-foreground/15">
+        <a
+          href={`/courses/${course.id}`}
+          class="group grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-4 py-6 transition-colors duration-(--duration-glide) ease-soft hover:bg-foreground/[0.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:grid-cols-[3.5rem_minmax(0,1fr)_2rem] sm:py-7"
+        >
+          <span class="pt-1 font-display text-sm font-semibold text-primary tabular-nums">
+            {siteContentService.courseNumber(index)}
+          </span>
+          <span class="flex flex-col gap-2">
+            <h3 class="font-display text-lg leading-snug font-semibold text-foreground sm:text-xl">
+              <span class="link-underline">{course.data.title}</span>
+            </h3>
+            <span class="max-w-[38rem] text-base leading-relaxed text-foreground/70">
+              {course.data.description}
+            </span>
+          </span>
+          <span
+            aria-hidden="true"
+            class="hidden pt-1 text-right font-display text-lg text-foreground/60 transition-[color,translate] duration-(--duration-glide) ease-soft group-hover:translate-x-1 group-hover:text-primary sm:block"
+          >
+            &rarr;
+          </span>
+        </a>
+      </li>
+    ))
+  }
+</ol>

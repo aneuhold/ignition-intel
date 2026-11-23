@@ -1,0 +1,51 @@
+---
+import Eyebrow from './ui/Eyebrow.astro';
+
+/**
+ * Plain facts as a definition list. `row` sets them side by side between
+ * hairlines with the value large above its label, like the summary table at
+ * the top of a report; `stack` lists them down a margin column, label first.
+ */
+interface Props {
+  facts: { label: string; value: string }[];
+  layout?: 'row' | 'stack';
+  class?: string;
+}
+
+const { facts, layout = 'stack', class: className } = Astro.props;
+---
+
+<dl
+  class:list={[
+    layout === 'row'
+      ? 'grid grid-cols-2 border-y border-foreground/15 lg:grid-cols-4'
+      : 'flex flex-col border-t border-foreground/15',
+    className
+  ]}
+>
+  {
+    facts.map(({ label, value }) => (
+      <div
+        data-reveal
+        class:list={[
+          'flex',
+          layout === 'row'
+            ? 'flex-col-reverse justify-end gap-2 border-foreground/15 py-6 pr-4 max-lg:nth-[n+3]:border-t lg:border-l lg:px-6 lg:first:border-l-0 lg:first:pl-0'
+            : 'flex-col gap-1.5 border-b border-foreground/15 py-3.5'
+        ]}
+      >
+        <Eyebrow as="dt" tone="muted" class="leading-relaxed">
+          {label}
+        </Eyebrow>
+        <dd
+          class:list={[
+            'font-display leading-snug font-semibold text-foreground',
+            layout === 'row' ? 'text-2xl tabular-nums sm:text-3xl' : 'text-base'
+          ]}
+        >
+          {value}
+        </dd>
+      </div>
+    ))
+  }
+</dl>

@@ -3,6 +3,15 @@ import { globalConstants } from '$util/globalConstants';
 import { contactFormConstants } from './contactFormConstants';
 
 /**
+ * A course the form can be about: its collection id (the slug in its URL)
+ * and its title.
+ */
+export interface ContactFormCourse {
+  slug: string;
+  title: string;
+}
+
+/**
  * Pure-logic singleton for the ContactForm island. Owns the Turnstile widget
  * lifecycle and the POST-to-worker interpretation so `ContactForm.svelte`
  * stays focused on state and markup.
@@ -105,6 +114,19 @@ class ContactFormService {
         message: contactFormConstants.networkErrorMessage
       };
     }
+  }
+
+  /**
+   * Finds the course named by the `course` query parameter in a URL search
+   * string (e.g. `?course=fire-origin-and-cause-fundamentals`). Returns
+   * `undefined` when the parameter is missing or matches no course.
+   *
+   * @param search A URL search string, with or without the leading `?`
+   * @param courses The courses the form can be about
+   */
+  findCourse(search: string, courses: ContactFormCourse[]): ContactFormCourse | undefined {
+    const slug = new URLSearchParams(search).get(contactFormConstants.courseQueryParam);
+    return slug ? courses.find((course) => course.slug === slug) : undefined;
   }
 
   /**

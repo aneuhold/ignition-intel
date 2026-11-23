@@ -1,0 +1,13 @@
+---
+/**
+ * A full-width hairline. Draws in from the left as it scrolls into view when
+ * motion is allowed (see `PageMotion.service.ts`).
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div data-rule aria-hidden="true" class:list={['h-px w-full bg-foreground/15', className]}></div>

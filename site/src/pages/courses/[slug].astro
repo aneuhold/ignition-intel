@@ -3,11 +3,23 @@ import type { GetStaticPaths } from 'astro';
 import { render } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Button from '$components-astro/ui/Button.astro';
+import Container from '$components-astro/ui/Container.astro';
+import DocumentGrid from '$components-astro/ui/DocumentGrid.astro';
+import Eyebrow from '$components-astro/ui/Eyebrow.astro';
+import Lede from '$components-astro/ui/Lede.astro';
+import PageHeader from '$components-astro/ui/PageHeader.astro';
+import Prose from '$components-astro/ui/Prose.astro';
+import Section from '$components-astro/ui/Section.astro';
+import TextLink from '$components-astro/ui/TextLink.astro';
 import siteContentService from '$util/SiteContent.service';
 import youTubeService from '$util/YouTube.service';
 
 interface Props {
   course: CollectionEntry<'courses'>;
+  number: string;
+  total: number;
+  next: CollectionEntry<'courses'>;
 }
 
 /**
@@ -15,27 +27,110 @@ interface Props {
  */
 export const getStaticPaths: GetStaticPaths = async () => {
   const courses = await siteContentService.courses();
-  return courses.map((course) => ({ params: { slug: course.id }, props: { course } }));
+  return courses.map((course, index) => ({
+    params: { slug: course.id },
+    props: {
+      course,
+      number: siteContentService.courseNumber(index),
+      total: courses.length,
+      next: courses[(index + 1) % courses.length]
+    }
+  }));
 };
 
-const { course } = Astro.props;
+const { course, number, total, next } = Astro.props;
 const { title, description, videoUrl } = course.data;
-const { Content } = await render(course);
+const { Content, headings } = await render(course);
+// Prose numbers each `##` section in order (1.0, 2.0), so the contents list
+// numbers them the same way.
+const sections = headings.filter(({ depth }) => depth === 2);
+const contactHref = `/contact?course=${encodeURIComponent(course.id)}`;
+const hasNext = next.id !== course.id;
 ---
 
 <BaseLayout title={`${title} | Ignition Intel Courses`} description={description}>
-  <main>
-    <h1>{title}</h1>
-    <p>{description}</p>
-    <iframe
-      src={youTubeService.convertToEmbedUrl(videoUrl)}
-      title={`${title} video`}
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      referrerpolicy="strict-origin-when-cross-origin"
-      allowfullscreen
-      loading="lazy"
-      class="aspect-video w-full"
-    ></iframe>
-    <Content />
-  </main>
+  <PageHeader kicker={`Course ${number}`} title={title}>
+    <TextLink slot="margin" href="/courses">
+      &larr; All courses
+    </TextLink>
+    <Lede>{description}</Lede>
+    <div class="mt-10">
+      <Button href={contactHref}>Get more info about this course</Button>
+    </div>
+  </PageHeader>
+
+  <section class="py-10 sm:py-14">
+    <Container>
+      <DocumentGrid marginClass="max-lg:hidden">
+        <div slot="margin" class="sticky top-10 flex flex-col gap-8">
+          <div class="flex flex-col gap-1.5 border-t border-foreground/15 pt-4">
+            <Eyebrow as="span" tone="muted">Course</Eyebrow>
+            <span class="font-display text-base font-semibold tabular-nums">
+              {number} <span class="text-foreground/70">of {String(total).padStart(2, '0')}</span>
+            </span>
+          </div>
+          {
+            sections.length > 0 && (
+              <nav aria-label="Contents" class="flex flex-col gap-3 border-t border-foreground/15 pt-4">
+                <Eyebrow as="span" tone="muted">Contents</Eyebrow>
+                <ol class="flex flex-col gap-2">
+                  {sections.map(({ slug, text }, index) => (
+                    <li class="flex gap-3 font-display text-sm">
+                      <span class="text-primary tabular-nums">{index + 1}.0</span>
+                      <a
+                        href={`#${slug}`}
+                        class="link-underline self-start text-foreground/75 transition-colors duration-(--duration-snap) ease-soft hover:text-foreground"
+                      >
+                        {text}
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            )
+          }
+          <TextLink href={contactHref} arrow>Get more info</TextLink>
+        </div>
+        <figure data-reveal class="mb-14 max-w-[48rem]">
+          <div class="border border-foreground/15 bg-muted p-2">
+            <iframe
+              src={youTubeService.convertToEmbedUrl(videoUrl)}
+              title={`${title} video`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+              loading="lazy"
+              class="block aspect-video w-full"></iframe>
+          </div>
+          <figcaption class="mt-3">
+            <Eyebrow as="span" tone="muted">Fig. 1 &middot; Course overview</Eyebrow>
+          </figcaption>
+        </figure>
+        <Prose>
+          <Content />
+        </Prose>
+      </DocumentGrid>
+    </Container>
+  </section>
+
+  <Section title="Next step">
+    <div class="flex flex-col items-start gap-8">
+      <Lede data-reveal>
+        Want dates, location, or to bring {title} to your team? Ask me about it.
+      </Lede>
+      <div data-reveal>
+        <Button href={contactHref}>Get more info about this course</Button>
+      </div>
+      {
+        hasNext && (
+          <p data-reveal class="mt-6 flex flex-col gap-2 border-t border-foreground/15 pt-6">
+            <Eyebrow as="span" tone="muted">Next course</Eyebrow>
+            <TextLink href={`/courses/${next.id}`} arrow size="base">
+              {next.data.title}
+            </TextLink>
+          </p>
+        )
+      }
+    </div>
+  </Section>
 </BaseLayout>

@@ -1,0 +1,39 @@
+---
+import Container from './Container.astro';
+import DocumentGrid from './DocumentGrid.astro';
+import Eyebrow from './Eyebrow.astro';
+import Rule from './Rule.astro';
+
+/**
+ * A numbered document section: a hairline, then the section number and title
+ * in the margin column and the content in the reading column. The number is
+ * optional so unnumbered closing sections share the same rhythm.
+ */
+interface Props {
+  title: string;
+  /** Section number as shown, e.g. `1.0`. */
+  number?: string;
+  id?: string;
+}
+
+const { title, number, id } = Astro.props;
+---
+
+<section id={id} class="scroll-mt-8 py-12 sm:py-16">
+  <Container>
+    <Rule />
+    <DocumentGrid class="mt-8 sm:mt-10">
+      <h2 slot="margin" data-reveal class="flex items-baseline gap-4 lg:flex-col lg:gap-2">
+        {
+          number && (
+            <span class="font-display text-sm font-semibold text-primary tabular-nums">
+              {number}
+            </span>
+          )
+        }
+        <Eyebrow as="span" tone="plain">{title}</Eyebrow>
+      </h2>
+      <slot />
+    </DocumentGrid>
+  </Container>
+</section>
