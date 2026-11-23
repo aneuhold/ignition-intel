@@ -1,0 +1,40 @@
+---
+/**
+ * Graphic scale bar from a plan drawing: alternating filled and open segments with
+ * distance marks. Decorative.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+const segments = [0, 1, 2, 3];
+---
+
+<svg viewBox="0 0 132 24" aria-hidden="true" class:list={['overflow-visible', className]}>
+  {
+    segments.map((index) => (
+      <rect
+        x={4 + index * 28}
+        y="4"
+        width="28"
+        height="5"
+        class:list={['stroke-primary', index % 2 === 0 ? 'fill-primary' : 'fill-none']}
+        stroke-width="1"
+      />
+    ))
+  }
+  {
+    [0, 5, 10, 15, 20].map((feet, index) => (
+      <text
+        x={4 + index * 28}
+        y="21"
+        text-anchor="middle"
+        class="fill-primary/80 font-display text-[7px] font-bold"
+      >
+        {feet}
+      </text>
+    ))
+  }
+  <text x="126" y="21" class="fill-primary/80 font-display text-[7px] font-bold">FT</text>
+</svg>

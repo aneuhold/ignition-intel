@@ -1,0 +1,57 @@
+---
+import youTubeService from '$util/YouTube.service';
+
+/**
+ * Click-to-play YouTube video. Shows the video's thumbnail as a link to the video; with JS,
+ * a click swaps in the embedded player, so YouTube's scripts only load when a visitor
+ * wants to watch. Without JS the link opens the video on YouTube.
+ */
+interface Props {
+  url: string;
+  title: string;
+}
+
+const { url, title } = Astro.props;
+---
+
+<a
+  href={url}
+  data-youtube-embed={youTubeService.convertToEmbedUrl(url)}
+  data-youtube-title={title}
+  class="group relative block aspect-video w-full overflow-hidden bg-muted focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+>
+  <img
+    src={youTubeService.thumbnailUrl(url)}
+    alt=""
+    width="480"
+    height="360"
+    loading="lazy"
+    decoding="async"
+    class="h-full w-full object-cover opacity-75 transition-opacity duration-(--duration-glide) ease-soft group-hover:opacity-100"
+  />
+  <span class="absolute inset-0 flex items-center justify-center">
+    <span
+      class="flex size-16 items-center justify-center bg-accent text-accent-foreground transition-transform duration-(--duration-snap) ease-soft group-hover:scale-105"
+    >
+      <svg viewBox="0 0 16 16" aria-hidden="true" class="ml-1 size-6 fill-current">
+        <path d="M3 1.5 L14 8 L3 14.5 Z"></path>
+      </svg>
+    </span>
+  </span>
+  <span class="sr-only">Play video: {title}</span>
+</a>
+
+<script>
+  import youTubeService from '$util/YouTube.service';
+
+  // Delegated on the document, which survives client-router page swaps.
+  document.addEventListener('click', (event) => {
+    const link =
+      event.target instanceof Element
+        ? event.target.closest<HTMLAnchorElement>('a[data-youtube-embed]')
+        : null;
+    if (!link) return;
+    event.preventDefault();
+    youTubeService.play(link);
+  });
+</script>

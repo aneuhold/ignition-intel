@@ -1,0 +1,259 @@
+---
+import RoomPlan from './RoomPlan.astro';
+import Container from '$components-astro/ui/Container.astro';
+import Eyebrow from '$components-astro/ui/Eyebrow.astro';
+import Heading from '$components-astro/ui/Heading.astro';
+
+/**
+ * The NFPA 921 scientific method as seven steps beside a scene diagram that gains one
+ * layer of annotation per step. On wide screens with motion allowed,
+ * `MethodWalkthrough.service.ts` pins the section and scrubs the steps with scroll.
+ * Otherwise it is a stepped list beside the fully annotated diagram.
+ */
+
+/** One step of the method and the copy shown for it. */
+interface MethodStep {
+  title: string;
+  body: string;
+}
+
+const steps: MethodStep[] = [
+  {
+    title: 'Recognize the need',
+    body: 'A fire happened and somebody needs to know why. That is the job.'
+  },
+  {
+    title: 'Define the problem',
+    body: 'Write down what you are answering: where it started and what caused it. Nothing else yet.'
+  },
+  {
+    title: 'Collect data',
+    body: 'Photos, measurements, statements, evidence. Collect it before you decide what it means.'
+  },
+  {
+    title: 'Analyze the data',
+    body: 'Read the patterns and the heat vectors. Let the scene tell you where the heat came from.'
+  },
+  {
+    title: 'Develop a hypothesis',
+    body: 'More than one. With only one idea, you are not testing. You are confirming.'
+  },
+  {
+    title: 'Test the hypothesis',
+    body: 'Try to prove each one wrong. Rule out whatever the data cannot support.'
+  },
+  {
+    title: 'Select the final hypothesis',
+    body: 'Keep the one that survived. If none did, the answer is undetermined, and that is a scientific answer.'
+  }
+];
+
+const note = 'fill-foreground font-display text-[11px] font-bold tracking-[0.16em]';
+const subnote = 'fill-foreground/60 font-body text-[11px] italic';
+const evidence = [
+  { x: 150, y: 330, n: 1 },
+  { x: 240, y: 300, n: 2 },
+  { x: 330, y: 250, n: 3 },
+  { x: 470, y: 230, n: 4 },
+  { x: 220, y: 390, n: 5 }
+];
+/** Heat vectors as [fromX, fromY, toX, toY], each pointing back toward the origin. */
+const vectors = [
+  [300, 200, 160, 320],
+  [250, 395, 150, 360],
+  [200, 120, 120, 300],
+  [330, 340, 160, 352]
+].map(([x1, y1, x2, y2]) => {
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  const head = (offset: number): string =>
+    `${x2 - 10 * Math.cos(angle + offset)} ${y2 - 10 * Math.sin(angle + offset)}`;
+  return { line: `M${x1} ${y1} L${x2} ${y2}`, head: `M${head(0.4)} L${x2} ${y2} L${head(-0.4)} Z` };
+});
+
+/** Photo positions as camera glyphs: position and the angle the lens faces, in degrees. */
+const cameras = [
+  { x: 250, y: 96, angle: 117 },
+  { x: 345, y: 392, angle: -168 }
+];
+const arcSites = [
+  [70, 300],
+  [70, 318],
+  [70, 336],
+  [76, 380],
+  [94, 380]
+];
+---
+
+<section
+  id="method"
+  data-walkthrough
+  aria-labelledby="method-heading"
+  class="relative border-t border-foreground/10 bg-muted bg-grid-fine"
+>
+  <div data-walkthrough-pin class="py-20 lg:flex lg:min-h-svh lg:items-center lg:py-8">
+    <Container class="grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-12">
+      <div class="lg:col-span-6">
+        <Eyebrow code="A-02">NFPA 921 scientific method</Eyebrow>
+        <Heading id="method-heading" class="mt-5" size="lg">
+          Trust the process. Here it is.
+        </Heading>
+        <p class="mt-3 text-lg text-foreground/75">
+          Every course I teach comes back to these seven steps.
+        </p>
+
+        <ol class="relative mt-8 space-y-4 border-l border-foreground/15 pl-6 lg:mt-6 lg:space-y-2.5">
+          <span
+            aria-hidden="true"
+            data-walkthrough-progress
+            class="absolute top-0 -left-px hidden h-full w-px origin-top bg-primary lg:block"
+          ></span>
+          {
+            steps.map(({ title, body }, index) => (
+              <li data-walkthrough-step class="relative">
+                <span
+                  aria-hidden="true"
+                  class="absolute top-1.5 -left-[1.85rem] size-2.5 rotate-45 border border-primary bg-muted"
+                />
+                <p class="flex items-baseline gap-3 font-display font-bold text-foreground">
+                  <span class="text-xs text-primary tabular-nums">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <span class="text-lg leading-snug lg:text-base">{title}</span>
+                </p>
+                <p class="mt-1 pl-8 text-base leading-snug text-foreground/75 lg:text-[0.95rem]">{body}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+
+      <figure class="lg:col-span-6">
+        <svg
+          viewBox="0 0 640 500"
+          role="img"
+          aria-label="Scene diagram annotated for each step: the scope, evidence markers and photo positions, heat vectors, three hypotheses, two ruled out, and the final area of origin."
+          class="h-auto w-full fill-none overflow-visible"
+          stroke-width="1.25"
+          stroke-linecap="square"
+        >
+          <RoomPlan tone="faint" />
+
+          <!-- 1. Recognize the need: the incident note. -->
+          <g data-walkthrough-layer>
+            <path class="stroke-primary/70" d="M410 448 H596 M410 448 V500"></path>
+            <text x="420" y="466" class={note}>INCIDENT 26-0412</text>
+            <text x="420" y="481" class={subnote}>residential, single story</text>
+            <text x="420" y="496" class={subnote}>controlled 02:14, no injuries</text>
+          </g>
+
+          <!-- 2. Define the problem: the scope boundary. -->
+          <g data-walkthrough-layer>
+            <rect
+              x="44"
+              y="44"
+              width="552"
+              height="392"
+              class="stroke-primary"
+              stroke-dasharray="10 6"></rect>
+            <text x="56" y="34" class="fill-primary font-display text-[11px] font-bold tracking-[0.16em]"
+              >SCOPE: ORIGIN AND CAUSE</text
+            >
+          </g>
+
+          <!-- 3. Collect data: evidence markers, photo positions, a measurement. -->
+          <g data-walkthrough-layer>
+            {
+              evidence.map(({ x, y, n }) => (
+                <g>
+                  <path class="stroke-primary" d={`M${x} ${y - 11} L${x + 10} ${y + 7} H${x - 10} Z`} />
+                  <text
+                    x={x}
+                    y={y + 4}
+                    text-anchor="middle"
+                    class="fill-primary font-display text-[8px] font-bold"
+                  >
+                    {n}
+                  </text>
+                </g>
+              ))
+            }
+            {
+              cameras.map(({ x, y, angle }) => (
+                <g transform={`translate(${x} ${y}) rotate(${angle})`}>
+                  <path class="stroke-foreground/80" d="M-10 -6 H2 V6 H-10 Z M2 -3 L7 -6 V6 L2 3" />
+                  <path class="stroke-foreground/50" d="M7 0 L44 -18 M7 0 L44 18" />
+                </g>
+              ))
+            }
+            <path class="stroke-primary/80" d="M70 394 H100 M70 388 V400 M100 388 V400"></path>
+            <text x="85" y="390" text-anchor="middle" class="fill-primary font-display text-[9px] font-bold"
+              >2'-6"</text
+            >
+          </g>
+
+          <!-- 4. Analyze the data: heat vectors converging, char depths, wall V-pattern. -->
+          <g data-walkthrough-layer>
+            {
+              vectors.map(({ line, head }) => (
+                <>
+                  <path class="stroke-accent" stroke-width="1.75" d={line} />
+                  <path data-draw-fade class="fill-accent stroke-none" d={head} />
+                </>
+              ))
+            }
+            <path class="stroke-accent" stroke-width="1.5" d="M65 318 L56 290 M65 318 L74 290"></path>
+            <text x="300" y="190" class="fill-foreground/70 font-display text-[9px] font-bold">3/8"</text>
+            <text x="200" y="110" class="fill-foreground/70 font-display text-[9px] font-bold">1/4"</text>
+            <text x="138" y="300" class="fill-foreground/70 font-display text-[9px] font-bold">5/8"</text>
+          </g>
+
+          <!-- 5. Develop hypotheses: three candidate areas. -->
+          <g data-walkthrough-layer>
+            <circle cx="104" cy="348" r="40" class="stroke-primary" stroke-dasharray="5 4"></circle>
+            <circle cx="358" cy="164" r="34" class="stroke-primary" stroke-dasharray="5 4"></circle>
+            <circle cx="459" cy="91" r="30" class="stroke-primary" stroke-dasharray="5 4"></circle>
+            <text x="150" y="400" class="fill-primary font-display text-[12px] font-bold">H1</text>
+            <text x="300" y="150" class="fill-primary font-display text-[12px] font-bold">H2</text>
+            <text x="404" y="96" class="fill-primary font-display text-[12px] font-bold">H3</text>
+          </g>
+
+          <!-- 6. Test the hypotheses: arc sites traced, H2 and H3 ruled out. -->
+          <g data-walkthrough-layer>
+            {
+              arcSites.map(([cx, cy]) => (
+                <circle data-draw-fade cx={cx} cy={cy} r="3.5" class="fill-primary stroke-none" />
+              ))
+            }
+            <path class="stroke-foreground" stroke-width="1.75" d="M334 140 L382 188 M382 140 L334 188"></path>
+            <path class="stroke-foreground" stroke-width="1.75" d="M437 69 L481 113 M481 69 L437 113"></path>
+            <text x="392" y="196" class={subnote}>ruled out:</text>
+            <text x="392" y="209" class={subnote}>no arcing on circuit</text>
+            <text x="440" y="138" class={subnote}>ruled out:</text>
+            <text x="440" y="151" class={subnote}>off, no patterns</text>
+          </g>
+
+          <!-- 7. Select the final hypothesis: the area of origin. -->
+          <g data-walkthrough-layer>
+            <ellipse data-draw-fade cx="104" cy="348" rx="44" ry="38" class="fill-accent/40 stroke-none"
+            ></ellipse>
+            <ellipse cx="104" cy="348" rx="44" ry="38" class="stroke-accent" stroke-width="2"></ellipse>
+            <path class="stroke-primary" d="M122 382 L152 466 H188"></path>
+            <text x="196" y="463" class={note}>AREA OF ORIGIN</text>
+            <text x="196" y="478" class={subnote}>or undetermined, if the data says so</text>
+          </g>
+
+        </svg>
+      </figure>
+    </Container>
+  </div>
+</section>
+
+<script>
+  import methodWalkthroughService from './MethodWalkthrough.service';
+  import motionService from '$util/Motion.service';
+
+  motionService.bindToPage(() => {
+    const section = document.querySelector<HTMLElement>('[data-walkthrough]');
+    return section ? methodWalkthroughService.attach(section) : null;
+  });
+</script>

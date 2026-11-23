@@ -1,0 +1,32 @@
+---
+import Container from './Container.astro';
+
+/**
+ * Vertical section rhythm. `surface` picks the backdrop: `grid` lays the measurement grid
+ * over the page color, `muted` is the recessed slate with the fine grid, `plain` is the
+ * page color alone. Each section starts with a hairline rule, like a sheet border.
+ */
+interface Props {
+  id?: string;
+  surface?: 'grid' | 'muted' | 'plain';
+  class?: string;
+  /** Classes for the inner container. */
+  containerClass?: string;
+}
+
+const { id, surface = 'plain', class: className, containerClass } = Astro.props;
+---
+
+<section
+  id={id}
+  class:list={[
+    'relative border-t border-foreground/10 py-20 lg:py-28',
+    surface === 'grid' && 'bg-grid',
+    surface === 'muted' && 'bg-muted bg-grid-fine',
+    className
+  ]}
+>
+  <Container class={containerClass}>
+    <slot />
+  </Container>
+</section>

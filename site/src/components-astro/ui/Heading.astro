@@ -1,0 +1,25 @@
+---
+/**
+ * Display heading in Public Sans bold. `size` sets the scale independently of the
+ * element so document outline and visual weight can differ.
+ */
+interface Props {
+  id?: string;
+  as?: 'h1' | 'h2' | 'h3';
+  size?: 'xl' | 'lg' | 'md' | 'sm';
+  class?: string;
+}
+
+const { id, as: Tag = 'h2', size = 'lg', class: className } = Astro.props;
+
+const sizes = {
+  xl: 'text-4xl sm:text-5xl lg:text-6xl leading-[1.05] tracking-tight',
+  lg: 'text-3xl sm:text-4xl leading-tight tracking-tight',
+  md: 'text-2xl leading-snug',
+  sm: 'text-lg leading-snug'
+};
+---
+
+<Tag id={id} class:list={['font-display font-bold text-balance text-foreground', sizes[size], className]}>
+  <slot />
+</Tag>

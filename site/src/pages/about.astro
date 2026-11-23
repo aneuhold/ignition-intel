@@ -1,6 +1,11 @@
 ---
 import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactCta from '$components-astro/ContactCta.astro';
+import PageHeader from '$components-astro/PageHeader.astro';
+import PlaceholderFrame from '$components-astro/ui/PlaceholderFrame.astro';
+import Prose from '$components-astro/ui/Prose.astro';
+import Section from '$components-astro/ui/Section.astro';
 import siteContentService from '$util/SiteContent.service';
 
 const entry = await siteContentService.about();
@@ -9,10 +14,28 @@ const { Content } = await render(entry);
 
 <BaseLayout
   title="About Nicole Brewer | Ignition Intel"
-  description="About Ignition Intel and fire investigation instructor Nicole Brewer. Placeholder description: update before launch."
+  description="Nicole Brewer, DFS, IAAI-CFI(V), CFEI: 30 years in the fire service, 26 with Portland Fire & Rescue, and more than 3,500 fire and explosion investigations."
+  sheet={{ code: 'B-01', name: 'About' }}
 >
-  <main>
-    <h1>{entry.data.heading}</h1>
-    <Content />
-  </main>
+  <PageHeader code="B-01" eyebrow="About the instructor" title={entry.data.heading} />
+
+  <Section>
+    <div class="grid gap-14 lg:grid-cols-12 lg:gap-12">
+      <div class="lg:col-span-4">
+        <div class="lg:sticky lg:top-8">
+          <PlaceholderFrame label="Photo: Nicole Brewer" class="aspect-[4/5] w-full" />
+          <p
+            class="mt-4 font-display text-[0.7rem] font-bold tracking-[0.2em] text-foreground/70 uppercase"
+          >
+            <span class="text-primary">Fig. 1</span>&ensp;Placeholder until a photo is uploaded
+          </p>
+        </div>
+      </div>
+      <Prose class="lg:col-span-8">
+        <Content />
+      </Prose>
+    </div>
+  </Section>
+
+  <ContactCta />
 </BaseLayout>

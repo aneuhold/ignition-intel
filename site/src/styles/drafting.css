@@ -1,0 +1,82 @@
+/* Drafting-sheet surfaces: the measurement grid behind sections and the hatching used
+   for marked areas. Colors derive from the foreground and primary tokens so a token swap
+   retunes them. Tailwind generates `bg-grid`, `bg-grid-fine`, and `bg-hatch`. */
+
+/* Major lines every 6rem with minor lines every 1.5rem, like engineering paper. */
+@utility bg-grid {
+  background-image:
+    linear-gradient(
+      to right,
+      oklch(from var(--color-foreground) l c h / 0.06) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      oklch(from var(--color-foreground) l c h / 0.06) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to right,
+      oklch(from var(--color-foreground) l c h / 0.025) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      oklch(from var(--color-foreground) l c h / 0.025) 1px,
+      transparent 1px
+    );
+  background-size:
+    6rem 6rem,
+    6rem 6rem,
+    1.5rem 1.5rem,
+    1.5rem 1.5rem;
+  background-position: -1px -1px;
+}
+
+/* Minor lines only, for recessed panels where the full grid would be busy. */
+@utility bg-grid-fine {
+  background-image:
+    linear-gradient(
+      to right,
+      oklch(from var(--color-foreground) l c h / 0.035) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      oklch(from var(--color-foreground) l c h / 0.035) 1px,
+      transparent 1px
+    );
+  background-size: 1.5rem 1.5rem;
+  background-position: -1px -1px;
+}
+
+/* 45 degree section hatching in gold, for placeholder frames and marked regions. */
+@utility bg-hatch {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    oklch(from var(--color-primary) l c h / 0.14) 0 1px,
+    transparent 1px 10px
+  );
+}
+
+/* Ruler ticks along the bottom edge: a short tick every 0.75rem and a long one every 3rem. */
+@utility bg-ruler {
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      oklch(from var(--color-primary) l c h / 0.55) 0 1px,
+      transparent 1px 3rem
+    ),
+    repeating-linear-gradient(
+      to right,
+      oklch(from var(--color-primary) l c h / 0.3) 0 1px,
+      transparent 1px 0.75rem
+    );
+  background-size:
+    100% 0.6rem,
+    100% 0.3rem;
+  background-position:
+    left bottom,
+    left bottom;
+  background-repeat: no-repeat;
+}

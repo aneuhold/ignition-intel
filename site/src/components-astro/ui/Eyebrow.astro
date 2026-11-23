@@ -1,0 +1,29 @@
+---
+/**
+ * Small uppercase label above a heading. With `code`, it reads like a drawing reference:
+ * the code in gold, a short rule, then the label.
+ */
+interface Props {
+  code?: string;
+  class?: string;
+}
+
+const { code, class: className } = Astro.props;
+---
+
+<p
+  class:list={[
+    'flex items-center gap-3 font-display text-xs font-bold tracking-[0.22em] text-primary uppercase',
+    className
+  ]}
+>
+  {
+    code && (
+      <>
+        <span class="shrink-0 whitespace-nowrap tabular-nums">{code}</span>
+        <span aria-hidden="true" class="h-px w-8 shrink-0 bg-primary/60" />
+      </>
+    )
+  }
+  <span class:list={[code && 'text-foreground/70']}><slot /></span>
+</p>

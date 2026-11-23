@@ -49,6 +49,23 @@ class ContactFormService {
   }
 
   /**
+   * Reads the course a visitor arrived about from a URL query string and returns its
+   * title with a starter message, or `null` when the query names no known course.
+   *
+   * @param search Query string, e.g. `window.location.search`
+   * @param courseTitles Course titles keyed by course slug
+   */
+  coursePrefill(
+    search: string,
+    courseTitles: Record<string, string>
+  ): { courseTitle: string; message: string } | null {
+    const slug = new URLSearchParams(search).get(contactFormConstants.courseParam);
+    const courseTitle = slug && Object.hasOwn(courseTitles, slug) ? courseTitles[slug] : undefined;
+    if (!courseTitle) return null;
+    return { courseTitle, message: contactFormConstants.courseMessage(courseTitle) };
+  }
+
+  /**
    * Removes the rendered Turnstile widget.
    *
    * @param widgetId Id returned from `mountTurnstile`

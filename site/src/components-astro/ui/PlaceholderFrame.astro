@@ -1,0 +1,25 @@
+---
+/**
+ * Hatched frame marking where a photo will go, labeled so nobody mistakes it for a
+ * finished image.
+ */
+interface Props {
+  label: string;
+  class?: string;
+}
+
+const { label, class: className } = Astro.props;
+---
+
+<figure
+  class:list={[
+    'relative flex items-center justify-center border border-dashed border-primary/50 bg-hatch',
+    className
+  ]}
+>
+  <figcaption
+    class="bg-background px-3 py-1.5 font-display text-[0.7rem] font-bold tracking-[0.2em] text-primary uppercase"
+  >
+    {label}
+  </figcaption>
+</figure>

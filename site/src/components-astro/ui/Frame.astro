@@ -1,0 +1,36 @@
+---
+/**
+ * Hairline box drawn as four separate edges with corner ticks, so the drawing service
+ * can trace it in on entry (see `SceneDrawing.service.ts`). Without JS, or with reduced
+ * motion, it is a plain hairline frame.
+ */
+interface Props {
+  as?: 'div' | 'article' | 'aside' | 'li';
+  tone?: 'primary' | 'foreground';
+  class?: string;
+}
+
+const { as: Tag = 'div', tone = 'foreground', class: className } = Astro.props;
+const edge = tone === 'primary' ? 'bg-primary/60' : 'bg-foreground/20';
+const tick = tone === 'primary' ? 'border-primary' : 'border-primary/70';
+---
+
+<Tag data-frame class:list={['relative', className]}>
+  <span aria-hidden="true" data-edge="top" class:list={['absolute inset-x-0 top-0 h-px', edge]}
+  ></span>
+  <span aria-hidden="true" data-edge="right" class:list={['absolute inset-y-0 right-0 w-px', edge]}
+  ></span>
+  <span
+    aria-hidden="true"
+    data-edge="bottom"
+    class:list={['absolute inset-x-0 bottom-0 h-px', edge]}></span>
+  <span aria-hidden="true" data-edge="left" class:list={['absolute inset-y-0 left-0 w-px', edge]}
+  ></span>
+  <span
+    aria-hidden="true"
+    class:list={['absolute -top-1.5 -left-1.5 size-3 border-t border-l', tick]}></span>
+  <span
+    aria-hidden="true"
+    class:list={['absolute -right-1.5 -bottom-1.5 size-3 border-r border-b', tick]}></span>
+  <slot />
+</Tag>

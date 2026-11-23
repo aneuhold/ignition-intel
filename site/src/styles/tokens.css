@@ -31,7 +31,13 @@
      read as text on slate. */
   --color-accent: #b5541f;
 
-  /* Text on accent. Large or bold type only; small text on rust is hard to read. */
+  /* Darker rust for fills that carry small text (buttons). Stone on --color-accent is
+     3.97:1, under WCAG AA's 4.5:1 for text below 18.66px bold; lowering lightness by 0.05
+     brings it to 4.9:1 with the same hue. */
+  --color-accent-strong: oklch(from var(--color-accent) calc(l - 0.05) c h);
+
+  /* Text on accent. Large or bold type only; small text on rust is hard to read. Use
+     --color-accent-strong as the fill when the text is small. */
   --color-accent-foreground: #ece6da;
 
   /* Typography: two roles. Tailwind generates font-display and font-body. The literal

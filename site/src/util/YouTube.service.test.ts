@@ -41,4 +41,31 @@ describe('YouTubeService', () => {
       expect(() => youTubeService.convertToEmbedUrl('https://vimeo.com/123')).toThrow();
     });
   });
+
+  describe('thumbnailUrl', () => {
+    it('builds the hqdefault thumbnail URL', () => {
+      expect(youTubeService.thumbnailUrl('https://youtu.be/dQw4w9WgXcQ')).toBe(
+        'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg'
+      );
+    });
+  });
+
+  describe('play', () => {
+    it('replaces the link with an autoplaying embed', () => {
+      const link = document.createElement('a');
+      link.dataset.youtubeEmbed = 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ';
+      link.dataset.youtubeTitle = 'Course video';
+      link.className = 'aspect-video w-full';
+      document.body.append(link);
+
+      youTubeService.play(link);
+
+      const iframe = document.querySelector('iframe');
+      expect(link.isConnected).toBe(false);
+      expect(iframe?.src).toBe('https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1');
+      expect(iframe?.title).toBe('Course video');
+      expect(iframe?.className).toBe('aspect-video w-full');
+      iframe?.remove();
+    });
+  });
 });

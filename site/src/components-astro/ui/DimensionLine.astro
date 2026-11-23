@@ -1,0 +1,32 @@
+---
+/**
+ * Horizontal dimension line: end ticks, a hairline, and an optional measurement label
+ * centered in a break in the line. The line extends from its center on entry.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div
+  class:list={[
+    'flex items-center gap-x-3 font-display text-[0.7rem] font-bold tracking-[0.2em] text-primary uppercase tabular-nums',
+    className
+  ]}
+>
+  <span aria-hidden="true" class="h-3 w-px shrink-0 bg-primary/70"></span>
+  <span aria-hidden="true" data-leader="right" class="h-px min-w-4 flex-1 bg-primary/50"></span>
+  {
+    Astro.slots.has('default') && (
+      <>
+        <span class="min-w-0 text-center">
+          <slot />
+        </span>
+        <span aria-hidden="true" data-leader="left" class="h-px min-w-4 flex-1 bg-primary/50" />
+      </>
+    )
+  }
+  <span aria-hidden="true" class="h-3 w-px shrink-0 bg-primary/70"></span>
+</div>
