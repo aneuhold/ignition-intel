@@ -35,7 +35,6 @@ Whatever the change, treat Sveltia and Astro as a single transaction. The two si
 - Sveltia `required: false` ↔ Zod `.optional()`
 - Sveltia singleton (`files:` entry) ↔ Astro `glob({ pattern: '<name>.<ext>', base: 'src/content' })`
 - Sveltia folder collection ↔ Astro `glob({ pattern: '*.<ext>', base: 'src/content/<name>' })`
-- Sveltia collection-level `reorder: true` ↔ Zod `order: z.number().optional()`, with `order` left out of the Sveltia `fields` list. Sveltia writes drag-and-drop positions to `order` starting at 1; entries never reordered have none and sort last ([docs](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries)).
 
 Always use `import { z } from 'astro/zod'` in `content.config.ts`. `astro:content`'s `z` is deprecated.
 
@@ -131,9 +130,7 @@ If the collection is rendered on a page, the component lives under `site/src/com
   index.ts              # barrel — re-exports <Name>.astro as default so callers can `import X from '$components-astro/<Name>'`
 ```
 
-A single `.astro` file in `components-astro/` is fine for components that just dump fields into the DOM with no logic worth unit-testing. Logic for a collection that pages read directly (no component) lives in `site/src/util/<Name>.service.ts`, e.g. `Courses.service.ts` for sorting courses and parsing YouTube links.
-
-A folder collection whose entries each get their own page uses a dynamic route that reads the collection in `getStaticPaths`, keyed by `entry.id` (the file name). See `site/src/pages/courses/[slug].astro`. Give that collection's Sveltia `slug:` no date suffix, since it becomes the URL.
+A single `.astro` file in `components-astro/` is fine for components that just dump fields into the DOM with no logic worth unit-testing.
 
 When updating a field, also update the component that reads it (the Astro check usually catches missed renames; missed widget-type changes can sneak through).
 

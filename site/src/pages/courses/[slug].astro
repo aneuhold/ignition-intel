@@ -1,0 +1,41 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import siteContentService from '$util/SiteContent.service';
+import youTubeService from '$util/YouTube.service';
+
+interface Props {
+  course: CollectionEntry<'courses'>;
+}
+
+/**
+ * See docs: https://docs.astro.build/en/reference/routing-reference/#getstaticpaths
+ */
+export const getStaticPaths: GetStaticPaths = async () => {
+  const courses = await siteContentService.courses();
+  return courses.map((course) => ({ params: { slug: course.id }, props: { course } }));
+};
+
+const { course } = Astro.props;
+const { title, description, videoUrl } = course.data;
+const { Content } = await render(course);
+---
+
+<BaseLayout title={`${title} | Ignition Intel Courses`} description={description}>
+  <main>
+    <h1>{title}</h1>
+    <p>{description}</p>
+    <iframe
+      src={youTubeService.convertToEmbedUrl(videoUrl)}
+      title={`${title} video`}
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen
+      loading="lazy"
+      class="aspect-video w-full"
+    ></iframe>
+    <Content />
+  </main>
+</BaseLayout>

@@ -3,7 +3,7 @@
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { defineCollection } from 'astro:content';
-import coursesService from './util/Courses.service';
+import youTubeService from './util/YouTube.service';
 
 const home = defineCollection({
   loader: glob({ pattern: 'home.json', base: 'src/content' }),
@@ -64,13 +64,11 @@ const courses = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    videoUrl: z.url().refine((url) => coursesService.youTubeVideoId(url) !== undefined, {
+    videoUrl: z.url().refine((url) => youTubeService.extractVideoId(url) !== undefined, {
       message: 'Must be a YouTube video link'
     }),
-    /**
-     * Written by Sveltia's drag-and-drop reorder; absent on entries never reordered.
-     */
-    order: z.number().optional()
+    order: z.number().optional(),
+    createdAt: z.coerce.date()
   })
 });
 

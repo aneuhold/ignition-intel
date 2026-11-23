@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import siteContentService from '$util/SiteContent.service';
+
+const courses = await siteContentService.courses();
+---
+
+<BaseLayout
+  title="Fire Investigation Training | Ignition Intel"
+  description="Fire and arson investigation courses and training offered by Ignition Intel. Placeholder description: update before launch."
+>
+  <main>
+    <h1>Courses.</h1>
+    <ul>
+      {courses.map((course) => (
+        <li>
+          <a href={`/courses/${course.id}`}>{course.data.title}</a>
+          <p>{course.data.description}</p>
+        </li>
+      ))}
+    </ul>
+  </main>
+</BaseLayout>

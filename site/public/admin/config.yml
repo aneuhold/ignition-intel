@@ -165,7 +165,6 @@ collections:
     folder: site/src/content/courses
     create: true
     delete: true
-    # Drag-and-drop ordering writes each entry's position to `order` (starting at 1).
     # https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries
     reorder: true
     slug: '{{fields.title | slugify}}'
@@ -189,6 +188,7 @@ collections:
           widget: string,
           hint: 'Paste the link to the YouTube video, e.g. https://www.youtube.com/watch?v=... or https://youtu.be/...'
         }
+      - { name: createdAt, label: Created, widget: hidden, default: '{{datetime}}' }
       - {
           name: body,
           label: Details,
