@@ -5,7 +5,8 @@ import type { CollectionEntry } from 'astro:content';
  * Course panels. Wide screens show one row where the open panel previews its
  * description and the rest show a vertical title; `CourseGrid.service.ts`
  * hands the preview to whichever panel is hovered or focused. Narrow screens
- * stack every panel open.
+ * stack every panel open. Each link's accessible name is whichever title is
+ * showing (the spine or the preview); the other is `display: none`.
  */
 interface Props {
   courses: CollectionEntry<'courses'>[];
@@ -32,15 +33,13 @@ const { courses } = Astro.props;
           />
           <a
             href={`/courses/${course.id}`}
-            aria-label={`${title}: course details`}
             class="relative flex h-full flex-col justify-between gap-10 p-6 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset sm:p-8 lg:p-6 lg:group-data-active/card:p-8"
           >
-            <span class="font-display text-xs font-bold tracking-[0.24em] text-primary">
+            <span aria-hidden="true" class="font-display text-xs font-bold tracking-[0.24em] text-primary">
               {number}
             </span>
             <span
               data-course-spine
-              aria-hidden="true"
               class="hidden font-display text-lg leading-snug font-bold text-foreground/85 [writing-mode:vertical-rl] rotate-180 lg:block lg:group-data-active/card:hidden"
             >
               {title}
