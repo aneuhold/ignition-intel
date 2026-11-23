@@ -1,0 +1,33 @@
+---
+/**
+ * Small gold label above a heading. An optional `index` prints before it like
+ * a field-notebook entry number (e.g. `02`). Set `as="h2"` when the label is
+ * the only heading a section has.
+ */
+interface Props {
+  index?: string;
+  as?: 'p' | 'h2';
+  id?: string;
+  class?: string;
+}
+
+const { index, as: Tag = 'p', id, class: className } = Astro.props;
+---
+
+<Tag
+  id={id}
+  class:list={[
+    'flex items-center gap-3 font-display text-xs font-bold uppercase tracking-[0.22em] text-primary',
+    className
+  ]}
+>
+  {
+    index && (
+      <>
+        <span class="tabular-nums">{index}</span>
+        <span class="h-px w-8 bg-primary/50" aria-hidden="true" />
+      </>
+    )
+  }
+  <slot />
+</Tag>

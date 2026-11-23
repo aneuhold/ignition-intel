@@ -3,6 +3,8 @@ import { Font } from 'astro:assets';
 import { ClientRouter } from 'astro:transitions';
 import Seo from '@jdevalk/astro-seo-graph/Seo.astro';
 import '../styles/global.css';
+import SiteFooter from '$components-astro/SiteFooter.astro';
+import SiteHeader from '$components-astro/SiteHeader.astro';
 import { globalConstants } from '$util/globalConstants';
 import seoGraphService from '$util/SeoGraph.service';
 
@@ -67,7 +69,32 @@ const graph = await seoGraphService.buildGraph({
     <ClientRouter />
     <slot name="head" />
   </head>
-  <body class="bg-background font-body text-foreground">
-    <slot />
+  <body class="flex min-h-screen flex-col bg-background font-body text-foreground">
+    <a
+      href="#main"
+      class="sr-only z-50 bg-primary px-4 py-2 font-display text-sm font-bold text-primary-foreground focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+    >
+      Skip to content
+    </a>
+    <SiteHeader />
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    <SiteFooter />
+    <script>
+      import sceneMotionService from '$util/SceneMotion.service';
+
+      // The ClientRouter swaps pages without a reload, so motion is attached on
+      // every page load and fully reverted before the next swap.
+      let detach: (() => void) | undefined;
+      document.addEventListener('astro:page-load', () => {
+        detach?.();
+        detach = sceneMotionService.attach(document.body);
+      });
+      document.addEventListener('astro:before-swap', () => {
+        detach?.();
+        detach = undefined;
+      });
+    </script>
   </body>
 </html>

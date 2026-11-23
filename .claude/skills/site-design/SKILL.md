@@ -21,7 +21,7 @@ The rules below are fixed. Everything else (layout, sections, extra pages, navig
 
 ## Voice
 
-All site copy reads as Nicole speaking: a retired fire/arson investigator teaching other practitioners, not a company selling a product. She talks to working investigators as peers and as one of them ("we", "our profession"), and to newcomers as a teacher, without talking down to them.
+All site copy reads as Nicole speaking: a working fire/arson investigator who teaches other practitioners, not a company selling a product. She talks to working investigators as peers and as one of them ("we", "our profession"), and to newcomers as a teacher, without talking down to them.
 
 - **Plain and direct.** Short declarative sentences and imperative headings: "This isn't new.", "Stay in Your Lane!", "Throw Out the Anchor", "Trust the Process, Not the Feeling". State a point, then back it up.
 - **Evidence over authority.** Claims rest on research, standards (NFPA 921, 1033, 1321), and her own case work, not on adjectives. List credentials and experience as plain facts ("Fire/Arson Investigator 18 years", "Three fire investigation text books"), never as superlatives.

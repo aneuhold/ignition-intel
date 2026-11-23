@@ -1,0 +1,37 @@
+---
+import Button from './ui/Button.astro';
+import Heading from './ui/Heading.astro';
+import PaperCard from './ui/PaperCard.astro';
+import Section from './ui/Section.astro';
+
+/**
+ * Closing call to action on a field-notebook page, linking to the contact
+ * form. Sits above the footer.
+ */
+interface Props {
+  href?: string;
+  heading?: string;
+  body?: string;
+  action?: string;
+}
+
+const {
+  href = '/contact',
+  heading = 'Ask me about a course.',
+  body = 'Dates, locations, bringing a class to your agency, or whether a course fits where you are right now. I read every message myself.',
+  action = 'Contact Nicole'
+} = Astro.props;
+---
+
+<Section labelledby="contact-cta-heading">
+  <PaperCard ruled class="mx-auto max-w-3xl rotate-[0.4deg] py-12 pr-6 sm:py-14 sm:pr-12">
+    <p class="font-display text-[0.65rem] font-bold uppercase leading-7 tracking-[0.22em] text-accent-ink">
+      Next step
+    </p>
+    <Heading id="contact-cta-heading" class="mt-0 leading-[3.5rem] sm:leading-[3.5rem]">
+      {heading}
+    </Heading>
+    <p class="max-w-xl text-lg leading-7">{body}</p>
+    <Button href={href} variant="ink" class="mt-7">{action}</Button>
+  </PaperCard>
+</Section>

@@ -31,6 +31,10 @@
      read as text on slate. */
   --color-accent: #b5541f;
 
+  /* Rust darkened for small text on paper surfaces (bg-foreground), where --color-accent
+     falls short of 4.5:1. Lower the offset further if a lighter paper is introduced. */
+  --color-accent-ink: oklch(from var(--color-accent) calc(l - 0.08) c h);
+
   /* Text on accent. Large or bold type only; small text on rust is hard to read. */
   --color-accent-foreground: #ece6da;
 

@@ -1,0 +1,79 @@
+---
+import { Image } from 'astro:assets';
+import logoMark from '../../assets/logo-gold.svg';
+import Ruler from './Ruler.astro';
+
+/**
+ * A scene photograph printed on stone with an L-shaped photo scale along its
+ * left and bottom edges and a small-caps caption. With no slotted content it
+ * renders a labelled placeholder frame; slot an image or embed to fill it.
+ */
+interface Props {
+  /** Figure label printed before the caption, e.g. `Fig. 1`. */
+  figure: string;
+  caption: string;
+  /** What the eventual photo shows, printed inside the empty placeholder. */
+  placeholder?: string;
+  aspect?: 'landscape' | 'portrait' | 'video';
+  /** Number on an evidence marker tent set into the placeholder. */
+  marker?: number;
+  class?: string;
+}
+
+const {
+  figure,
+  caption,
+  placeholder,
+  aspect = 'landscape',
+  marker,
+  class: className
+} = Astro.props;
+const aspectClasses = {
+  landscape: 'aspect-[4/3]',
+  portrait: 'aspect-[4/5]',
+  video: 'aspect-video'
+};
+const hasContent = Astro.slots.has('default');
+---
+
+<figure class:list={['flex flex-col gap-3', className]}>
+  <div
+    class="grid grid-cols-[1.25rem_1fr] grid-rows-[1fr_1.25rem] bg-foreground p-2 shadow-[0_14px_24px_-10px_rgb(0_0_0/0.55)] sm:p-3"
+  >
+    <Ruler orientation="vertical" class="border-r border-primary-foreground/30" />
+    <div class:list={['relative overflow-hidden bg-muted', aspectClasses[aspect]]}>
+      {
+        hasContent ? (
+          <slot />
+        ) : (
+          <div class="bg-hatch flex h-full w-full flex-col items-center justify-center gap-3 p-6 text-center">
+            <Image src={logoMark} alt="" class="h-14 w-auto opacity-25" />
+            <p class="font-display text-xs font-bold uppercase tracking-[0.22em] text-foreground/70">
+              Photo placeholder
+            </p>
+            {placeholder && (
+              <p class="max-w-xs text-sm italic text-foreground/70">{placeholder}</p>
+            )}
+            {marker !== undefined && (
+              <span
+                aria-hidden="true"
+                class="shape-marker absolute bottom-5 right-6 flex h-9 w-10 items-end justify-center bg-primary pb-1 font-display text-sm font-bold text-primary-foreground"
+              >
+                {marker}
+              </span>
+            )}
+          </div>
+        )
+      }
+    </div>
+    <span class="bg-foreground" aria-hidden="true"></span>
+    <Ruler class="border-t border-primary-foreground/30" />
+  </div>
+  <figcaption
+    class="font-display text-sm tracking-[0.08em] text-foreground/70 [font-variant-caps:all-small-caps]"
+  >
+    <span class="font-bold text-primary">{figure}</span>
+    <span aria-hidden="true" class="mx-1.5 text-foreground/30">/</span>
+    {caption}
+  </figcaption>
+</figure>

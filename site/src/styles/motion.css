@@ -1,17 +1,29 @@
-/* Motion — 3 durations, 1 easing, named animations.
-   Tailwind generates duration-snap, duration-glide, duration-slow, ease-soft,
-   animate-fade-up, animate-fade-in.
+/* Motion — durations, easings, named animations.
+   Tailwind generates ease-soft, animate-fade-up, animate-fade-in, and the other
+   --ease-* / --animate-* utilities. It has no --duration-* namespace, so use duration
+   tokens through the variable form: duration-(--duration-snap),
+   duration-(--duration-glide), duration-(--duration-slow).
+   `@theme static` emits every variable even when no utility uses it, because
+   SceneMotion.service.ts reads these same tokens at runtime to drive GSAP.
+   --duration-count, --duration-stamp, --ease-settle, and --ease-thunk exist for
+   GSAP: the stat count-up, the stamp landing, and cards settling after a reveal.
    The two-duration rule still applies for interactive bits (snap for hovers,
    glide for transitions); --duration-slow exists only for the hero fade-in
    so the photo doesn't visibly shift on first paint.
    Expand when needed:
      - Additional easings (--ease-bounce) for a different feel.
      - Additional named animations (--animate-slide-up) per pattern. */
-@theme {
+@theme static {
   --duration-snap: 150ms;
   --duration-glide: 400ms;
   --duration-slow: 700ms;
+  --duration-stamp: 260ms;
+  --duration-count: 1400ms;
   --ease-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* Small overshoot, for paper settling into place. */
+  --ease-settle: cubic-bezier(0.22, 1.25, 0.45, 1);
+  /* Hard overshoot, for a stamp hitting paper. */
+  --ease-thunk: cubic-bezier(0.3, 1.6, 0.55, 1);
   --animate-fade-up: fade-up var(--duration-glide) var(--ease-soft) both;
   --animate-fade-in: fade-in var(--duration-slow) var(--ease-soft) both;
   --animate-slide-in-left: slide-in-left var(--duration-glide) var(--ease-soft) both;

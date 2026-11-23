@@ -1,0 +1,98 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Heading from './ui/Heading.astro';
+import caseNumberService from '$util/CaseNumber.service';
+
+/**
+ * A course as a paper evidence tag hanging from a string: case number, title,
+ * and short description, linking to the course page. Tags rest at a slight
+ * tilt that alternates by position and straighten on hover. Carries
+ * `data-motion="tag"` for the scroll reveal in `SceneMotion.service.ts`.
+ */
+interface Props {
+  course: CollectionEntry<'courses'>;
+  /** The course's 0-based position in display order; drives the case number and tilt. */
+  index: number;
+  headingLevel?: 2 | 3;
+}
+
+const { course, index, headingLevel = 3 } = Astro.props;
+const { title, description } = course.data;
+const caseNumber = caseNumberService.forCourse(course.id, index);
+const tilts = [
+  'rotate-[-1.4deg]',
+  'rotate-[1deg]',
+  'rotate-[-0.6deg]',
+  'rotate-[1.5deg]',
+  'rotate-[-1deg]',
+  'rotate-[0.5deg]'
+];
+const fieldLabelClasses =
+  'font-display text-[0.62rem] font-bold uppercase tracking-[0.2em] text-primary-foreground/75';
+---
+
+<!-- GSAP owns the link's transform during the reveal, so the resting tilt and
+     hover lift live on the inner wrapper. -->
+<a
+  href={`/courses/${course.id}`}
+  data-motion="tag"
+  class="group flex flex-col focus-visible:outline-none"
+>
+<div
+  class:list={[
+    'relative flex flex-1 flex-col pt-12 transition-[rotate,translate] duration-(--duration-glide) ease-soft group-hover:-translate-y-1.5 group-hover:rotate-0 group-focus-visible:rotate-0 group-focus-visible:outline-2 group-focus-visible:outline-offset-4 group-focus-visible:outline-primary',
+    tilts[index % tilts.length]
+  ]}
+>
+  <svg
+    aria-hidden="true"
+    viewBox="0 0 96 76"
+    fill="none"
+    class="pointer-events-none absolute left-1/2 top-0 z-10 h-19 w-24 -translate-x-px text-foreground/60"
+  >
+    <path
+      d="M1 76C3 50 24 26 62 0M1 76C9 54 38 34 88 8"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="round"></path>
+  </svg>
+  <!-- The clip-path would cut off a shadow on the tag itself, so a plain box below the
+       chamfered corners casts it instead of a drop-shadow filter. -->
+  <span
+    aria-hidden="true"
+    class="absolute inset-x-0 bottom-0 top-[4.5rem] shadow-[0_14px_18px_-8px_rgb(0_0_0/0.55)]"
+  ></span>
+  <div
+    class="shape-tag relative flex flex-1 flex-col bg-foreground px-6 pb-6 pt-14 text-primary-foreground"
+  >
+    <span
+      aria-hidden="true"
+      class="absolute left-1/2 top-7 size-7 -translate-1/2 rounded-full border-[3px] border-primary/70"
+    ></span>
+    <span
+      aria-hidden="true"
+      class="absolute left-1/2 top-7 size-4 -translate-1/2 rounded-full bg-primary-foreground shadow-[inset_0_1px_2px_rgb(0_0_0/0.7)]"
+    ></span>
+    <div
+      class="flex items-baseline justify-between gap-3 border-b border-dashed border-primary-foreground/30 pb-3 font-display text-[0.65rem] font-bold uppercase tracking-[0.2em]"
+    >
+      <span class="text-accent-ink">Evidence</span>
+      <span class="tabular-nums text-primary-foreground/75">No. {caseNumber}</span>
+    </div>
+    <p class:list={[fieldLabelClasses, 'mt-4']}>Item</p>
+    <Heading level={headingLevel} size="md" class="mt-1">{title}</Heading>
+    <p class:list={[fieldLabelClasses, 'mt-4']}>Notes</p>
+    <p class="bg-ruled mt-1 text-[0.95rem] leading-7 text-primary-foreground/85">{description}</p>
+    <div
+      class="mt-auto flex items-center justify-between pt-6 font-display text-xs font-bold uppercase tracking-[0.18em]"
+    >
+      <span class="text-primary-foreground/75">Course file</span>
+      <span
+        class="text-accent-ink underline decoration-transparent decoration-2 underline-offset-4 transition-colors duration-(--duration-snap) ease-soft group-hover:decoration-accent-ink group-focus-visible:decoration-accent-ink"
+      >
+        Open file &rarr;
+      </span>
+    </div>
+  </div>
+</div>
+</a>

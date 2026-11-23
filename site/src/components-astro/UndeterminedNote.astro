@@ -1,0 +1,78 @@
+---
+import Stamp from './Stamp.astro';
+import Button from './ui/Button.astro';
+import Eyebrow from './ui/Eyebrow.astro';
+import Heading from './ui/Heading.astro';
+import PaperCard from './ui/PaperCard.astro';
+import Section from './ui/Section.astro';
+
+/**
+ * Nicole's core message, "undetermined is a scientific answer", set beside an
+ * origin and cause worksheet that gets stamped UNDETERMINED as it scrolls in.
+ */
+interface Props {
+  /** Entry number printed on the eyebrow. */
+  index?: string;
+}
+
+const { index } = Astro.props;
+const worksheet = [
+  { label: 'Area of origin', value: 'Living room, northeast corner, floor level' },
+  { label: 'First fuel ignited', value: 'Upholstered chair' },
+  {
+    label: 'Competing ignition sources',
+    value: 'Space heater; lamp cord; smoking materials'
+  },
+  { label: 'Hypotheses eliminated', value: 'None, with the data available' }
+];
+const labelClasses =
+  'font-display text-[0.62rem] font-bold uppercase leading-7 tracking-[0.2em] text-primary-foreground/75';
+---
+
+<Section tone="muted" labelledby="undetermined-heading">
+  <div class="grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
+    <PaperCard
+      ruled
+      motion="stamp-surface"
+      class="order-2 rotate-[-1deg] py-7 pr-6 sm:pr-10 lg:order-1"
+    >
+      <div
+        class="flex flex-wrap items-baseline justify-between gap-x-4 font-display text-[0.65rem] font-bold uppercase leading-7 tracking-[0.2em]"
+      >
+        <span class="text-accent-ink">Origin and cause worksheet</span>
+        <span class="tabular-nums text-primary-foreground/75">Example</span>
+      </div>
+      <dl class="mt-7">
+        {
+          worksheet.map(({ label, value }) => (
+            <div>
+              <dt class={labelClasses}>{label}</dt>
+              <dd class="leading-7 italic">{value}</dd>
+            </div>
+          ))
+        }
+        <div>
+          <dt class={labelClasses}>Classification of cause</dt>
+          <dd class="pt-3 pb-1 pl-2">
+            <Stamp label="Undetermined" />
+          </dd>
+        </div>
+      </dl>
+    </PaperCard>
+    <div class="order-1 flex flex-col gap-5 lg:order-2">
+      <Eyebrow index={index}>Classification of cause</Eyebrow>
+      <Heading id="undetermined-heading">Undetermined is an answer.</Heading>
+      <p class="text-lg leading-relaxed text-foreground/85">
+        When the evidence can't separate one ignition source from another, the honest
+        classification is undetermined. That isn't giving up. It's the scientific method doing its
+        job, and NFPA 921 says so.
+      </p>
+      <p class="text-lg leading-relaxed text-foreground/85">
+        I've written undetermined on my own reports and defended it on the stand. Confidence is not
+        accuracy. Every course I teach comes back to that: say what the evidence supports, show how
+        you got there, and stop.
+      </p>
+      <Button href="/courses" variant="outline" class="mt-3 self-start">See the courses</Button>
+    </div>
+  </div>
+</Section>

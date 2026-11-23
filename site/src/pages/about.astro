@@ -1,6 +1,13 @@
 ---
 import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactCta from '$components-astro/ContactCta.astro';
+import FieldStats from '$components-astro/FieldStats.astro';
+import Eyebrow from '$components-astro/ui/Eyebrow.astro';
+import Heading from '$components-astro/ui/Heading.astro';
+import Prose from '$components-astro/ui/Prose.astro';
+import ScenePhoto from '$components-astro/ui/ScenePhoto.astro';
+import Section from '$components-astro/ui/Section.astro';
 import siteContentService from '$util/SiteContent.service';
 
 const entry = await siteContentService.about();
@@ -11,8 +18,34 @@ const { Content } = await render(entry);
   title="About Nicole Brewer | Ignition Intel"
   description="About Ignition Intel and fire investigation instructor Nicole Brewer. Placeholder description: update before launch."
 >
-  <main>
-    <h1>{entry.data.heading}</h1>
-    <Content />
-  </main>
+  <Section>
+    <div class="grid gap-14 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
+      <div class="flex flex-col gap-8 lg:sticky lg:top-28 lg:self-start">
+        <ScenePhoto
+          figure="Fig. 1"
+          caption="Nicole Brewer, DFS, IAAI-CFI(V), CFEI, ECT"
+          placeholder="Portrait of Nicole on a fire scene"
+          aspect="portrait"
+          marker={1}
+          class="mx-auto w-full max-w-sm lg:rotate-[-1deg]"
+        />
+      </div>
+      <div class="flex flex-col gap-6">
+        <div data-motion="intro">
+          <Eyebrow>About</Eyebrow>
+        </div>
+        <Heading level={1} size="display">{entry.data.heading}</Heading>
+          <Prose class="sm:text-xl [&>p:first-child]:text-xl sm:[&>p:first-child]:text-2xl [&>p:first-child]:italic">
+            <Content />
+          </Prose>
+      </div>
+    </div>
+  </Section>
+
+  <Section spacing="tight" tone="muted" labelledby="field-record-heading">
+    <Eyebrow as="h2" id="field-record-heading" class="mb-6">Field record</Eyebrow>
+    <FieldStats />
+  </Section>
+
+  <ContactCta />
 </BaseLayout>
