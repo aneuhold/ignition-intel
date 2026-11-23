@@ -1,0 +1,19 @@
+---
+/**
+ * Small, bold, widely tracked label that sits above a headline.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<p
+  class:list={[
+    'font-display text-xs font-bold tracking-[0.24em] text-primary uppercase sm:text-sm',
+    className
+  ]}
+>
+  <slot />
+</p>

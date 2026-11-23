@@ -1,0 +1,73 @@
+---
+import { Image } from 'astro:assets';
+import logoFullText from '../assets/logo-full-text-gold.svg';
+import { globalConstants } from '$util/globalConstants';
+import siteContentService from '$util/SiteContent.service';
+import Container from './ui/Container.astro';
+
+/**
+ * Site footer: logo, a one-line description, page links, social links from the CMS, and
+ * the copyright line.
+ */
+const { links: socialLinks } = (await siteContentService.socialMediaLinks()).data;
+const pages = [
+  { href: '/courses', label: 'Courses' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' }
+];
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t-4 border-accent bg-muted">
+  <Container class="grid gap-12 py-16 lg:grid-cols-[2fr_1fr_1fr] lg:py-20">
+    <div class="flex flex-col gap-5">
+      <Image src={logoFullText} alt={globalConstants.siteName} class="h-8 w-auto self-start" />
+      <p class="max-w-md text-foreground/70">
+        Fire and arson investigation training by {globalConstants.ownerName}. Built on NFPA 921,
+        taught from real scenes.
+      </p>
+    </div>
+    <nav aria-label="Footer">
+      <p class="mb-4 font-display text-xs font-bold tracking-[0.24em] text-primary uppercase">
+        Pages
+      </p>
+      <ul class="flex flex-col gap-2 font-display font-bold">
+        {
+          pages.map(({ href, label }) => (
+            <li>
+              <a href={href} class="transition-colors duration-(--duration-snap) ease-soft hover:text-primary">
+                {label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    {
+      socialLinks.length > 0 && (
+        <div>
+          <p class="mb-4 font-display text-xs font-bold tracking-[0.24em] text-primary uppercase">
+            Elsewhere
+          </p>
+          <ul class="flex flex-col gap-2 font-display font-bold">
+            {socialLinks.map(({ label, url }) => (
+              <li>
+                <a href={url} class="transition-colors duration-(--duration-snap) ease-soft hover:text-primary">
+                  {label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+  </Container>
+  <div class="border-t border-foreground/10">
+    <Container
+      class="flex flex-col gap-2 py-6 font-display text-xs tracking-[0.16em] text-foreground/50 uppercase sm:flex-row sm:justify-between"
+    >
+      <p>&copy; {year} {globalConstants.siteName}</p>
+      <p>Molalla, Oregon</p>
+    </Container>
+  </div>
+</footer>

@@ -11,6 +11,24 @@ const validPayload = {
 };
 
 describe('ContactFormService', () => {
+  describe('courseFromSearch', () => {
+    const courses = [
+      { slug: 'origin-and-cause', title: 'Origin and Cause' },
+      { slug: 'testimony', title: 'Testimony' }
+    ];
+
+    it('returns the course named by the course parameter', () => {
+      expect(contactFormService.courseFromSearch('?course=testimony', courses)).toEqual(courses[1]);
+    });
+
+    it.each(['', '?course=', '?course=unknown', '?other=testimony'])(
+      'returns undefined for %j',
+      (search) => {
+        expect(contactFormService.courseFromSearch(search, courses)).toBeUndefined();
+      }
+    );
+  });
+
   describe('submit', () => {
     afterEach(() => {
       vi.restoreAllMocks();

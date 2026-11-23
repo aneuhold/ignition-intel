@@ -1,0 +1,37 @@
+---
+import { MotionEffect } from '$util/motion/MotionEffect';
+import { SectionTone } from './SectionTone';
+
+/**
+ * A downward V between two sections: a heat-gradient wedge that starts in the color of the
+ * section above and points into the section below, its apex dropping (a scaleY from the top
+ * edge) as it scrolls in.
+ */
+interface Props {
+  above?: SectionTone;
+  below?: SectionTone;
+  class?: string;
+}
+
+const { above = SectionTone.Base, below = SectionTone.Base, class: className } = Astro.props;
+
+const backdropClasses: Record<SectionTone, string> = {
+  [SectionTone.Base]: 'bg-background',
+  [SectionTone.Muted]: 'bg-muted'
+};
+const wedgeClasses: Record<SectionTone, string> = {
+  [SectionTone.Base]: 'from-background',
+  [SectionTone.Muted]: 'from-muted'
+};
+---
+
+<div aria-hidden="true" class:list={['relative h-24 lg:h-44', backdropClasses[below], className]}>
+  <div
+    data-motion={MotionEffect.VDrop}
+    class:list={[
+      'absolute inset-0 origin-top bg-linear-to-b via-accent/80 to-primary clip-v',
+      wedgeClasses[above]
+    ]}
+  >
+  </div>
+</div>

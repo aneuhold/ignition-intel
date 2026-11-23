@@ -1,23 +1,67 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import CtaBand from '$components-astro/CtaBand.astro';
+import PageHero from '$components-astro/PageHero.astro';
+import Section from '$components-astro/ui/Section.astro';
+import { SectionTone } from '$components-astro/ui/SectionTone';
+import VDivider from '$components-astro/ui/VDivider.astro';
+import VPattern from '$components-astro/ui/VPattern.astro';
 import siteContentService from '$util/SiteContent.service';
 
 const courses = await siteContentService.courses();
 ---
 
 <BaseLayout
-  title="Fire Investigation Training | Ignition Intel"
-  description="Fire and arson investigation courses and training offered by Ignition Intel. Placeholder description: update before launch."
+  title="Fire Investigation Courses | Ignition Intel"
+  description="Fire and arson investigation courses taught by Nicole Brewer: origin and cause, NFPA 921, cognitive bias, scene documentation, testimony, and vehicle fires."
 >
-  <main>
-    <h1>Courses.</h1>
-    <ul>
-      {courses.map((course) => (
-        <li>
-          <a href={`/courses/${course.id}`}>{course.data.title}</a>
-          <p>{course.data.description}</p>
-        </li>
-      ))}
-    </ul>
-  </main>
+  <PageHero
+    eyebrow="Courses"
+    heading={`${courses.length} Courses. One Method.`}
+    lede="Every course is built on NFPA 921 and taught from real scenes, including the ones I'd work differently now. Most run one to three days and can come to your agency. If you don't see what you need, ask me."
+  >
+    <VPattern slot="aside" class="hidden h-[26rem] lg:flex" />
+  </PageHero>
+
+  <VDivider below={SectionTone.Muted} />
+  <Section tone={SectionTone.Muted} class="pt-10 lg:pt-14">
+    <ol class="border-t-2 border-foreground/15">
+      {
+        courses.map((course, index) => (
+          <li>
+            <a
+              href={`/courses/${course.id}`}
+              class="group relative grid gap-4 overflow-hidden border-b-2 border-foreground/15 py-10 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary lg:grid-cols-[8rem_3fr_2fr_3rem] lg:items-center lg:gap-10 lg:py-12"
+            >
+              <span
+                aria-hidden="true"
+                class="absolute inset-0 origin-bottom scale-y-0 bg-linear-to-t from-accent/25 to-accent/0 transition-transform duration-(--duration-glide) ease-soft group-hover:scale-y-100"
+              />
+              <span class="relative font-display text-display font-black text-foreground/15 transition-colors duration-(--duration-glide) ease-soft group-hover:text-primary">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <h2 class="relative font-display text-title font-bold text-balance">
+                {course.data.title}
+              </h2>
+              <p class="relative text-foreground/75">{course.data.description}</p>
+              <span
+                aria-hidden="true"
+                class="relative hidden font-display text-3xl text-primary transition-transform duration-(--duration-snap) ease-soft group-hover:translate-x-2 lg:block"
+              >
+                &rarr;
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
+  <VDivider above={SectionTone.Muted} />
+  <CtaBand
+    heading="Training for Your Agency?"
+    body="I bring any of these courses to departments, chapters, and conferences, and I can build a day around what your investigators see most."
+    href="/contact"
+    label="Send a note"
+  />
 </BaseLayout>

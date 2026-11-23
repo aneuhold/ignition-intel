@@ -1,0 +1,22 @@
+/* V-pattern geometry. The site's motif is the V-shaped burn mark that points down toward
+   the area of origin; these utilities draw it with static clip-paths. Motion never changes a
+   clip-path: GSAP moves or scales the clipped element with transforms, which the compositor
+   handles without repainting.
+   Expand when needed: add a utility here rather than an inline clip-path. */
+
+/* A solid V: full width at the top, apex at bottom center. */
+@utility clip-v {
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+/* A panel whose bottom 2/7 is a V tail. Pair with a height of 140% of the area it covers, so
+   the rectangular part covers it exactly and the tail hangs below. */
+@utility clip-v-tail {
+  clip-path: polygon(0 0, 100% 0, 100% 71.43%, 50% 100%, 0 71.43%);
+}
+
+/* A panel whose top 3/8 is a peak, like a plume rising from the center. Pair with a height
+   of 160% of the area it covers, offset 60% above it. */
+@utility clip-v-peak {
+  clip-path: polygon(50% 0, 100% 37.5%, 100% 100%, 0 100%, 0 37.5%);
+}

@@ -1,0 +1,37 @@
+---
+import { MotionEffect } from '$util/motion/MotionEffect';
+import Heading from './ui/Heading.astro';
+import { HeadingSize } from './ui/HeadingSize';
+
+/**
+ * A display headline that heat climbs through as it scrolls in: a dim copy of the text sits
+ * under a gold-to-rust copy. The gold copy lives inside a `clip-v-peak` front that rises from
+ * below the headline while the copy counter-moves to stay in place, so the gold appears
+ * behind a plume-shaped edge, center first.
+ */
+interface Props {
+  text: string;
+  level?: 1 | 2 | 3;
+  class?: string;
+}
+
+const { text, level = 2, class: className } = Astro.props;
+---
+
+<div data-motion={MotionEffect.HeatMask} class:list={['relative', className]}>
+  <Heading level={level} size={HeadingSize.Display} reveal={false} class="relative">
+    <span class="block text-foreground/15">{text}</span>
+    <span
+      data-heat-front
+      aria-hidden="true"
+      class="absolute inset-x-0 -top-[60%] h-[160%] clip-v-peak"
+    >
+      <span
+        data-heat-fill
+        class="absolute inset-x-0 top-[37.5%] h-[62.5%] bg-linear-to-t from-primary via-accent to-foreground bg-clip-text text-transparent"
+      >
+        {text}
+      </span>
+    </span>
+  </Heading>
+</div>
