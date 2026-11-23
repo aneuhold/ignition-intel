@@ -3,8 +3,6 @@ import { Font } from 'astro:assets';
 import { ClientRouter } from 'astro:transitions';
 import Seo from '@jdevalk/astro-seo-graph/Seo.astro';
 import '../styles/global.css';
-import Footer from '$components-astro/Footer.astro';
-import Nav from '$components-astro/Nav.astro';
 import { globalConstants } from '$util/globalConstants';
 import seoGraphService from '$util/SeoGraph.service';
 
@@ -64,15 +62,12 @@ const graph = await seoGraphService.buildGraph({
       ]}
       extraMeta={[{ name: 'theme-color', content: globalConstants.webManifestThemeColor }]}
     />
-    <Font cssVariable="--font-zilla-slab" preload />
-    <Font cssVariable="--font-inter" preload />
+    <Font cssVariable="--font-public-sans" preload />
+    <Font cssVariable="--font-lora" preload />
     <ClientRouter />
     <slot name="head" />
   </head>
   <body class="bg-background font-body text-foreground">
-    <Nav />
-    <div class="h-px bg-foreground/10"></div>
     <slot />
-    <Footer />
   </body>
 </html>

@@ -1,8 +1,8 @@
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
-import { readDesignTokensCss } from './design-tokens';
 import { PUBLIC_DIR } from './generate-logos-utils';
+import designTokensService from './services/DesignTokens.service';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 
@@ -39,7 +39,7 @@ const generateOgImage = async (): Promise<void> => {
     await page.goto(pathToFileURL(config.htmlSource).toString(), {
       waitUntil: 'networkidle'
     });
-    await page.addStyleTag({ content: readDesignTokensCss() });
+    await page.addStyleTag({ content: designTokensService.readCss() });
     await page.evaluate(() => document.fonts.ready);
     await page.screenshot({
       path: config.outputPath,

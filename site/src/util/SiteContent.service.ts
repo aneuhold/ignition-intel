@@ -1,12 +1,12 @@
 import type { CollectionEntry } from 'astro:content';
-import { getEntry } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 
 /**
- * Typed accessors for the site's singleton content entries. Each site-info
- * collection is backed by exactly one file, so these wrap `getEntry` with the
- * fixed entry id and a not-found guard. Callers get a guaranteed-present,
- * fully-typed entry instead of repeating the lookup-and-throw dance at every
- * call site.
+ * Typed accessors for the site's content collections. Singleton collections
+ * (backed by exactly one file) wrap `getEntry` with the fixed entry id and a
+ * not-found guard, so callers get a guaranteed-present, fully-typed entry
+ * instead of repeating the lookup-and-throw dance at every call site.
+ * Multi-entry collections come back already in display order.
  */
 class SiteContentService {
   /**
@@ -17,7 +17,7 @@ class SiteContentService {
   }
 
   /**
-   * About-page heading, markdown body, and highlight blocks.
+   * About-page heading and markdown body.
    */
   async about(): Promise<CollectionEntry<'about'>> {
     return this.#required(await getEntry('about', 'about'), 'about');
@@ -31,7 +31,7 @@ class SiteContentService {
   }
 
   /**
-   * Social links shown in the footer.
+   * Social media links (e.g. LinkedIn, Instagram).
    */
   async socialMediaLinks(): Promise<CollectionEntry<'socialMediaLinks'>> {
     return this.#required(
@@ -49,6 +49,22 @@ class SiteContentService {
       await getEntry('businessProfiles', 'business-profiles'),
       'businessProfiles'
     );
+  }
+
+  /**
+   * All courses, sorted by ascending `order`, then newest `createdAt`, then
+   * `id`. Entries without an `order` come last.
+   */
+  async courses(): Promise<CollectionEntry<'courses'>[]> {
+    const entries = await getCollection('courses');
+    return [...entries].sort((a, b) => {
+      const aOrder = a.data.order ?? Number.POSITIVE_INFINITY;
+      const bOrder = b.data.order ?? Number.POSITIVE_INFINITY;
+      if (aOrder !== bOrder) return aOrder - bOrder;
+      const createdDiff = b.data.createdAt.getTime() - a.data.createdAt.getTime();
+      if (createdDiff !== 0) return createdDiff;
+      return a.id.localeCompare(b.id);
+    });
   }
 
   /**

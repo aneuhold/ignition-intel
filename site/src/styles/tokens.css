@@ -1,31 +1,50 @@
-/* Colors: 4 base vars + 1 accent. Tints/shades/state colors come from opacity modifiers
-   (e.g. text-foreground/60 for muted, bg-primary/80 for hover, border-foreground/10 for borders).
-   The values below are a starting palette; retune them here and every utility follows.
+/* Colors and fonts originally came from a template deck on 11/22/2026 as well as the logo.
+
+   Colors: a dark theme. Tints/shades/state colors come from opacity modifiers (e.g.
+   bg-primary/80 for hover, border-foreground/10 for borders).
    Expand when needed:
-     - Add --color-muted / --color-border if opacity-on-foreground gives the wrong hue.
+     - Add --color-border if opacity-on-foreground gives the wrong hue.
      - Add --color-primary-50..-900 numbered shades only if you need a step ramp that
        color-mix can't express (multi-stop gradients, distinct semantic states).
-     - Add a :root primitives layer (palette -> semantic) when a second theme exists.
-
-   --color-accent is the one fresh hue outside the primary family. Keep it for a small
-   number of high-signal moments (a hero CTA, a highlight chip); primary stays for
-   transactional moments (Contact form submit). */
+     - Add a :root primitives layer (palette -> semantic) when a second theme exists. */
 @theme {
-  --color-background: oklch(0.98 0.006 80);
-  --color-foreground: oklch(0.2 0.012 60);
-  --color-primary: oklch(0.5 0.13 55);
-  --color-primary-foreground: oklch(0.98 0.006 80);
-  --color-accent: oklch(0.42 0.06 150);
-  --color-accent-foreground: oklch(0.98 0.006 80);
+  /* Slate page color, the color the gold logo is paired with. */
+  --color-background: oklch(0.362 0.015 259.8);
 
-  /* Typography: two roles. Tailwind generates font-display and font-body.
-     The literal font families are configured in astro.config.ts under `fonts`, and the
-     Font components in BaseLayout.astro wire the --font-zilla-slab / --font-inter CSS
+  /* Stone body copy. */
+  --color-foreground: #ece6da;
+
+  /* Darker slate for recessed panels: the background with lightness lowered. Change the
+     offset to deepen or soften the step. */
+  --color-muted: oklch(from var(--color-background) calc(l - 0.046) c h);
+
+  /* Darker stone for captions, footers, meta. */
+  --color-muted-foreground: #e0d8c8;
+
+  /* Gold, matching the logo. Links, eyebrow labels, transactional moments. */
+  --color-primary: #c9a55c;
+
+  /* Text on primary. */
+  --color-primary-foreground: #2e3238;
+
+  /* Rust. Fills and underlines only (buttons, the current-page nav mark); too dark to
+     read as text on slate. */
+  --color-accent: #b5541f;
+
+  /* Text on accent. Large or bold type only; small text on rust is hard to read. */
+  --color-accent-foreground: #ece6da;
+
+  /* Typography: two roles. Tailwind generates font-display and font-body. The literal
+     font families are configured in astro.config.ts under `fonts`, and the Font
+     components in BaseLayout.astro wire the --font-public-sans / --font-lora CSS
      variables. Swap providers or weights there; this file is the only place to switch
      which face plays which role.
-       - font-display: headings, buttons, nav, eyebrow labels.
-       - font-body: all long-form copy.
      Expand when needed: add --font-mono if monospace is required. */
-  --font-display: var(--font-zilla-slab);
-  --font-body: var(--font-inter);
+
+  /* Public Sans: headings, buttons, nav, eyebrow labels. Headings bold; eyebrows bold,
+     uppercase, widely tracked. */
+  --font-display: var(--font-public-sans);
+
+  /* Lora: all long-form copy; italic for subtitles and pull quotes. */
+  --font-body: var(--font-lora);
 }

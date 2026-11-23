@@ -33,9 +33,9 @@
 
 ### Design and content
 
-- [ ] Real logo in `site/src/assets/logo.svg`, then `pnpm generate:assets`
-- [ ] Colors and fonts in `site/src/styles/tokens.css` and `site/astro.config.ts`
-- [ ] Sync `webManifestThemeColor` / `webManifestBackgroundColor` in `globalConstants.ts` with the new tokens
+- [x] Real logo in `site/src/assets/logo-gold.svg`, then `pnpm generate:assets`
+- [x] Colors and fonts in `site/src/styles/tokens.css` and `site/astro.config.ts`
+- [x] Sync `webManifestThemeColor` / `webManifestBackgroundColor` in `globalConstants.ts` with the new tokens
 - [ ] Fill in "Brand direction" in `.claude/skills/site-design/SKILL.md`
 - [ ] Replace placeholder copy: page `description`s in `site/src/pages/*.astro`, home section, courses page
 - [ ] Seed content in `site/src/content/` (or via the CMS)

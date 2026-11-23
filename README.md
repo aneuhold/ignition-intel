@@ -36,8 +36,8 @@ The main website for Ignition Intel.
 
 ### Assets
 
-- Hand-picked/static brand assets (logos, icons, etc.) live in `site/src/assets` so Astro can optimize and hash them at build time. `pnpm generate:assets` renders the favicons, PWA icons, and OG image from `site/src/assets/logo.svg` and `scripts/og-image/index.html`.
-- CMS-managed inline images (gallery photos, hero image, About body images) live in the `ignition-intel-media` R2 bucket and are served from `https://media.ignitionintel.aneuhold.dev`. Sveltia uploads directly to R2; Astro fetches and optimizes the remote URLs at build time via `image.remotePatterns` and caches the output under `node_modules/.astro/`. The bucket is flat, so every upload name needs to be unique, otherwise it will overwrite.
+- Hand-picked/static brand assets (logos, icons, etc.) live in `site/src/assets` so Astro can optimize and hash them at build time. `pnpm generate:assets` renders the favicons, PWA icons, and OG image from `site/src/assets/logo-gold.svg` and `scripts/og-image/index.html`.
+- CMS-managed inline images (hero image, About and course body images) live in the `ignition-intel-media` R2 bucket and are served from `https://media.ignitionintel.aneuhold.dev`. Sveltia uploads directly to R2; Astro fetches and optimizes the remote URLs at build time via `image.remotePatterns` and caches the output under `node_modules/.astro/`. The bucket is flat, so every upload name needs to be unique, otherwise it will overwrite.
 
 ### Deployment
 

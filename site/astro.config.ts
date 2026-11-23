@@ -42,20 +42,20 @@ export default defineConfig({
   ],
   fonts: [
     {
-      name: 'Zilla Slab',
-      cssVariable: '--font-zilla-slab',
+      name: 'Public Sans',
+      cssVariable: '--font-public-sans',
       provider: fontProviders.google(),
       weights: [400, 600, 700],
       styles: ['normal'],
-      fallbacks: ['ui-serif', 'Georgia', 'serif']
+      fallbacks: ['ui-sans-serif', 'system-ui', 'sans-serif']
     },
     {
-      name: 'Inter',
-      cssVariable: '--font-inter',
+      name: 'Lora',
+      cssVariable: '--font-lora',
       provider: fontProviders.google(),
-      weights: [400, 500, 600],
-      styles: ['normal'],
-      fallbacks: ['ui-sans-serif', 'system-ui', 'sans-serif']
+      weights: [400, 600],
+      styles: ['normal', 'italic'],
+      fallbacks: ['ui-serif', 'Georgia', 'serif']
     }
   ],
   vite: {

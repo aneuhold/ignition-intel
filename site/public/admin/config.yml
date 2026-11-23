@@ -28,7 +28,7 @@ output:
 collections:
   - name: siteInfo
     label: General Site Info
-    description: Site-wide info shown across the home, about, contact, and footer.
+    description: Site-wide info shown across the home, about, and contact pages.
     files:
       - name: home
         label: Home
@@ -82,20 +82,6 @@ collections:
               widget: markdown,
               hint: 'Free-form text. Supports bold, links, headings, and inline images.'
             }
-          - name: highlights
-            label: Highlights
-            widget: list
-            required: false
-            summary: '{{fields.headline}}'
-            hint: 'Short highlight blocks shown under the About text. Three fits the layout best.'
-            fields:
-              - { name: headline, label: Title, widget: string, hint: 'Short bold title.' }
-              - {
-                  name: body,
-                  label: Blurb,
-                  widget: text,
-                  hint: 'One or two sentences shown under the title.'
-                }
 
       - name: contact
         label: Contact Info
@@ -136,7 +122,7 @@ collections:
             widget: list
             required: false
             summary: '{{fields.label}} ({{fields.url}})'
-            hint: 'Each entry becomes one link in the footer, e.g. LinkedIn or Instagram.'
+            hint: 'Each entry becomes one social link on the site, e.g. LinkedIn or Instagram.'
             fields:
               - {
                   name: label,
@@ -173,31 +159,40 @@ collections:
                   hint: 'Full URL to the listing including https://.'
                 }
 
-  - name: gallery
-    label: Gallery Photos
-    description: Photos shown in the gallery. Lower display order shows first.
-    folder: site/src/content/gallery
+  - name: courses
+    label: Courses
+    description: Courses listed on the courses page. Each one gets its own page. Use the reorder button in the list to drag courses into the order they should appear.
+    folder: site/src/content/courses
     create: true
     delete: true
-    slug: '{{fields.alt | slugify}}-{{year}}{{month}}{{day}}'
-    format: json
+    # https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries
+    reorder: true
+    slug: '{{fields.title | slugify}}'
+    format: frontmatter
     fields:
       - {
-          name: photo,
-          label: Photo,
-          widget: image,
-          hint: 'Upload a JPG or PNG. It will be optimized automatically.'
-        }
-      - {
-          name: alt,
-          label: Description,
+          name: title,
+          label: Title,
           widget: string,
-          hint: "Short, specific description of what's in the photo. Used by screen readers and Google image search. Write what someone would see."
+          hint: 'Course name. The page address is based on the title when the course is first created and stays the same if the title changes later.'
         }
       - {
-          name: order,
-          label: Display order,
-          widget: number,
-          default: 0,
-          hint: "Lower numbers show first. Leave at 0 if you don't care about order."
+          name: description,
+          label: Short description,
+          widget: text,
+          hint: 'One or two sentences shown on the courses list and at the top of the course page.'
+        }
+      - {
+          name: videoUrl,
+          label: YouTube video link,
+          widget: string,
+          hint: 'Paste the link to the YouTube video, e.g. https://www.youtube.com/watch?v=... or https://youtu.be/...'
+        }
+      - { name: createdAt, label: Created, widget: hidden, default: '{{datetime}}' }
+      - {
+          name: body,
+          label: Details,
+          widget: markdown,
+          required: false,
+          hint: 'Optional longer details: syllabus, schedule, prerequisites. Supports bold, links, headings, and inline images.'
         }

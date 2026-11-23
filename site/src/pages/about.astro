@@ -1,12 +1,10 @@
 ---
+import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import About from '$components-astro/About.astro';
-import Container from '$components-astro/ui/Container.astro';
-import Heading from '$components-astro/ui/Heading.astro';
-import Section from '$components-astro/ui/Section.astro';
 import siteContentService from '$util/SiteContent.service';
 
-const { heading } = (await siteContentService.about()).data;
+const entry = await siteContentService.about();
+const { Content } = await render(entry);
 ---
 
 <BaseLayout
@@ -14,12 +12,7 @@ const { heading } = (await siteContentService.about()).data;
   description="About Ignition Intel and fire investigation instructor Nicole Brewer. Placeholder description: update before launch."
 >
   <main>
-    <Section padding="tight">
-      <Container size="wide">
-        <Heading level={1}>{heading}</Heading>
-      </Container>
-    </Section>
-
-    <About />
+    <h1>{entry.data.heading}</h1>
+    <Content />
   </main>
 </BaseLayout>
