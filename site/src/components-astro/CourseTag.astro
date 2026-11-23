@@ -28,7 +28,7 @@ const tilts = [
   'rotate-[0.5deg]'
 ];
 const fieldLabelClasses =
-  'font-display text-[0.62rem] font-bold uppercase tracking-[0.2em] text-primary-foreground/55';
+  'font-display text-[0.62rem] font-bold uppercase tracking-[0.2em] text-primary-foreground/75';
 ---
 
 <!-- GSAP owns the link's transform during the reveal, so the resting tilt and
@@ -76,8 +76,8 @@ const fieldLabelClasses =
     <div
       class="flex items-baseline justify-between gap-3 border-b border-dashed border-primary-foreground/30 pb-3 font-display text-[0.65rem] font-bold uppercase tracking-[0.2em]"
     >
-      <span class="text-accent">Evidence</span>
-      <span class="tabular-nums text-primary-foreground/70">No. {caseNumber}</span>
+      <span class="text-accent-ink">Evidence</span>
+      <span class="tabular-nums text-primary-foreground/75">No. {caseNumber}</span>
     </div>
     <p class:list={[fieldLabelClasses, 'mt-4']}>Item</p>
     <Heading level={headingLevel} size="md" class="mt-1">{title}</Heading>
@@ -86,9 +86,9 @@ const fieldLabelClasses =
     <div
       class="mt-auto flex items-center justify-between pt-6 font-display text-xs font-bold uppercase tracking-[0.18em]"
     >
-      <span class="text-primary-foreground/55">Course file</span>
+      <span class="text-primary-foreground/75">Course file</span>
       <span
-        class="text-accent underline decoration-transparent decoration-2 underline-offset-4 transition-colors duration-(--duration-snap) ease-soft group-hover:decoration-accent group-focus-visible:decoration-accent"
+        class="text-accent-ink underline decoration-transparent decoration-2 underline-offset-4 transition-colors duration-(--duration-snap) ease-soft group-hover:decoration-accent-ink group-focus-visible:decoration-accent-ink"
       >
         Open file &rarr;
       </span>
