@@ -1,0 +1,36 @@
+---
+import Button from './ui/Button.astro';
+import Container from './ui/Container.astro';
+import Eyebrow from './ui/Eyebrow.astro';
+import Heading from './ui/Heading.astro';
+
+/**
+ * Closing call to action that points at the contact page, set over a low
+ * rust glow.
+ */
+interface Props {
+  eyebrow: string;
+  heading: string;
+  body: string;
+  href?: string;
+  label: string;
+}
+
+const { eyebrow, heading, body, href = '/contact', label } = Astro.props;
+---
+
+<section class="relative isolate overflow-hidden border-t border-foreground/10 py-24 sm:py-32">
+  <div
+    aria-hidden="true"
+    class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_70%_at_50%_120%,color-mix(in_oklch,var(--color-accent)_38%,transparent),transparent_70%)]"
+  >
+  </div>
+  <Container narrow class="flex flex-col items-center gap-7 text-center">
+    <Eyebrow>{eyebrow}</Eyebrow>
+    <Heading reveal="scroll">{heading}</Heading>
+    <p data-reveal class="max-w-xl font-body text-lg leading-relaxed text-foreground/75">{body}</p>
+    <div data-reveal>
+      <Button href={href} magnetic>{label}</Button>
+    </div>
+  </Container>
+</section>

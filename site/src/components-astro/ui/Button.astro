@@ -1,0 +1,36 @@
+---
+/**
+ * Link styled as a button. `magnetic` lets the button lean toward a nearby
+ * pointer on devices with a fine pointer.
+ */
+interface Props {
+  href: string;
+  variant?: 'primary' | 'ghost';
+  magnetic?: boolean;
+  class?: string;
+}
+
+const { href, variant = 'primary', magnetic = false, class: className } = Astro.props;
+---
+
+<a
+  href={href}
+  data-magnetic={magnetic ? '' : undefined}
+  class:list={[
+    'group/button relative inline-flex items-center justify-center gap-3 rounded-full px-7 py-3.5 font-display text-sm font-bold uppercase tracking-[0.14em] transition-colors duration-(--duration-snap) ease-soft focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary',
+    variant === 'primary' &&
+      'bg-primary text-primary-foreground shadow-[0_0_2.5rem_-0.5rem_var(--color-primary)] hover:bg-foreground',
+    variant === 'ghost' &&
+      'border border-foreground/25 text-foreground hover:border-primary hover:text-primary',
+    className
+  ]}
+>
+  <span data-magnetic-label class="inline-flex items-center gap-3">
+    <slot />
+    <span
+      aria-hidden="true"
+      class="transition-transform duration-(--duration-snap) ease-soft group-hover/button:translate-x-1"
+      >&rarr;</span
+    >
+  </span>
+</a>

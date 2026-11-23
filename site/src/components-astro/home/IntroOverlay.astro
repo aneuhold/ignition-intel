@@ -1,0 +1,29 @@
+---
+import LogoMark from '../ui/LogoMark.astro';
+
+/**
+ * Full-screen layer for the first-visit intro on the home page. Hidden unless
+ * the inline script in BaseLayout sets `html[data-intro]`; `Intro.service.ts`
+ * plays it and hands the mark off to the hero's `[data-intro-target]`.
+ */
+---
+
+<div
+  data-intro-overlay
+  aria-hidden="true"
+  class="pointer-events-none fixed inset-0 z-50 hidden place-items-center"
+>
+  <div data-intro-backdrop class="absolute inset-0 bg-background"></div>
+  <div data-intro-mark class="relative h-[min(42svh,22rem)]">
+    <div
+      data-intro-glow
+      class="absolute inset-[-45%] rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklch,var(--color-primary)_32%,transparent),transparent)] opacity-0"
+    >
+    </div>
+    <LogoMark id="intro-mark" class="relative h-full w-auto" />
+    <span
+      data-intro-spark
+      class="absolute bottom-[3%] left-1/2 -ml-1 size-2 rounded-full bg-foreground opacity-0 shadow-[0_0_0.75rem_0.25rem_var(--color-primary),0_0_2rem_0.75rem_var(--color-accent)]"
+    ></span>
+  </div>
+</div>

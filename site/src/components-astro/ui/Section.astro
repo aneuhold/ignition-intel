@@ -1,0 +1,29 @@
+---
+import Container from './Container.astro';
+
+/**
+ * Vertical rhythm for a page section, with an optional recessed tone.
+ */
+interface Props {
+  id?: string;
+  class?: string;
+  /** `muted` sits the section on the darker recessed slate. */
+  tone?: 'default' | 'muted';
+  narrow?: boolean;
+}
+
+const { id, class: className, tone = 'default', narrow = false } = Astro.props;
+---
+
+<section
+  id={id}
+  class:list={[
+    'relative scroll-mt-20 py-20 sm:py-28',
+    tone === 'muted' && 'border-y border-foreground/10 bg-muted',
+    className
+  ]}
+>
+  <Container narrow={narrow}>
+    <slot />
+  </Container>
+</section>

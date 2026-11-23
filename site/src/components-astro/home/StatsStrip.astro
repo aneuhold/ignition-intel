@@ -1,0 +1,38 @@
+---
+import Container from '../ui/Container.astro';
+
+/**
+ * A row of plain-fact numbers about Nicole's career. Numbers with `count`
+ * tick up the first time they scroll into view.
+ */
+const stats = [
+  { display: '30', count: 30, label: 'years in the fire service' },
+  { display: '3,500+', count: 3500, suffix: '+', label: 'fire and explosion investigations' },
+  { display: '26', count: 26, label: 'years with Portland Fire & Rescue' },
+  { display: '2022', label: 'IAAI Fire Investigator of the Year' }
+];
+---
+
+<section class="border-y border-foreground/10 bg-muted">
+  <Container>
+    <dl class="grid grid-cols-2 lg:grid-cols-4">
+      {
+        stats.map(({ display, count, suffix, label }) => (
+          <div
+            data-reveal
+            class="flex flex-col gap-2 border-foreground/10 px-2 py-8 not-first:border-l max-lg:nth-3:border-l-0 max-lg:nth-[n+3]:border-t sm:px-6 lg:px-8"
+          >
+            <dt class="order-2 font-body text-sm leading-snug text-foreground/65 sm:text-base">
+              {label}
+            </dt>
+            <dd class="order-1 font-display text-4xl font-bold tracking-tight text-primary tabular-nums sm:text-5xl">
+              <span data-count={count} data-count-suffix={suffix}>
+                {display}
+              </span>
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Container>
+</section>

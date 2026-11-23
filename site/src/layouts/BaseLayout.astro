@@ -2,6 +2,8 @@
 import { Font } from 'astro:assets';
 import { ClientRouter } from 'astro:transitions';
 import Seo from '@jdevalk/astro-seo-graph/Seo.astro';
+import SiteFooter from '$components-astro/SiteFooter.astro';
+import SiteHeader from '$components-astro/SiteHeader.astro';
 import '../styles/global.css';
 import { globalConstants } from '$util/globalConstants';
 import seoGraphService from '$util/SeoGraph.service';
@@ -65,9 +67,54 @@ const graph = await seoGraphService.buildGraph({
     <Font cssVariable="--font-public-sans" preload />
     <Font cssVariable="--font-lora" preload />
     <ClientRouter />
+    <!--
+      Runs before first paint. Marks the document for GSAP-owned starting states
+      (see motion.css) only when motion is welcome, and flags the home intro when
+      home is the first page of the session.
+    -->
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        const motionOk = matchMedia('(prefers-reduced-motion: no-preference)').matches;
+        const mark = () => {
+          if (motionOk) root.dataset.motion = '';
+        };
+        mark();
+        document.addEventListener('astro:after-swap', mark);
+        try {
+          if (motionOk && location.pathname === '/' && !sessionStorage.getItem('ii-visited')) {
+            root.dataset.intro = '';
+          }
+          sessionStorage.setItem('ii-visited', '1');
+        } catch {
+          // Storage is blocked: skip the intro.
+        }
+      })();
+    </script>
     <slot name="head" />
   </head>
-  <body class="bg-background font-body text-foreground">
-    <slot />
+  <body class="flex min-h-svh flex-col bg-background font-body text-foreground antialiased">
+    <a
+      href="#main"
+      class="sr-only z-50 rounded-full bg-primary px-4 py-2 font-display text-sm font-bold text-primary-foreground focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+      >Skip to content</a
+    >
+    <SiteHeader />
+    <div
+      data-transition-bar
+      transition:persist
+      aria-hidden="true"
+      class="pointer-events-none fixed inset-x-0 top-16 z-50 h-px origin-left scale-x-0 bg-primary shadow-[0_0_1rem_var(--color-primary)]"
+    >
+    </div>
+    <main id="main" data-page-main class="flex-1">
+      <slot />
+    </main>
+    <SiteFooter />
+    <script>
+      import motionService from '$util/motion/Motion.service';
+
+      motionService.init();
+    </script>
   </body>
 </html>

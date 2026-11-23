@@ -1,0 +1,62 @@
+---
+import { Image } from 'astro:assets';
+import Container from './ui/Container.astro';
+import logoFullTextGold from '../assets/logo-full-text-gold.svg';
+import { globalConstants } from '$util/globalConstants';
+import siteContentService from '$util/SiteContent.service';
+
+/**
+ * Site footer: full logo, nav, and social links from the CMS.
+ */
+const { links: socialLinks } = (await siteContentService.socialMediaLinks()).data;
+const courses = await siteContentService.courses();
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-foreground/10 bg-muted">
+  <Container class="grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr]">
+    <div class="flex flex-col gap-5">
+      <Image src={logoFullTextGold} alt={globalConstants.siteName} class="h-12 w-auto self-start" />
+      <p class="max-w-sm font-body text-sm leading-relaxed text-muted-foreground/70">
+        Fire and arson investigation training taught by {globalConstants.ownerName}. Based in
+        Molalla, Oregon. Teaching in person and online.
+      </p>
+    </div>
+    <nav aria-label="Courses" class="flex flex-col gap-3">
+      <p class="font-display text-xs font-bold uppercase tracking-[0.24em] text-primary">Courses</p>
+      {
+        courses.map((course) => (
+          <a
+            href={`/courses/${course.id}`}
+            class="font-body text-sm text-muted-foreground/75 transition-colors duration-(--duration-snap) ease-soft hover:text-primary"
+          >
+            {course.data.title}
+          </a>
+        ))
+      }
+    </nav>
+    <nav aria-label="Site" class="flex flex-col gap-3">
+      <p class="font-display text-xs font-bold uppercase tracking-[0.24em] text-primary">Site</p>
+      {
+        [
+          { href: '/', label: 'Home' },
+          { href: '/about', label: 'About Nicole' },
+          { href: '/contact', label: 'Contact' },
+          ...socialLinks.map(({ label, url }) => ({ href: url, label }))
+        ].map(({ href, label }) => (
+          <a
+            href={href}
+            class="font-body text-sm text-muted-foreground/75 transition-colors duration-(--duration-snap) ease-soft hover:text-primary"
+          >
+            {label}
+          </a>
+        ))
+      }
+    </nav>
+  </Container>
+  <Container class="border-t border-foreground/10 py-6">
+    <p class="font-display text-xs tracking-[0.14em] text-muted-foreground/50 uppercase">
+      {`© ${year} ${globalConstants.siteName}`}
+    </p>
+  </Container>
+</footer>

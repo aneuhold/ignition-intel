@@ -1,0 +1,20 @@
+---
+/**
+ * Small uppercase label that sits above a heading.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<p
+  class:list={[
+    'flex items-center gap-3 font-display text-xs font-bold uppercase tracking-[0.24em] text-primary',
+    className
+  ]}
+>
+  <span aria-hidden="true" class="h-px w-8 bg-accent"></span>
+  <slot />
+</p>

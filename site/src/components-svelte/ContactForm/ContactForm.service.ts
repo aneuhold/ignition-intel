@@ -3,6 +3,23 @@ import { globalConstants } from '$util/globalConstants';
 import { contactFormConstants } from './contactFormConstants';
 
 /**
+ * A course the contact form can be pre-filled for: its collection id (the
+ * URL slug) and its display title.
+ */
+export interface ContactFormCourse {
+  slug: string;
+  title: string;
+}
+
+/**
+ * The starting state for a form opened from a course page.
+ */
+export interface ContactFormPrefill {
+  courseTitle: string;
+  message: string;
+}
+
+/**
  * Pure-logic singleton for the ContactForm island. Owns the Turnstile widget
  * lifecycle and the POST-to-worker interpretation so `ContactForm.svelte`
  * stays focused on state and markup.
@@ -15,6 +32,24 @@ class ContactFormService {
     'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
 
   #scriptLoad: Promise<boolean> | null = null;
+
+  /**
+   * Reads the `course` query parameter and returns the matching course's
+   * title with a starter message, or `null` when the parameter is missing or
+   * names no known course.
+   *
+   * @param search The page's query string, e.g. `window.location.search`
+   * @param courses Every course the form knows about
+   */
+  coursePrefill(search: string, courses: ContactFormCourse[]): ContactFormPrefill | null {
+    const slug = new URLSearchParams(search).get('course');
+    const course = slug ? courses.find((candidate) => candidate.slug === slug) : undefined;
+    if (!course) return null;
+    return {
+      courseTitle: course.title,
+      message: contactFormConstants.courseStarterMessage(course.title)
+    };
+  }
 
   /**
    * Loads the Turnstile script if needed, then renders the widget into the

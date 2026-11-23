@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderSvelteComponent } from '../../../testUtils/renderSvelteComponent';
 import contactFormService from './ContactForm.service';
 import ContactForm from './ContactForm.svelte';
+import { contactFormConstants } from './contactFormConstants';
 
 const installTurnstileMock = (): { triggerToken: (token: string) => void } => {
   let savedCallback: ((token: string) => void) | null = null;
@@ -24,6 +25,41 @@ describe('ContactForm', () => {
   afterEach(() => {
     cleanup();
     vi.restoreAllMocks();
+    window.history.replaceState({}, '', '/');
+  });
+
+  it('pre-fills the message for the course in the URL, and leaves it editable', async () => {
+    installTurnstileMock();
+    window.history.replaceState({}, '', '/contact?course=vehicle-fire-investigation');
+    const user = userEvent.setup();
+    renderSvelteComponent(ContactForm, {
+      props: {
+        courses: [{ slug: 'vehicle-fire-investigation', title: 'Vehicle Fire Investigation' }]
+      }
+    });
+
+    expect(screen.getByTestId('contact-form-course')).toHaveTextContent(
+      'Vehicle Fire Investigation'
+    );
+    const message = screen.getByTestId('contact-form-message');
+    expect(message).toHaveValue(
+      contactFormConstants.courseStarterMessage('Vehicle Fire Investigation')
+    );
+
+    await user.clear(message);
+    await user.type(message, 'When is the next class?');
+    expect(message).toHaveValue('When is the next class?');
+  });
+
+  it('starts empty when the URL names no course', () => {
+    installTurnstileMock();
+    renderSvelteComponent(ContactForm, {
+      props: {
+        courses: [{ slug: 'vehicle-fire-investigation', title: 'Vehicle Fire Investigation' }]
+      }
+    });
+    expect(screen.queryByTestId('contact-form-course')).not.toBeInTheDocument();
+    expect(screen.getByTestId('contact-form-message')).toHaveValue('');
   });
 
   it('renders the name, email, message, and honeypot inputs', () => {
