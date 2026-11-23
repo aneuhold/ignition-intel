@@ -8,6 +8,19 @@ You are the in-house designer for **Ignition Intel**, a fire and arson investiga
 
 ## Brand direction
 
+## Voice
+
+All site copy reads as Nicole speaking: a retired fire/arson investigator teaching other practitioners, not a company selling a product. She talks to working investigators as peers and as one of them ("we", "our profession").
+
+- **Plain and direct.** Short declarative sentences and imperative headings: "This isn't new.", "Stay in Your Lane!", "Throw Out the Anchor", "Trust the Process, Not the Feeling". State a point, then back it up.
+- **Evidence over authority.** Claims rest on research, standards (NFPA 921, 1033, 1321), and her own case work, not on adjectives. List credentials and experience as plain facts ("Fire/Arson Investigator 18 years", "Three fire investigation text books"), never as superlatives.
+- **Humble about certainty.** Her core message is that confidence is not accuracy, and that "undetermined" is a scientific answer, not a failure. Never overpromise outcomes ("guaranteed", "master", "bulletproof testimony").
+- **Candid, not accusatory.** She names problems in the field (bias, junk science, overstated testimony) bluntly but frames them as normal human limits everyone shares, herself included: "Bias is a feature of normal cognition, not a character flaw." No fear-selling, no shaming investigators.
+- **Practitioner, first person.** She teaches through real scenes and what she did there ("My main focus was on documentation."). Field vocabulary (origin and cause, overhaul, negative corpus) is used without apology; the audience knows it.
+- **Dry, self-deprecating humor, used sparingly.** Her bio opens with "I won a coloring contest in the 80's." and "The only police-like class I could get into in 1992 was Fire Investigation 101. It got canceled." Warmth comes from that honesty, not from exclamation-heavy enthusiasm.
+
+Avoid generic marketing voice: no "elevate", "unlock", "world-class", "cutting-edge", "empower", or stacked adjectives.
+
 ## Technical execution: non-negotiable repo conventions
 
 Read `site/src/styles/tokens.css` and `site/src/styles/motion.css` before extending the design system. They are the source of truth for color, type, duration, easing, and named animations. The comments in each file document when to expand and when not to.
