@@ -1,0 +1,58 @@
+---
+import logoSource from '../../assets/logo-gold.svg?raw';
+
+/**
+ * The gold flame mark, inlined from `assets/logo-gold.svg` so its paths can be
+ * animated. Each path carries `data-logo-path` with its draw order (body
+ * first, tip last). `id` keeps the gradient reference unique when the mark
+ * appears more than once on a page.
+ */
+interface Props {
+  id: string;
+  class?: string;
+  /** Label for assistive tech. Omit to hide the mark as decoration. */
+  label?: string;
+}
+
+const { id, class: className, label } = Astro.props;
+
+const viewBox = /viewBox="([^"]+)"/.exec(logoSource)?.[1];
+const [outerTransform, innerTransform] = [...logoSource.matchAll(/<g transform="([^"]+)"/g)].map(
+  (match) => match[1]
+);
+const paths = [...logoSource.matchAll(/ d="([^"]+)"/g)].map((match) => match[1]);
+// Source order is body, right tongue, left tongue, tip. Draw bottom-up.
+const drawOrder = [0, 2, 1, 3];
+const gradientId = `${id}-gold`;
+const gradientDefs = (/<defs>(.*)<\/defs>/.exec(logoSource)?.[1] ?? '').replace(
+  /id="[^"]+"/,
+  `id="${gradientId}"`
+);
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox={viewBox}
+  class={className}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+>
+  <defs set:html={gradientDefs} />
+  <g transform={outerTransform}>
+    <g transform={innerTransform}>
+      {
+        paths.map((d, index) => (
+          <path
+            d={d}
+            fill={`url(#${gradientId})`}
+            stroke="var(--color-primary)"
+            stroke-width="0"
+            vector-effect="non-scaling-stroke"
+            data-logo-path={drawOrder.indexOf(index)}
+          />
+        ))
+      }
+    </g>
+  </g>
+</svg>

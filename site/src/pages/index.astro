@@ -1,20 +1,90 @@
 ---
-import { Image } from 'astro:assets';
+import CallToAction from '$components-astro/CallToAction.astro';
+import CourseGrid from '$components-astro/CourseGrid.astro';
+import HomeHero from '$components-astro/home/HomeHero.astro';
+import IntroOverlay from '$components-astro/home/IntroOverlay.astro';
+import StatsStrip from '$components-astro/home/StatsStrip.astro';
+import TrustTheProcess from '$components-astro/home/TrustTheProcess.astro';
+import Button from '$components-astro/ui/Button.astro';
+import Eyebrow from '$components-astro/ui/Eyebrow.astro';
+import Heading from '$components-astro/ui/Heading.astro';
+import Section from '$components-astro/ui/Section.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { globalConstants } from '$util/globalConstants';
 import siteContentService from '$util/SiteContent.service';
 
-const { title, tagline, heroImage, heroImageAlt = '' } = (await siteContentService.home()).data;
+/** How many courses the home page shows before pointing to the full list. */
+const homeCourseLimit = 5;
+
+const { title, tagline } = (await siteContentService.home()).data;
+const courses = await siteContentService.courses();
 ---
 
 <BaseLayout
-  title={`${title} | Fire & Arson Investigation Training`}
+  title={`${globalConstants.siteName} | Fire & Arson Investigation Training`}
   description="Ignition Intel offers fire and arson investigation courses and training, taught by Nicole Brewer. Placeholder description: update before launch."
 >
-  <main>
-    {heroImage && (
-      <Image src={heroImage} alt={heroImageAlt} inferSize loading="eager" fetchpriority="high" />
-    )}
-    <h1>{title}</h1>
-    {tagline && <p>{tagline}</p>}
-  </main>
+  <IntroOverlay />
+  <HomeHero title={title} tagline={tagline} />
+  <StatsStrip />
+
+  <Section id="courses">
+    <div class="mb-12 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+      <div class="flex max-w-2xl flex-col gap-5">
+        <Eyebrow>Courses</Eyebrow>
+        <Heading reveal="scroll">Pick where you want to start.</Heading>
+        <p data-reveal class="font-body text-lg leading-relaxed text-foreground/75">
+          Each course stands on its own. If you're new, start with the fundamentals. If you've
+          been doing this for years, go straight to bias or testimony.
+        </p>
+      </div>
+      <a
+        href="/courses"
+        class="font-display text-xs font-bold tracking-[0.18em] text-primary uppercase underline decoration-accent decoration-2 underline-offset-8 transition-colors duration-(--duration-snap) ease-soft hover:text-foreground"
+      >
+        All courses &rarr;
+      </a>
+    </div>
+    <CourseGrid courses={courses.slice(0, homeCourseLimit)} />
+  </Section>
+
+  <TrustTheProcess />
+
+  <Section>
+    <div class="grid items-center gap-12 lg:grid-cols-[0.65fr_1fr] lg:gap-20">
+      <div
+        data-reveal
+        class="relative grid aspect-[4/3] place-items-center lg:aspect-[4/5] rounded-2xl border border-dashed border-foreground/25 bg-muted"
+      >
+        <p class="max-w-[16ch] text-center font-display text-xs tracking-[0.2em] text-foreground/75 uppercase">
+          Photo placeholder: Nicole on scene
+        </p>
+      </div>
+      <div class="flex flex-col gap-6">
+        <Eyebrow>Who's teaching</Eyebrow>
+        <Heading reveal="scroll">Thirty years in the fire service. Still checking my work.</Heading>
+        <div data-reveal class="flex flex-col gap-5 font-body text-lg leading-relaxed text-foreground/75">
+          <p>
+            I spent 26 years with Portland Fire &amp; Rescue, the last 17 as a sworn fire and arson
+            investigator, and trained the investigators who came after me. I still work fire scenes
+            as a consultant and private investigator, and I still teach.
+          </p>
+          <p>
+            I've worked more than 3,500 fire and explosion scenes. Most of what I teach, I learned
+            by getting it wrong first or watching someone else do it.
+          </p>
+        </div>
+        <div data-reveal>
+          <Button href="/about" variant="ghost">More about me</Button>
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  <CallToAction
+    eyebrow="Questions"
+    heading="Not sure which course fits? Ask me."
+    body="Tell me where you are in your career and what you're working toward. I'll tell you which course makes sense, or that none of them do yet."
+    label="Send me a note"
+  />
 </BaseLayout>

@@ -1,0 +1,72 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+/**
+ * Course panels. Wide screens show one row where the open panel previews its
+ * description and the rest show a vertical title; `CourseGrid.service.ts`
+ * hands the preview to whichever panel is hovered or focused. Narrow screens
+ * stack every panel open. Each link's accessible name is whichever title is
+ * showing (the spine or the preview); the other is `display: none`.
+ */
+interface Props {
+  courses: CollectionEntry<'courses'>[];
+}
+
+const { courses } = Astro.props;
+---
+
+<ul data-course-grid class="flex flex-col gap-4 lg:h-[30rem] lg:flex-row">
+  {
+    courses.map((course, index) => {
+      const { title, description } = course.data;
+      const number = String(index + 1).padStart(2, '0');
+      return (
+        <li
+          data-course-card
+          data-active={index === 0 ? '' : undefined}
+          class="group/card relative min-w-0 overflow-hidden rounded-2xl border border-foreground/10 bg-muted transition-colors duration-(--duration-glide) ease-soft hover:border-primary/50 data-active:border-primary/40 lg:flex-1 lg:data-active:flex-[2.8]"
+        >
+          <span
+            data-course-glow
+            aria-hidden="true"
+            class="pointer-events-none absolute top-full left-[70%] size-[52rem] -translate-1/2 rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklch,var(--color-accent)_30%,transparent),transparent)] opacity-0 transition-opacity duration-(--duration-glide) ease-soft group-hover/card:opacity-100 group-data-active/card:opacity-60"
+          />
+          <a
+            href={`/courses/${course.id}`}
+            class="relative flex h-full flex-col justify-between gap-10 p-6 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset sm:p-8 lg:p-6 lg:group-data-active/card:p-8"
+          >
+            <span aria-hidden="true" class="font-display text-xs font-bold tracking-[0.24em] text-primary">
+              {number}
+            </span>
+            <span
+              data-course-spine
+              class="hidden font-display text-lg leading-snug font-bold text-foreground/85 [writing-mode:vertical-rl] rotate-180 lg:block lg:group-data-active/card:hidden"
+            >
+              {title}
+            </span>
+            <span
+              data-course-preview
+              class="flex flex-col gap-5 lg:hidden lg:w-[21rem] lg:group-data-active/card:flex"
+            >
+              <span class="font-display text-2xl leading-tight font-bold text-foreground sm:text-3xl">
+                {title}
+              </span>
+              <span class="font-body text-base leading-relaxed text-foreground/75">
+                {description}
+              </span>
+              <span class="inline-flex items-center gap-2 font-display text-xs font-bold tracking-[0.18em] text-primary uppercase">
+                Course details
+                <span
+                  aria-hidden="true"
+                  class="transition-transform duration-(--duration-snap) ease-soft group-hover/card:translate-x-1"
+                >
+                  &rarr;
+                </span>
+              </span>
+            </span>
+          </a>
+        </li>
+      );
+    })
+  }
+</ul>

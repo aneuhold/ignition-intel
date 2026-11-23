@@ -1,0 +1,28 @@
+---
+/**
+ * Display heading in three sizes. `reveal` opts the heading into the
+ * line-by-line SplitText reveal: `load` plays when the page shows, `scroll`
+ * plays when the heading scrolls into view.
+ */
+interface Props {
+  level?: 1 | 2 | 3;
+  size?: 'display' | 'section' | 'card';
+  reveal?: 'load' | 'scroll';
+  class?: string;
+}
+
+const { level = 2, size = 'section', reveal, class: className } = Astro.props;
+const Tag = `h${level}` as const;
+const sizeClass = {
+  display: 'text-5xl leading-[1.02] sm:text-6xl lg:text-7xl',
+  section: 'text-4xl leading-[1.05] sm:text-5xl',
+  card: 'text-2xl leading-tight'
+}[size];
+---
+
+<Tag
+  data-split={reveal}
+  class:list={['font-display font-bold tracking-tight text-balance text-foreground', sizeClass, className]}
+>
+  <slot />
+</Tag>

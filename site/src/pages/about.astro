@@ -1,6 +1,12 @@
 ---
 import { render } from 'astro:content';
+import CallToAction from '$components-astro/CallToAction.astro';
+import Eyebrow from '$components-astro/ui/Eyebrow.astro';
+import Heading from '$components-astro/ui/Heading.astro';
+import Prose from '$components-astro/ui/Prose.astro';
+import Section from '$components-astro/ui/Section.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { globalConstants } from '$util/globalConstants';
 import siteContentService from '$util/SiteContent.service';
 
 const entry = await siteContentService.about();
@@ -9,10 +15,39 @@ const { Content } = await render(entry);
 
 <BaseLayout
   title="About Nicole Brewer | Ignition Intel"
-  description="About Ignition Intel and fire investigation instructor Nicole Brewer. Placeholder description: update before launch."
+  description="About Nicole Brewer, fire investigator and fire investigation instructor, and Ignition Intel. Placeholder description: update before launch."
 >
-  <main>
-    <h1>{entry.data.heading}</h1>
-    <Content />
-  </main>
+  <Section>
+    <div class="grid gap-14 lg:grid-cols-[22rem_1fr] lg:gap-20">
+      <aside class="order-2 flex flex-col gap-6 lg:sticky lg:top-24 lg:order-1 lg:self-start">
+        <div
+          class="grid aspect-[4/3] place-items-center lg:aspect-[4/5] rounded-2xl border border-dashed border-foreground/25 bg-muted"
+        >
+          <p class="max-w-[16ch] text-center font-display text-xs tracking-[0.2em] text-foreground/75 uppercase">
+            Photo placeholder: portrait of Nicole
+          </p>
+        </div>
+        <div class="flex flex-col gap-2">
+          <p class="font-display text-xl font-bold text-foreground">{globalConstants.ownerName}</p>
+          <p class="font-display text-xs tracking-[0.18em] text-primary uppercase">
+            DFS, IAAI-CFI(V), CFEI, ECT
+          </p>
+          <p class="font-body text-sm text-foreground/75">Molalla, Oregon</p>
+        </div>
+      </aside>
+      <div class="order-1 flex min-w-0 flex-col gap-8 lg:order-2">
+        <Eyebrow>About Nicole Brewer</Eyebrow>
+        <Heading level={1} size="display" reveal="load">{entry.data.heading}</Heading>
+        <Prose class="[&>p:first-of-type]:text-xl [&>p:first-of-type]:text-foreground">
+          <Content />
+        </Prose>
+      </div>
+    </div>
+  </Section>
+  <CallToAction
+    eyebrow="Work with me"
+    heading="Have a question about training? Ask me."
+    body="Whether it's one course for you or a week of training for your agency, send me a note and I'll get back to you."
+    label="Send me a note"
+  />
 </BaseLayout>

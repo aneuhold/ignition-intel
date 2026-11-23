@@ -1,0 +1,69 @@
+---
+import Button from '../ui/Button.astro';
+import Container from '../ui/Container.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Heading from '../ui/Heading.astro';
+import LogoMark from '../ui/LogoMark.astro';
+
+/**
+ * Home hero: headline and tagline from the `home` entry, the two calls to
+ * action, and the flame mark over a field of rising embers.
+ */
+interface Props {
+  title: string;
+  tagline?: string;
+}
+
+const { title, tagline } = Astro.props;
+---
+
+<section class="relative isolate overflow-hidden">
+  <div
+    aria-hidden="true"
+    class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_55%_at_72%_115%,color-mix(in_oklch,var(--color-accent)_42%,transparent),transparent_70%),radial-gradient(ellipse_45%_40%_at_76%_55%,color-mix(in_oklch,var(--color-primary)_12%,transparent),transparent_70%)]"
+  >
+  </div>
+  <canvas
+    data-ember-field
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-0 -z-10 size-full"
+  ></canvas>
+  <Container
+    class="grid min-h-[calc(100svh-4rem)] content-center items-center gap-10 py-14 lg:grid-cols-[1.4fr_1fr] lg:py-20"
+  >
+    <div class="order-2 flex flex-col gap-7 lg:order-1">
+      <Eyebrow>Fire and arson investigation training</Eyebrow>
+      <Heading level={1} size="display" reveal="load" class="max-w-[16ch]">{title}</Heading>
+      {
+        tagline && (
+          <p
+            data-reveal
+            class="max-w-xl font-body text-lg leading-relaxed text-foreground/75 sm:text-xl"
+          >
+            {tagline}
+          </p>
+        )
+      }
+      <div data-reveal class="flex flex-wrap items-center gap-4">
+        <Button href="#courses" magnetic>See the courses</Button>
+        <Button href="/contact" variant="ghost">Ask me a question</Button>
+      </div>
+      <p data-reveal class="font-display text-xs tracking-[0.2em] text-foreground/75 uppercase">
+        Nicole Brewer &middot; DFS, IAAI-CFI(V), CFEI, ECT
+      </p>
+    </div>
+    <div class="order-1 flex justify-start lg:order-2 lg:justify-center">
+      <div data-intro-target class="relative h-28 sm:h-40 lg:h-[min(60svh,32rem)]">
+        <div
+          data-flicker-glow
+          aria-hidden="true"
+          class="absolute inset-[-35%] -z-10 rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklch,var(--color-primary)_20%,transparent),transparent)]"
+        >
+        </div>
+        <div data-flicker class="h-full">
+          <LogoMark id="hero-mark" class="h-full w-auto" />
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>

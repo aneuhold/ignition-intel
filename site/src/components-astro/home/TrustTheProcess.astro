@@ -1,0 +1,240 @@
+---
+import Container from '../ui/Container.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Heading from '../ui/Heading.astro';
+
+/**
+ * "Trust the process, not the feeling": a room fire worked from first
+ * impression to an honest undetermined. Written in its final state (every
+ * scene listed, the case notes and plan complete); on wide screens
+ * `Story.service.ts` pins it and scrubs through the scenes with scroll.
+ */
+const scenes = [
+  {
+    label: 'First look',
+    title: 'It feels like arson.',
+    body: "Heavy burning low on the couch. Irregular patterns on the floor beside it. Everyone on scene has the same thought, and so do you. That's a hypothesis, not a finding."
+  },
+  {
+    label: 'Test it',
+    title: "The patterns aren't telling you what you think.",
+    body: 'Once a room reaches full involvement, it can burn low and leave irregular patterns across the floor with no help at all. Look past the couch: they are everywhere.'
+  },
+  {
+    label: 'Revise',
+    title: 'Follow the data somewhere new.',
+    body: 'Arc mapping puts the first electrical failure on the lamp cord behind the couch. The floor samples come back with no ignitable liquid. New hypothesis. Test that one too.'
+  },
+  {
+    label: 'Answer honestly',
+    title: 'Undetermined is a scientific answer.',
+    body: "A space heater sits in the same area, and the evidence can't eliminate it. I can't show which one started this fire, so I don't claim to. That isn't a failure. It's the method working."
+  }
+];
+
+const notes = [
+  { text: 'H1, incendiary: irregular patterns by the couch.', strike: 2 },
+  { text: 'Same patterns across the room: full-room involvement.', enter: 2 },
+  { text: 'Arc mapping: first arc on the lamp cord.', enter: 3 },
+  { text: 'Lab: no ignitable liquid.', enter: 3 },
+  { text: "Space heater in the same area. Can't eliminate it.", enter: 4 },
+  { text: 'Cause: undetermined.', enter: 4, conclusion: true }
+];
+
+const meterLabel = 'font-display text-[0.65rem] font-bold tracking-[0.2em] uppercase text-foreground/75';
+---
+
+<section data-story class="group/story relative border-y border-foreground/10 bg-muted">
+  <Container
+    class="grid gap-12 py-20 sm:py-28 lg:min-h-[calc(100svh-4rem)] lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-16 group-data-[story=pinned]/story:lg:py-10"
+  >
+    <div class="flex flex-col gap-10">
+      <div class="flex flex-col gap-5">
+        <Eyebrow>How I teach</Eyebrow>
+        <Heading reveal="scroll">Trust the process, not the feeling.</Heading>
+        <p class="max-w-md font-body text-lg leading-relaxed text-foreground/75">
+          Confidence is not accuracy. Here's what that looks like on one kind of scene I've
+          worked more times than I can count.
+        </p>
+      </div>
+      <ol class="grid gap-10 group-data-[story=pinned]/story:gap-0">
+        {
+          scenes.map(({ label, title, body }, index) => (
+            <li
+              data-story-scene
+              class="flex flex-col gap-3 border-l border-accent pl-6 group-data-[story=pinned]/story:[grid-area:1/1]"
+            >
+              <p class="font-display text-xs font-bold tracking-[0.24em] text-primary uppercase">
+                {String(index + 1).padStart(2, '0')} &middot; {label}
+              </p>
+              <h3
+                class:list={[
+                  'font-display text-2xl leading-tight font-bold sm:text-3xl',
+                  index === scenes.length - 1 ? 'text-primary' : 'text-foreground'
+                ]}
+              >
+                {title}
+              </h3>
+              <p class="max-w-md font-body text-base leading-relaxed text-foreground/75 sm:text-lg">
+                {body}
+              </p>
+            </li>
+          ))
+        }
+      </ol>
+      <div aria-hidden="true" class="hidden gap-2 group-data-[story=pinned]/story:flex">
+        {
+          scenes.map(() => (
+            <span class="h-0.5 w-10 overflow-hidden bg-foreground/15">
+              <span data-story-tick class="block h-full bg-primary" />
+            </span>
+          ))
+        }
+      </div>
+    </div>
+
+    <figure
+      class="flex flex-col gap-6 rounded-2xl border border-foreground/10 bg-background/70 p-5 shadow-[0_2rem_4rem_-2rem_rgb(0_0_0/0.5)] sm:p-7"
+    >
+      <figcaption class="flex items-center justify-between gap-4">
+        <span class="font-display text-xs font-bold tracking-[0.24em] text-primary uppercase">
+          Case notes
+        </span>
+        <span class="font-display text-xs tracking-[0.18em] text-foreground/75 uppercase">
+          Living room, single-family
+        </span>
+      </figcaption>
+
+      <svg
+        viewBox="0 0 400 260"
+        role="img"
+        aria-label="Floor plan of the living room: couch on the left wall with a lamp behind it and a space heater beside it, fire patterns across the floor, arc sites on the lamp circuit, and a marked origin area around the couch, lamp, and heater."
+        class="w-full font-display"
+      >
+        <rect x="20" y="20" width="360" height="220" fill="var(--color-primary)" fill-opacity="0.07" data-story-enter="2"></rect>
+        <g fill="var(--color-accent)" fill-opacity="0.5">
+          <path d="M84 104c14-6 30 2 34 14s-6 20-2 32-10 24-24 20-12-16-16-28 -4-34 8-38z"></path>
+          <path d="M126 168c8-4 18 0 18 8s-10 12-18 10-6-14 0-18z"></path>
+        </g>
+        <g fill="var(--color-accent)" fill-opacity="0.38" data-story-enter="2">
+          <path d="M196 60c12-4 26 4 24 16s-18 14-26 8-8-20 2-24z"></path>
+          <path d="M236 150c16-8 36 0 36 14s-20 22-34 16-16-24-2-30z"></path>
+          <path d="M300 196c10-6 24 0 22 10s-16 14-24 8-6-14 2-18z"></path>
+          <path d="M150 210c8-4 20 0 18 8s-14 10-20 6-4-10 2-14z"></path>
+          <path d="M318 60c8-4 18 2 16 10s-12 10-18 6-4-12 2-16z"></path>
+        </g>
+        <g fill="none" stroke="var(--color-foreground)" stroke-opacity="0.45" stroke-width="2">
+          <path d="M20 20H380V240H300M260 240H20Z"></path>
+        </g>
+        <g fill="none" stroke="var(--color-foreground)" stroke-opacity="0.28" stroke-width="1.25">
+          <path d="M170 20h80M170 24h80"></path>
+          <rect x="30" y="84" width="46" height="106" rx="6"></rect>
+          <path d="M42 90v94M30 120h12M30 154h12"></path>
+          <rect x="30" y="48" width="30" height="26" rx="3"></rect>
+          <circle cx="45" cy="61" r="7"></circle>
+          <rect x="112" y="112" width="60" height="38" rx="3"></rect>
+          <rect x="252" y="40" width="50" height="46" rx="8"></rect>
+          <rect x="342" y="96" width="28" height="86" rx="3"></rect>
+          <rect x="82" y="196" width="18" height="14" rx="2"></rect>
+        </g>
+        <path
+          d="M23 236V66"
+          fill="none"
+          stroke="var(--color-primary)"
+          stroke-opacity="0.5"
+          stroke-dasharray="3 4"
+        ></path>
+        <path
+          d="M23 203H82"
+          fill="none"
+          stroke="var(--color-primary)"
+          stroke-opacity="0.6"
+          stroke-dasharray="3 4"
+          data-story-enter="4"></path>
+        <g fill="var(--color-primary)">
+          <circle cx="23" cy="190" r="2.5" data-story-enter="3"></circle>
+          <circle cx="23" cy="140" r="2.5" data-story-enter="3"></circle>
+          <circle cx="23" cy="70" r="4.5" data-story-enter="3"></circle>
+        </g>
+        <g data-story-enter="4">
+          <ellipse
+            cx="66"
+            cy="130"
+            rx="46"
+            ry="94"
+            fill="var(--color-primary)"
+            fill-opacity="0.07"
+            stroke="var(--color-primary)"
+            stroke-dasharray="5 5"
+            stroke-width="1.5"></ellipse>
+          <text x="118" y="46" fill="var(--color-primary)" font-size="10" font-weight="700" letter-spacing="1.5"
+            >ORIGIN AREA</text
+          >
+        </g>
+        <g data-story-exit="4" data-story-move="3" data-story-dx="-8" data-story-dy="-74" class="opacity-0">
+          <circle
+            cx="53"
+            cy="135"
+            r="11"
+            fill="var(--color-primary)"
+            fill-opacity="0.25"
+            stroke="var(--color-primary)"
+            stroke-width="1.5"></circle>
+          <text x="70" y="139" fill="var(--color-primary)" font-size="10" font-weight="700" letter-spacing="1.5"
+            >ORIGIN?</text
+          >
+        </g>
+        <g fill="var(--color-foreground)" fill-opacity="0.75" font-size="8" letter-spacing="1">
+          <text x="182" y="128">TABLE</text>
+          <text x="258" y="100">CHAIR</text>
+          <text x="104" y="207" data-story-enter="4">HEATER</text>
+          <text x="266" y="252">DOOR</text>
+        </g>
+      </svg>
+
+      <ol class="grid gap-2 border-t border-foreground/10 pt-5 font-body text-sm sm:text-base">
+        {
+          notes.map(({ text, strike, enter, conclusion }) => (
+            <li
+              data-story-enter={enter}
+              class:list={[
+                'relative justify-self-start',
+                conclusion ? 'font-semibold text-primary' : 'text-foreground/80'
+              ]}
+            >
+              {text}
+              {strike && (
+                <span
+                  data-story-strike={strike}
+                  aria-hidden="true"
+                  class="absolute inset-x-0 top-1/2 h-px bg-accent"
+                />
+              )}
+            </li>
+          ))
+        }
+      </ol>
+
+      <div class="grid gap-3 sm:grid-cols-2 sm:gap-6">
+        <div class="flex flex-col gap-2">
+          <span class={meterLabel}>How sure it feels</span>
+          <span class="block h-1.5 overflow-hidden rounded-full bg-foreground/10">
+            <span
+              data-story-meter
+              data-story-values="0.9,0.5,0.75,0.35"
+              class="block h-full rounded-full bg-accent [clip-path:inset(0_65%_0_0)]"></span>
+          </span>
+        </div>
+        <div class="flex flex-col gap-2">
+          <span class={meterLabel}>How much has been tested</span>
+          <span class="block h-1.5 overflow-hidden rounded-full bg-foreground/10">
+            <span
+              data-story-meter
+              data-story-values="0.05,0.4,0.75,1"
+              class="block h-full rounded-full bg-primary [clip-path:inset(0_0_0_0)]"></span>
+          </span>
+        </div>
+      </div>
+    </figure>
+  </Container>
+</section>

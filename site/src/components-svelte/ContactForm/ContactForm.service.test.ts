@@ -10,7 +10,31 @@ const validPayload = {
   turnstileToken: 'tok'
 };
 
+const courses = [
+  { slug: 'fire-origin-and-cause-fundamentals', title: 'Fire Origin and Cause Fundamentals' },
+  { slug: 'vehicle-fire-investigation', title: 'Vehicle Fire Investigation' }
+];
+
 describe('ContactFormService', () => {
+  describe('coursePrefill', () => {
+    it('returns the title and a starter message for a known course', () => {
+      expect(
+        contactFormService.coursePrefill('?course=vehicle-fire-investigation', courses)
+      ).toEqual({
+        courseTitle: 'Vehicle Fire Investigation',
+        message: contactFormConstants.courseStarterMessage('Vehicle Fire Investigation')
+      });
+    });
+
+    it('returns null without a course parameter', () => {
+      expect(contactFormService.coursePrefill('', courses)).toBeNull();
+    });
+
+    it('returns null for an unknown course', () => {
+      expect(contactFormService.coursePrefill('?course=not-a-course', courses)).toBeNull();
+    });
+  });
+
   describe('submit', () => {
     afterEach(() => {
       vi.restoreAllMocks();

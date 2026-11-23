@@ -1,0 +1,66 @@
+---
+import youTubeService from '$util/YouTube.service';
+
+/**
+ * A branded poster for a YouTube video that loads the player only when it's
+ * clicked, so the page never pays for YouTube's scripts up front. Without JS
+ * the poster is a plain link to the video on YouTube.
+ */
+interface Props {
+  videoUrl: string;
+  title: string;
+}
+
+const { videoUrl, title } = Astro.props;
+const embedUrl = `${youTubeService.convertToEmbedUrl(videoUrl)}?autoplay=1`;
+---
+
+<a
+  href={videoUrl}
+  data-video-poster
+  data-embed={embedUrl}
+  data-title={`${title} video`}
+  class="group/video relative grid aspect-video w-full place-items-center overflow-hidden bg-muted outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
+>
+  <span
+    aria-hidden="true"
+    class="absolute inset-0 bg-[radial-gradient(ellipse_60%_70%_at_50%_110%,color-mix(in_oklch,var(--color-accent)_35%,transparent),transparent_70%)]"
+  ></span>
+  <span
+    class="relative grid size-20 place-items-center rounded-full bg-primary text-primary-foreground transition-transform duration-(--duration-snap) ease-soft group-hover/video:scale-105"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true" class="ml-1 size-8 fill-current">
+      <path d="M8 5.5v13l10.5-6.5z"></path>
+    </svg>
+    <span class="sr-only">Play the {title} overview video</span>
+  </span>
+  <span
+    aria-hidden="true"
+    class="absolute bottom-5 left-6 font-display text-xs font-bold tracking-[0.2em] text-foreground/80 uppercase"
+  >
+    Watch the overview
+  </span>
+</a>
+
+<script>
+  // One delegated listener survives client-router navigations.
+  document.addEventListener('click', (event) => {
+    const poster =
+      event.target instanceof Element
+        ? event.target.closest<HTMLAnchorElement>('[data-video-poster]')
+        : null;
+    const src = poster?.dataset.embed;
+    if (!poster || !src) return;
+    event.preventDefault();
+    const player = document.createElement('iframe');
+    player.src = src;
+    player.title = poster.dataset.title ?? '';
+    player.allow =
+      'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    player.referrerPolicy = 'strict-origin-when-cross-origin';
+    player.allowFullscreen = true;
+    player.className = 'aspect-video w-full';
+    poster.replaceWith(player);
+    player.focus();
+  });
+</script>

@@ -1,17 +1,26 @@
-/* Motion — 3 durations, 1 easing, named animations.
-   Tailwind generates duration-snap, duration-glide, duration-slow, ease-soft,
-   animate-fade-up, animate-fade-in.
+/* Motion — 4 durations, 2 easings, named animations.
+   Tailwind generates ease-soft, ease-sweep, animate-fade-up, animate-fade-in.
+   Tailwind has no duration namespace, so use the variable form for
+   transitions: duration-(--duration-snap). GSAP reads the same tokens at runtime
+   (src/util/motion/MotionTokens.service.ts), so a change here retunes both.
    The two-duration rule still applies for interactive bits (snap for hovers,
-   glide for transitions); --duration-slow exists only for the hero fade-in
-   so the photo doesn't visibly shift on first paint.
+   glide for transitions); --duration-slow is for entrances that should not
+   visibly jump (heading reveals, the hero fade-in), and --duration-cinema is
+   only for the home intro and the pinned story scenes.
+   --ease-sweep is a symmetric in-out curve for things that travel across the
+   screen (page sweeps, the intro logo hand-off, scrubbed scenes).
+   `static` makes Tailwind emit every variable even when no utility uses it,
+   so GSAP and the duration-(--duration-*) form can always read them.
    Expand when needed:
      - Additional easings (--ease-bounce) for a different feel.
      - Additional named animations (--animate-slide-up) per pattern. */
-@theme {
+@theme static {
   --duration-snap: 150ms;
   --duration-glide: 400ms;
   --duration-slow: 700ms;
+  --duration-cinema: 1200ms;
   --ease-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-sweep: cubic-bezier(0.65, 0, 0.35, 1);
   --animate-fade-up: fade-up var(--duration-glide) var(--ease-soft) both;
   --animate-fade-in: fade-in var(--duration-slow) var(--ease-soft) both;
   --animate-slide-in-left: slide-in-left var(--duration-glide) var(--ease-soft) both;
@@ -88,17 +97,40 @@
   }
 }
 
-/* Root crossfade for Astro view transitions; consumes motion tokens so a token
-   swap retunes the transition. */
+/* Astro view transitions swap the page instantly; GSAP owns the page sweep
+   (src/util/motion/PageTransition.service.ts) so the header and footer stay
+   put while only the main content moves. */
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: var(--duration-glide);
-  animation-timing-function: var(--ease-soft);
+  animation: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none;
+/* GSAP-owned starting states. An inline script in BaseLayout sets
+   html[data-motion] only when the visitor has no reduced-motion preference,
+   so without JS (or with reduced motion) everything below is inert and the
+   content renders in its final state. The failsafe animations un-hide
+   content if the GSAP bundle never runs. */
+@keyframes motion-failsafe {
+  to {
+    visibility: visible;
   }
+}
+
+@keyframes intro-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+html[data-motion] :is([data-split], [data-reveal]) {
+  visibility: hidden;
+  animation: motion-failsafe 0s 2.5s forwards;
+}
+
+/* The home intro overlay shows only when the inline script marks this visit
+   as the first page of the session. */
+html[data-intro] [data-intro-overlay] {
+  display: grid;
+  animation: intro-failsafe var(--duration-glide) 4s forwards;
 }
