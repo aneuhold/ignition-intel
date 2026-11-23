@@ -3,6 +3,15 @@ import { globalConstants } from '$util/globalConstants';
 import { contactFormConstants } from './contactFormConstants';
 
 /**
+ * A course the contact form can be opened about: its collection slug and
+ * display title.
+ */
+export interface ContactFormCourse {
+  slug: string;
+  title: string;
+}
+
+/**
  * Pure-logic singleton for the ContactForm island. Owns the Turnstile widget
  * lifecycle and the POST-to-worker interpretation so `ContactForm.svelte`
  * stays focused on state and markup.
@@ -64,6 +73,24 @@ class ContactFormService {
    */
   resetTurnstile(widgetId: string): void {
     turnstile.reset(widgetId);
+  }
+
+  /**
+   * Finds the course named by the `course` query parameter and builds the
+   * starter message for it. Returns `null` when the parameter is missing or
+   * names no known course, so the form starts empty.
+   *
+   * @param search The page's query string, e.g. `window.location.search`
+   * @param courses Every course the form can be opened about
+   */
+  coursePrefill(
+    search: string,
+    courses: readonly ContactFormCourse[]
+  ): { course: ContactFormCourse; message: string } | null {
+    const slug = new URLSearchParams(search).get(contactFormConstants.courseQueryParam);
+    const course = slug ? courses.find((candidate) => candidate.slug === slug) : undefined;
+    if (!course) return null;
+    return { course, message: contactFormConstants.courseStarterMessage(course.title) };
   }
 
   /**

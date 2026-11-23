@@ -4,6 +4,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderSvelteComponent } from '../../../testUtils/renderSvelteComponent';
 import contactFormService from './ContactForm.service';
 import ContactForm from './ContactForm.svelte';
+import { contactFormConstants } from './contactFormConstants';
+
+const courses = [{ slug: 'scene-documentation', title: 'Scene Documentation' }];
 
 const installTurnstileMock = (): { triggerToken: (token: string) => void } => {
   let savedCallback: ((token: string) => void) | null = null;
@@ -24,6 +27,29 @@ describe('ContactForm', () => {
   afterEach(() => {
     cleanup();
     vi.restoreAllMocks();
+    window.history.replaceState(null, '', '/');
+  });
+
+  it('pre-fills the course and starter message from the course query parameter', async () => {
+    installTurnstileMock();
+    window.history.replaceState(null, '', '/contact?course=scene-documentation');
+    renderSvelteComponent(ContactForm, { props: { courses } });
+
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('contact-form-course')).toHaveTextContent('Scene Documentation')
+    );
+    expect(screen.getByTestId('contact-form-message')).toHaveValue(
+      contactFormConstants.courseStarterMessage('Scene Documentation')
+    );
+  });
+
+  it('starts empty without a course query parameter', () => {
+    installTurnstileMock();
+    window.history.replaceState(null, '', '/contact');
+    renderSvelteComponent(ContactForm, { props: { courses } });
+
+    expect(screen.queryByTestId('contact-form-course')).not.toBeInTheDocument();
+    expect(screen.getByTestId('contact-form-message')).toHaveValue('');
   });
 
   it('renders the name, email, message, and honeypot inputs', () => {

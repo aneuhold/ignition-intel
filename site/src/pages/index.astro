@@ -1,20 +1,135 @@
 ---
-import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactCta from '$components-astro/ContactCta.astro';
+import CourseTag from '$components-astro/CourseTag.astro';
+import FieldStats from '$components-astro/FieldStats.astro';
+import SceneTape from '$components-astro/SceneTape.astro';
+import UndeterminedNote from '$components-astro/UndeterminedNote.astro';
+import Button from '$components-astro/ui/Button.astro';
+import Container from '$components-astro/ui/Container.astro';
+import Eyebrow from '$components-astro/ui/Eyebrow.astro';
+import Heading from '$components-astro/ui/Heading.astro';
+import ScenePhoto from '$components-astro/ui/ScenePhoto.astro';
+import Section from '$components-astro/ui/Section.astro';
 import siteContentService from '$util/SiteContent.service';
 
-const { title, tagline, heroImage, heroImageAlt = '' } = (await siteContentService.home()).data;
+const { title, tagline } = (await siteContentService.home()).data;
+const courses = await siteContentService.courses();
+/** How many course tags the home page shows before linking to the full list. */
+const featuredCount = 3;
+const featured = courses.slice(0, featuredCount);
 ---
 
 <BaseLayout
   title={`${title} | Fire & Arson Investigation Training`}
   description="Ignition Intel offers fire and arson investigation courses and training, taught by Nicole Brewer. Placeholder description: update before launch."
 >
-  <main>
-    {heroImage && (
-      <Image src={heroImage} alt={heroImageAlt} inferSize loading="eager" fetchpriority="high" />
-    )}
-    <h1>{title}</h1>
-    {tagline && <p>{tagline}</p>}
-  </main>
+  <Container class="pt-14 pb-4 sm:pt-20 sm:pb-8">
+    <div class="grid items-center gap-14 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
+      <div class="flex flex-col gap-6">
+        <div data-motion="intro">
+          <Eyebrow index="01">Fire &amp; arson investigation training</Eyebrow>
+        </div>
+        <Heading level={1} size="display">{tagline ?? title}</Heading>
+        <p class="max-w-xl text-xl leading-relaxed text-foreground/85">
+          I'm Nicole Brewer. I've worked more than 3,500 fire and explosion investigations over 30
+          years in the fire service, and I'm still working them. I teach investigators to reach
+          conclusions the evidence can carry, and to say so when it can't.
+        </p>
+        <div data-motion="intro" class="mt-2 flex flex-wrap gap-4">
+          <Button href="/courses">See the courses</Button>
+          <Button href="/contact" variant="outline">Ask about training</Button>
+        </div>
+        <p
+          data-motion="intro"
+          class="mt-4 flex flex-wrap gap-x-6 gap-y-1 border-t border-foreground/15 pt-4 font-display text-xs font-bold uppercase tracking-[0.18em] text-foreground/55"
+        >
+          <span>DFS &middot; IAAI-CFI(V) &middot; CFEI &middot; ECT</span>
+          <span>Fire Investigator of the Year, 2022</span>
+        </p>
+      </div>
+      <div data-motion="intro">
+        <ScenePhoto
+          figure="Fig. 1"
+          caption="Area of origin, residential fire"
+          placeholder="Nicole documenting an area of origin on scene"
+          marker={1}
+          class="lg:rotate-[1deg]"
+        />
+      </div>
+    </div>
+  </Container>
+
+  <Section spacing="tight" labelledby="field-record-heading">
+    <Eyebrow as="h2" id="field-record-heading" class="mb-6">Field record</Eyebrow>
+    <FieldStats />
+  </Section>
+
+  <SceneTape />
+
+  <Section labelledby="courses-heading">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <div class="flex max-w-2xl flex-col gap-4">
+        <Eyebrow index="02">Courses</Eyebrow>
+        <Heading id="courses-heading">Training built on the method.</Heading>
+        <p class="text-lg leading-relaxed text-foreground/85">
+          Each course is built on NFPA 921 and 1033 and on scenes I've worked. I teach them for
+          agencies, associations, and private firms.
+        </p>
+      </div>
+      {
+        courses.length > featured.length && (
+          <a
+            href="/courses"
+            class="font-display text-sm font-bold uppercase tracking-[0.16em] text-primary underline decoration-primary/40 underline-offset-8 transition-colors duration-(--duration-snap) ease-soft hover:decoration-primary"
+          >
+            All {courses.length} courses &rarr;
+          </a>
+        )
+      }
+    </div>
+    <div class="mt-12 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+      {featured.map((course, index) => <CourseTag course={course} index={index} />)}
+    </div>
+  </Section>
+
+  <UndeterminedNote index="03" />
+
+  <Section labelledby="about-heading">
+    <div class="grid items-center gap-14 lg:grid-cols-[5fr_7fr] lg:gap-20">
+      <ScenePhoto
+        figure="Fig. 2"
+        caption="Nicole Brewer, DFS"
+        placeholder="Portrait of Nicole in turnout gear"
+        aspect="portrait"
+        class="mx-auto w-full max-w-sm lg:rotate-[-1deg]"
+      />
+      <div class="flex flex-col gap-5">
+        <Eyebrow index="04">Who's teaching</Eyebrow>
+        <Heading id="about-heading">I investigate fires. I teach the people who do.</Heading>
+        <p class="text-lg leading-relaxed text-foreground/85">
+          I spent 26 years with Portland Fire &amp; Rescue as a fire training specialist, inspector,
+          and sworn fire/arson investigator, and I trained Portland's new investigators. Today I
+          work fire cases as a Principal Consultant at Envista Forensics, and I teach.
+        </p>
+        <ul class="flex flex-col border-t border-foreground/15">
+          {
+            [
+              'Doctorate, Forensic Sciences (Arson and Explosives)',
+              'IAAI-CFI(V), CFEI, ECT, IAAI Certified Instructor',
+              'Validated three IFSTA fire investigation textbooks'
+            ].map((line) => (
+              <li class="flex items-baseline gap-3 border-b border-foreground/15 py-3 font-display text-sm text-foreground/80">
+                <span aria-hidden="true" class="size-1.5 shrink-0 translate-y-[-0.1rem] bg-accent" />
+                {line}
+              </li>
+            ))
+          }
+        </ul>
+        <Button href="/about" variant="outline" class="mt-3 self-start">More about me</Button>
+      </div>
+    </div>
+  </Section>
+
+  <ContactCta />
 </BaseLayout>

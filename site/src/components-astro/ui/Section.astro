@@ -1,0 +1,46 @@
+---
+import Container from './Container.astro';
+
+/**
+ * A page section with the site's vertical rhythm, wrapping its content in a
+ * `Container`.
+ */
+interface Props {
+  id?: string;
+  /** `muted` sets the section on the recessed slate panel color. */
+  tone?: 'default' | 'muted';
+  /** `tight` halves the vertical padding, for bands between full sections. */
+  spacing?: 'default' | 'tight';
+  /** Drops the padding on one side, so a section can run on from the one before or after it. */
+  flush?: 'top' | 'bottom';
+  width?: 'default' | 'narrow';
+  /** Id of the heading that names this section. */
+  labelledby?: string;
+  class?: string;
+}
+
+const {
+  id,
+  tone = 'default',
+  spacing = 'default',
+  flush,
+  width = 'default',
+  labelledby,
+  class: className
+} = Astro.props;
+---
+
+<section
+  id={id}
+  aria-labelledby={labelledby}
+  class:list={[
+    flush !== 'top' && (spacing === 'tight' ? 'pt-12 sm:pt-16' : 'pt-20 sm:pt-28'),
+    flush !== 'bottom' && (spacing === 'tight' ? 'pb-12 sm:pb-16' : 'pb-20 sm:pb-28'),
+    tone === 'muted' && 'bg-muted',
+    className
+  ]}
+>
+  <Container width={width}>
+    <slot />
+  </Container>
+</section>

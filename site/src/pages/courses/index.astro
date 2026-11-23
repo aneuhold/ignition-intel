@@ -1,5 +1,11 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContactCta from '$components-astro/ContactCta.astro';
+import CourseTag from '$components-astro/CourseTag.astro';
+import SceneTape from '$components-astro/SceneTape.astro';
+import Eyebrow from '$components-astro/ui/Eyebrow.astro';
+import Heading from '$components-astro/ui/Heading.astro';
+import Section from '$components-astro/ui/Section.astro';
 import siteContentService from '$util/SiteContent.service';
 
 const courses = await siteContentService.courses();
@@ -9,15 +15,31 @@ const courses = await siteContentService.courses();
   title="Fire Investigation Training | Ignition Intel"
   description="Fire and arson investigation courses and training offered by Ignition Intel. Placeholder description: update before launch."
 >
-  <main>
-    <h1>Courses.</h1>
-    <ul>
-      {courses.map((course) => (
-        <li>
-          <a href={`/courses/${course.id}`}>{course.data.title}</a>
-          <p>{course.data.description}</p>
-        </li>
-      ))}
-    </ul>
-  </main>
+  <Section flush="bottom">
+    <div class="flex max-w-2xl flex-col gap-5">
+      <div data-motion="intro">
+        <Eyebrow>Courses &middot; {courses.length} on file</Eyebrow>
+      </div>
+      <Heading level={1} size="display">What I teach.</Heading>
+      <p class="text-xl leading-relaxed text-foreground/85">
+        Every course is built on NFPA 921, NFPA 1033, and the scenes I've worked. I teach them for
+        agencies, associations, and private firms, in a classroom near you or at a scene we can
+        burn. Pick one to see what it covers.
+      </p>
+    </div>
+  </Section>
+
+  <Section flush="top" class="pt-10 sm:pt-12" labelledby="course-list-heading">
+    <h2 id="course-list-heading" class="sr-only">All courses</h2>
+    <div class="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+      {courses.map((course, index) => <CourseTag course={course} index={index} />)}
+    </div>
+  </Section>
+
+  <SceneTape />
+
+  <ContactCta
+    heading="Want a course brought to you?"
+    body="I teach for agencies, IAAI chapters, and private firms. Tell me what your people need, how many of them there are, and roughly when."
+  />
 </BaseLayout>

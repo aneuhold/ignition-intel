@@ -1,0 +1,27 @@
+---
+/**
+ * A sheet of stone-colored paper on slate: dark ink, a soft drop shadow, and
+ * optionally ruled lines with a rust margin rule like a field notebook page.
+ */
+interface Props {
+  /** Adds ruled lines and the rust margin rule. */
+  ruled?: boolean;
+  /** Passed through as `data-motion`, e.g. `stamp-surface`. */
+  motion?: string;
+  class?: string;
+}
+
+const { ruled = false, motion, class: className } = Astro.props;
+---
+
+<div
+  data-motion={motion}
+  class:list={[
+    'relative bg-foreground text-primary-foreground shadow-[0_14px_24px_-10px_rgb(0_0_0/0.55)]',
+    ruled &&
+      'bg-ruled pl-12 before:absolute before:inset-y-0 before:left-8 before:w-px before:bg-accent/60 sm:pl-14 sm:before:left-10',
+    className
+  ]}
+>
+  <slot />
+</div>

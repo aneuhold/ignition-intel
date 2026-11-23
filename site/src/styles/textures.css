@@ -1,0 +1,46 @@
+/* Paper and evidence textures as Tailwind utilities. Each one is a background or a shape
+   that the "field notes" visual language reuses across components (evidence tags, report
+   forms, photo placeholders). They draw only from tokens in tokens.css, so a color change
+   there carries through.
+   Nothing here may use a mask, filter, or blend mode: every texture is a static
+   background or shape so pages stay cheap to paint on phones.
+   Expand when needed: add a utility here only when the same multi-stop gradient or shape
+   appears in more than one component; one-offs stay as arbitrary values in markup. */
+
+/* Ruled notebook lines in faint ink, for paper surfaces (bg-foreground). Line spacing
+   matches leading-7 so text set at that leading sits on the lines. */
+@utility bg-ruled {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 calc(1.75rem - 1px),
+    color-mix(in oklab, var(--color-primary-foreground) 14%, transparent) calc(1.75rem - 1px)
+      1.75rem
+  );
+}
+
+/* Diagonal hatch for empty photo frames on slate. */
+@utility bg-hatch {
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--color-foreground) 7%, transparent) 0 1px,
+    transparent 1px 11px
+  );
+}
+
+/* Shipping-tag silhouette: chamfered top corners from a static clip-path polygon. The
+   punched hole is a drawn element, not a mask, so the tag stays cheap to paint. */
+@utility shape-tag {
+  clip-path: polygon(
+    1.5rem 0,
+    calc(100% - 1.5rem) 0,
+    100% 1.5rem,
+    100% 100%,
+    0 100%,
+    0 1.5rem
+  );
+}
+
+/* Evidence marker tent: a trapezoid seen from the front. */
+@utility shape-marker {
+  clip-path: polygon(18% 0, 82% 0, 100% 100%, 0 100%);
+}

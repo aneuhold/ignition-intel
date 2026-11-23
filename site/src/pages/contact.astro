@@ -1,10 +1,25 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ContactForm from '$components-svelte/ContactForm';
+import Eyebrow from '$components-astro/ui/Eyebrow.astro';
+import Heading from '$components-astro/ui/Heading.astro';
+import Section from '$components-astro/ui/Section.astro';
 import siteContentService from '$util/SiteContent.service';
 
 const { phone, email, note } = (await siteContentService.contact()).data;
 const telHref = phone ? `tel:${phone.replace(/[^\d+]/g, '')}` : undefined;
+const courses = (await siteContentService.courses()).map((course) => ({
+  slug: course.id,
+  title: course.data.title
+}));
+const helpfulDetails = [
+  'Which course you are asking about',
+  'Your agency, chapter, or firm',
+  'Rough dates and location',
+  'How many people would attend'
+];
+const labelClasses =
+  'font-display text-[0.65rem] font-bold uppercase tracking-[0.22em] text-foreground/55';
 ---
 
 <BaseLayout
@@ -12,13 +27,58 @@ const telHref = phone ? `tel:${phone.replace(/[^\d+]/g, '')}` : undefined;
   description="Get in touch with Ignition Intel about fire and arson investigation courses and training. Send a note through the contact form."
 >
   <link slot="head" rel="preconnect" href="https://challenges.cloudflare.com" />
-  <main>
-    <h1>Get in touch.</h1>
-    <address>
-      {phone && <a href={telHref}>{phone}</a>}
-      <a href={`mailto:${email}`}>{email}</a>
-    </address>
-    <p>{note}</p>
-    <ContactForm client:idle />
-  </main>
+  <Section>
+    <div class="grid gap-14 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
+      <div class="flex flex-col gap-6">
+        <div data-motion="intro">
+          <Eyebrow>Contact</Eyebrow>
+        </div>
+        <Heading level={1} size="display">Get in touch.</Heading>
+        <p class="text-xl leading-relaxed text-foreground/85">{note}</p>
+        <address data-motion="intro" class="flex flex-col gap-2 not-italic">
+          <span class={labelClasses}>Or write directly</span>
+          {
+            phone && (
+              <a
+                href={telHref}
+                class="font-display text-lg font-bold text-primary underline decoration-primary/40 underline-offset-4 hover:decoration-primary"
+              >
+                {phone}
+              </a>
+            )
+          }
+          <a
+            href={`mailto:${email}`}
+            class="font-display text-lg font-bold text-primary underline decoration-primary/40 underline-offset-4 hover:decoration-primary"
+          >
+            {email}
+          </a>
+        </address>
+        <div data-motion="intro" class="mt-4 flex flex-col gap-3 border-t border-foreground/15 pt-6">
+          <p class={labelClasses}>Helpful to include</p>
+          <ul class="flex flex-col gap-2">
+            {
+              helpfulDetails.map((detail) => (
+                <li class="flex items-baseline gap-3 font-display text-sm text-foreground/80">
+                  <span aria-hidden="true" class="size-1.5 shrink-0 bg-accent" />
+                  {detail}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+      <div data-motion="intro" class="border border-foreground/15 bg-muted">
+        <div
+          class="flex items-center justify-between border-b border-foreground/15 px-6 py-3 sm:px-8"
+        >
+          <span class={labelClasses}>Field notes</span>
+          <span class={labelClasses}>New message</span>
+        </div>
+        <div class="p-6 sm:p-8">
+          <ContactForm client:idle courses={courses} />
+        </div>
+      </div>
+    </div>
+  </Section>
 </BaseLayout>

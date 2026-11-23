@@ -24,6 +24,7 @@
     "@sveltia/cms": "^0.256.1",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.4.4",
+    "gsap": "^3.15.1",
     "schema-dts": "^2.1.0",
     "sharp": "^0.35.5",
     "svelte": "^5.57.3",

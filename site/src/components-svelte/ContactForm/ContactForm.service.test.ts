@@ -10,7 +10,31 @@ const validPayload = {
   turnstileToken: 'tok'
 };
 
+const courses = [
+  { slug: 'scene-documentation', title: 'Scene Documentation' },
+  { slug: 'cognitive-bias', title: 'Cognitive Bias in Fire Investigation' }
+];
+
 describe('ContactFormService', () => {
+  describe('coursePrefill', () => {
+    it('returns the course and a starter message naming it', () => {
+      const prefill = contactFormService.coursePrefill('?course=cognitive-bias', courses);
+      expect(prefill).toEqual({
+        course: courses[1],
+        message: contactFormConstants.courseStarterMessage('Cognitive Bias in Fire Investigation')
+      });
+      expect(prefill?.message).toContain('Cognitive Bias in Fire Investigation');
+    });
+
+    it('returns null without a course parameter', () => {
+      expect(contactFormService.coursePrefill('', courses)).toBeNull();
+    });
+
+    it('returns null for an unknown course slug', () => {
+      expect(contactFormService.coursePrefill('?course=not-a-course', courses)).toBeNull();
+    });
+  });
+
   describe('submit', () => {
     afterEach(() => {
       vi.restoreAllMocks();

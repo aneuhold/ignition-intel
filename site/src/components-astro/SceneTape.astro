@@ -1,0 +1,39 @@
+---
+/**
+ * A decorative band of scene tape laid across the page at a slight angle.
+ * Carries `data-motion="tape"` so it slides in on scroll.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+const phrases = ['Fire investigation training', 'Ignition Intel', 'Origin and cause'];
+const repeats = 6;
+---
+
+<!-- The tilt sits on a wrapper because GSAP owns the band's transform while it
+     slides in. -->
+<div aria-hidden="true" class:list={['overflow-hidden py-10', className]}>
+  <div class="-ml-[10%] w-[120%] rotate-[-2deg]">
+    <div
+      data-motion="tape"
+      class="overflow-hidden border-y-4 border-primary-foreground/80 bg-primary py-2.5"
+    >
+    <div
+      class="flex w-max gap-6 whitespace-nowrap font-display text-xs font-bold uppercase tracking-[0.3em] text-primary-foreground sm:text-sm"
+    >
+      {
+        Array.from({ length: repeats }, () =>
+          phrases.map((phrase) => (
+            <>
+              <span>{phrase}</span>
+              <span class="text-accent">&#9632;</span>
+            </>
+          ))
+        )
+      }
+    </div>
+    </div>
+  </div>
+</div>

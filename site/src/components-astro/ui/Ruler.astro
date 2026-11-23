@@ -1,0 +1,81 @@
+---
+/**
+ * A forensic photo scale: millimetre-style ticks with a number every
+ * "centimetre" (40px), drawn on stone in dark ink. `horizontal` reads left to
+ * right from 0; `vertical` reads bottom to top from 0, so a vertical and a
+ * horizontal ruler meeting at a corner form an L-shaped scale. The ruler fills
+ * its box and clips whatever ticks don't fit.
+ */
+interface Props {
+  orientation?: 'horizontal' | 'vertical';
+  class?: string;
+}
+
+const { orientation = 'horizontal', class: className } = Astro.props;
+
+/** Pixels per labelled unit, and per minor tick. */
+const unit = 40;
+const step = 4;
+/** Long enough to cover any frame the site renders. */
+const length = 2000;
+const tickDepth = (offset: number): number => {
+  if (offset % unit === 0) return 10;
+  if (offset % (unit / 2) === 0) return 7;
+  return 4;
+};
+const offsets = Array.from({ length: length / step + 1 }, (_, i) => i * step);
+const labels = Array.from({ length: length / unit }, (_, i) => i);
+
+// Horizontal ticks hang from the top edge; vertical ticks grow left from the
+// right edge, at negative y so they count up from the bottom.
+const ticksPath = offsets
+  .map((offset) =>
+    orientation === 'horizontal'
+      ? `M${offset + 0.5} 0v${tickDepth(offset)}`
+      : `M20 ${-offset - 0.5}h${-tickDepth(offset)}`
+  )
+  .join('');
+---
+
+<svg
+  aria-hidden="true"
+  class:list={[
+    'block overflow-hidden bg-foreground text-primary-foreground',
+    orientation === 'horizontal' ? 'h-5 w-full' : 'h-full w-5',
+    className
+  ]}
+>
+  {
+    orientation === 'horizontal' ? (
+      <g>
+        <path d={ticksPath} stroke="currentColor" stroke-width="1" />
+        {labels.map((label) => (
+          <text
+            x={label * unit + 2.5}
+            y="18.5"
+            fill="currentColor"
+            font-size="7"
+            class="font-display font-bold"
+          >
+            {label}
+          </text>
+        ))}
+      </g>
+    ) : (
+      <svg y="100%" overflow="visible">
+        <path d={ticksPath} stroke="currentColor" stroke-width="1" />
+        {labels.map((label) => (
+          <text
+            x="1"
+            y={-label * unit - 2.5}
+            fill="currentColor"
+            font-size="7"
+            class="font-display font-bold"
+          >
+            {label}
+          </text>
+        ))}
+      </svg>
+    )
+  }
+</svg>

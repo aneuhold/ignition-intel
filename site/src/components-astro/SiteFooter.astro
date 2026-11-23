@@ -1,0 +1,77 @@
+---
+import { Image } from 'astro:assets';
+import logoFull from '../assets/logo-full-text-gold.svg';
+import Container from './ui/Container.astro';
+import siteContentService from '$util/SiteContent.service';
+
+/**
+ * Site-wide footer: the logo and a one-line introduction, page links, the
+ * states Nicole is licensed in, and any social links from the CMS.
+ */
+const { links: socialLinks } = (await siteContentService.socialMediaLinks()).data;
+const pages = [
+  { href: '/', label: 'Home' },
+  { href: '/courses', label: 'Courses' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' }
+];
+const year = new Date().getFullYear();
+const labelClasses =
+  'font-display text-[0.65rem] font-bold uppercase tracking-[0.22em] text-foreground/55';
+---
+
+<footer class="border-t border-foreground/10 bg-muted">
+  <Container class="grid gap-10 py-14 md:grid-cols-[1.6fr_1fr_1fr]">
+    <div class="flex flex-col gap-4">
+      <Image src={logoFull} alt="Ignition Intel" class="h-8 w-auto self-start" />
+      <p class="max-w-sm text-sm leading-relaxed text-muted-foreground/80">
+        Fire and arson investigation training from Nicole Brewer, DFS, IAAI-CFI(V), CFEI, ECT.
+        Thirty years of fire scenes, taught by someone still working them.
+      </p>
+    </div>
+    <nav aria-label="Footer" class="flex flex-col gap-3">
+      <p class={labelClasses}>Pages</p>
+      <ul class="flex flex-col gap-2">
+        {
+          pages.map(({ href, label }) => (
+            <li>
+              <a
+                href={href}
+                class="font-display text-sm text-foreground/80 transition-colors duration-(--duration-snap) ease-soft hover:text-primary"
+              >
+                {label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <div class="flex flex-col gap-3">
+      <p class={labelClasses}>Licensed private investigator</p>
+      <p class="font-display text-sm text-foreground/80">Oregon, Washington, Alaska, Montana</p>
+      {
+        socialLinks.length > 0 && (
+          <ul class="mt-3 flex flex-wrap gap-4">
+            {socialLinks.map(({ label, url }) => (
+              <li>
+                <a
+                  href={url}
+                  rel="noopener"
+                  class="font-display text-sm text-primary underline decoration-primary/40 underline-offset-4 hover:decoration-primary"
+                >
+                  {label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </Container>
+  <div class="border-t border-foreground/10">
+    <Container class={`flex flex-wrap justify-between gap-2 py-5 ${labelClasses}`}>
+      <span>&copy; {year} Ignition Intel</span>
+      <span>Molalla, Oregon</span>
+    </Container>
+  </div>
+</footer>
