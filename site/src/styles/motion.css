@@ -1,17 +1,25 @@
-/* Motion — 3 durations, 1 easing, named animations.
-   Tailwind generates duration-snap, duration-glide, duration-slow, ease-soft,
-   animate-fade-up, animate-fade-in.
+/* Motion — 3 durations, 2 easings, named animations.
+   Tailwind generates ease-soft, ease-draft, animate-fade-up, animate-fade-in. It has no
+   --duration-* theme namespace, so durations are used through the variable form:
+   duration-(--duration-snap), duration-(--duration-glide), duration-(--duration-slow).
+   `static` keeps every variable on :root even when no utility uses it, because
+   GSAP reads them at runtime (see util/Motion.service.ts).
    The two-duration rule still applies for interactive bits (snap for hovers,
    glide for transitions); --duration-slow exists only for the hero fade-in
    so the photo doesn't visibly shift on first paint.
    Expand when needed:
      - Additional easings (--ease-bounce) for a different feel.
      - Additional named animations (--animate-slide-up) per pattern. */
-@theme {
+@theme static {
   --duration-snap: 150ms;
   --duration-glide: 400ms;
   --duration-slow: 700ms;
+  /* Line work: hairlines, leader lines, and plan walls drawing themselves in. */
+  --duration-draw: 900ms;
   --ease-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* Symmetric in-out, like a pen that accelerates and settles. Used for line drawing so
+     strokes start and stop precisely rather than overshooting. */
+  --ease-draft: cubic-bezier(0.65, 0, 0.35, 1);
   --animate-fade-up: fade-up var(--duration-glide) var(--ease-soft) both;
   --animate-fade-in: fade-in var(--duration-slow) var(--ease-soft) both;
   --animate-slide-in-left: slide-in-left var(--duration-glide) var(--ease-soft) both;

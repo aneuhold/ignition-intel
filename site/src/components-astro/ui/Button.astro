@@ -1,0 +1,30 @@
+---
+/**
+ * Link styled as a button. `primary` is the rust fill for the main action on a page;
+ * `secondary` is a gold hairline outline. A trailing arrow nudges right on hover.
+ */
+interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary';
+  class?: string;
+}
+
+const { href, variant = 'primary', class: className } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={[
+    'group inline-flex items-center gap-3 px-5 py-3 font-display text-sm font-bold tracking-[0.14em] uppercase transition-colors duration-(--duration-snap) ease-soft focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary',
+    variant === 'primary' && 'bg-accent text-accent-foreground hover:bg-accent/85',
+    variant === 'secondary' &&
+      'border border-primary/70 text-primary hover:border-primary hover:bg-primary/10',
+    className
+  ]}
+>
+  <slot />
+  <span
+    aria-hidden="true"
+    class="transition-transform duration-(--duration-snap) ease-soft group-hover:translate-x-1">&rarr;</span
+  >
+</a>

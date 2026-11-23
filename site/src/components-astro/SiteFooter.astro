@@ -1,0 +1,79 @@
+---
+import { Image } from 'astro:assets';
+import logoFull from '../assets/logo-full-text-gold.svg';
+import Container from '$components-astro/ui/Container.astro';
+import NorthArrow from '$components-astro/ui/NorthArrow.astro';
+import ScaleBar from '$components-astro/ui/ScaleBar.astro';
+import type { DrawingSheet } from '$util/DrawingSheet.service';
+import { globalConstants } from '$util/globalConstants';
+
+/**
+ * Site footer set as a drawing title block: who drew it, which sheet this is, and the
+ * navigation, in ruled cells.
+ */
+interface Props {
+  sheet: DrawingSheet;
+}
+
+const { sheet } = Astro.props;
+const year = new Date().getFullYear();
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/courses', label: 'Courses' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' }
+];
+const cell = 'border-foreground/15 p-5 sm:p-6';
+const label =
+  'mb-2 block font-display text-[0.65rem] font-bold tracking-[0.22em] text-foreground/60 uppercase';
+---
+
+<footer class="border-t border-foreground/10 bg-muted bg-grid-fine py-12 sm:py-16">
+  <Container>
+    <div
+      class="grid border border-foreground/25 text-sm sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_auto]"
+    >
+      <div class:list={[cell, 'border-b sm:border-r lg:border-b-0']}>
+        <Image src={logoFull} alt={globalConstants.siteName} class="mb-4 h-7 w-auto" />
+        <p class="max-w-xs text-foreground/75">
+          Fire and arson investigation training, taught by {globalConstants.ownerName}.
+        </p>
+      </div>
+      <nav aria-label="Footer" class:list={[cell, 'border-b lg:border-r lg:border-b-0']}>
+        <span class={label}>Index</span>
+        <ul class="grid grid-cols-2 gap-x-4 gap-y-1.5 font-display text-sm font-semibold">
+          {
+            links.map(({ href, label: text }) => (
+              <li>
+                <a
+                  href={href}
+                  class="text-foreground/80 transition-colors duration-(--duration-snap) ease-soft hover:text-primary"
+                >
+                  {text}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <div class:list={[cell, 'border-b sm:border-r sm:border-b-0 lg:border-r']}>
+        <span class={label}>Sheet</span>
+        <p class="font-display text-3xl font-bold text-primary tabular-nums">{sheet.code}</p>
+        <p class="mt-1 line-clamp-2 font-display text-xs font-semibold tracking-[0.12em] text-foreground/70 uppercase">
+          {sheet.name}
+        </p>
+      </div>
+      <div class:list={[cell, 'flex items-center gap-5']}>
+        <NorthArrow class="h-14 w-10" />
+        <ScaleBar class="h-6 w-32" />
+      </div>
+    </div>
+    <div
+      class="flex flex-col gap-1 border-x border-b border-foreground/25 px-5 py-3 font-display text-[0.7rem] font-semibold tracking-[0.16em] text-foreground/60 uppercase sm:flex-row sm:justify-between sm:px-6"
+    >
+      <span>&copy; {year} {globalConstants.siteName}</span>
+      <span>Drawn by N. Brewer, DFS, IAAI-CFI(V), CFEI</span>
+      <span>Scale: not to scale</span>
+    </div>
+  </Container>
+</footer>

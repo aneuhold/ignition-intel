@@ -1,0 +1,42 @@
+---
+import Container from '$components-astro/ui/Container.astro';
+import Eyebrow from '$components-astro/ui/Eyebrow.astro';
+import Heading from '$components-astro/ui/Heading.astro';
+import NorthArrow from '$components-astro/ui/NorthArrow.astro';
+import ScaleBar from '$components-astro/ui/ScaleBar.astro';
+
+/**
+ * Top of an inner page on the measurement grid: sheet code, page title, and an optional
+ * lead paragraph. A dimension-style rule under the title spans the content width.
+ */
+interface Props {
+  code: string;
+  eyebrow: string;
+  title: string;
+}
+
+const { code, eyebrow, title } = Astro.props;
+---
+
+<section class="border-b border-foreground/10 bg-grid">
+  <Container class="relative pt-16 pb-14 lg:pt-24 lg:pb-20">
+    <div aria-hidden="true" class="absolute top-24 right-8 hidden flex-col items-end gap-4 lg:flex">
+      <NorthArrow class="h-16 w-12" />
+      <ScaleBar class="h-6 w-32" />
+    </div>
+    <Eyebrow code={code}>{eyebrow}</Eyebrow>
+    <Heading as="h1" size="xl" class="mt-6 max-w-4xl lg:pr-40">{title}</Heading>
+    <div aria-hidden="true" class="mt-10 flex items-center">
+      <span class="h-3 w-px bg-primary/70"></span>
+      <span data-leader="left" class="h-px flex-1 bg-primary/40"></span>
+      <span class="h-3 w-px bg-primary/70"></span>
+    </div>
+    {
+      Astro.slots.has('default') && (
+        <div class="mt-8 max-w-2xl text-lg leading-relaxed text-foreground/80">
+          <slot />
+        </div>
+      )
+    }
+  </Container>
+</section>

@@ -1,5 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContactCta from '$components-astro/ContactCta.astro';
+import CourseSheet from '$components-astro/CourseSheet.astro';
+import PageHeader from '$components-astro/PageHeader.astro';
+import Section from '$components-astro/ui/Section.astro';
 import siteContentService from '$util/SiteContent.service';
 
 const courses = await siteContentService.courses();
@@ -7,17 +11,22 @@ const courses = await siteContentService.courses();
 
 <BaseLayout
   title="Fire Investigation Training | Ignition Intel"
-  description="Fire and arson investigation courses and training offered by Ignition Intel. Placeholder description: update before launch."
+  description="Fire and arson investigation courses taught by Nicole Brewer: origin and cause, the NFPA 921 scientific method, cognitive bias, documentation, testimony, and vehicle fires."
+  sheet={{ code: 'C-00', name: 'Drawing index' }}
 >
-  <main>
-    <h1>Courses.</h1>
-    <ul>
-      {courses.map((course) => (
-        <li>
-          <a href={`/courses/${course.id}`}>{course.data.title}</a>
-          <p>{course.data.description}</p>
-        </li>
-      ))}
+  <PageHeader code="C-00" eyebrow="Drawing index" title="Courses">
+    <p>
+      Some of these are for working investigators who want more. Some are for people learning the
+      job. All of them tie back to NFPA 921 and the job performance requirements in NFPA 1033. Open
+      a sheet for the syllabus, format, and length.
+    </p>
+  </PageHeader>
+
+  <Section>
+    <ul class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {courses.map((course, index) => <CourseSheet course={course} index={index} />)}
     </ul>
-  </main>
+  </Section>
+
+  <ContactCta />
 </BaseLayout>

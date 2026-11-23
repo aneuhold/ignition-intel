@@ -1,0 +1,27 @@
+---
+import Button from '$components-astro/ui/Button.astro';
+import Eyebrow from '$components-astro/ui/Eyebrow.astro';
+import Frame from '$components-astro/ui/Frame.astro';
+import Heading from '$components-astro/ui/Heading.astro';
+import Section from '$components-astro/ui/Section.astro';
+
+/**
+ * Closing call to action that sends visitors to the contact page.
+ */
+---
+
+<Section surface="grid">
+  <Frame tone="primary" class="bg-background/80 px-6 py-12 sm:px-12 sm:py-16">
+    <div class="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
+      <div>
+        <Eyebrow code="D-01">Questions</Eyebrow>
+        <Heading class="mt-5 max-w-2xl" size="lg">Not sure which course fits? Ask me.</Heading>
+        <p class="mt-5 max-w-xl text-lg text-foreground/80">
+          Tell me what you work and where you are in your career. I'll tell you honestly whether a
+          course is worth your time, or if something else would serve you better.
+        </p>
+      </div>
+      <Button href="/contact">Get in touch</Button>
+    </div>
+  </Frame>
+</Section>

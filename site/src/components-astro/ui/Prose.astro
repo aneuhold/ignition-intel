@@ -1,0 +1,30 @@
+---
+/**
+ * Long-form markdown typography in Lora: section headings in Public Sans with a gold
+ * leader rule, square gold list markers, and tables set like a drawing schedule.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div
+  class:list={[
+    'max-w-prose text-lg leading-relaxed text-foreground/85',
+    '[&_p]:my-5 [&_a]:text-primary [&_a]:underline [&_a]:decoration-primary/40 [&_a]:underline-offset-4 [&_strong]:text-foreground',
+    '[&_h2]:mt-14 [&_h2]:mb-5 [&_h2]:flex [&_h2]:items-center [&_h2]:gap-4 [&_h2]:font-display [&_h2]:text-sm [&_h2]:font-bold [&_h2]:tracking-[0.2em] [&_h2]:text-primary [&_h2]:uppercase',
+    "[&_h2]:after:h-px [&_h2]:after:flex-1 [&_h2]:after:bg-primary/30 [&_h2]:after:content-['']",
+    '[&_h3]:mt-8 [&_h3]:mb-3 [&_h3]:font-display [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-foreground',
+    '[&_ul]:my-5 [&_ul]:space-y-2 [&_ul>li]:relative [&_ul>li]:pl-6',
+    "[&_ul>li]:before:absolute [&_ul>li]:before:top-[0.7em] [&_ul>li]:before:left-0 [&_ul>li]:before:size-1.5 [&_ul>li]:before:bg-primary [&_ul>li]:before:content-['']",
+    '[&_table]:my-6 [&_table]:w-full [&_table]:border-collapse [&_table]:text-base',
+    '[&_th]:border-b [&_th]:border-primary/50 [&_th]:py-2 [&_th]:pr-4 [&_th]:text-left [&_th]:font-display [&_th]:text-xs [&_th]:font-bold [&_th]:tracking-[0.18em] [&_th]:text-primary [&_th]:uppercase',
+    '[&_td]:border-b [&_td]:border-foreground/10 [&_td]:py-3 [&_td]:pr-4 [&_td]:align-top',
+    '[&_td:first-child]:font-display [&_td:first-child]:text-sm [&_td:first-child]:font-bold [&_td:first-child]:whitespace-nowrap [&_td:first-child]:text-foreground',
+    className
+  ]}
+>
+  <slot />
+</div>

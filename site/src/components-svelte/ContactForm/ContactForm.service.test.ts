@@ -11,6 +11,26 @@ const validPayload = {
 };
 
 describe('ContactFormService', () => {
+  describe('coursePrefill', () => {
+    const courseTitles = { 'scene-documentation': 'Scene Documentation' };
+
+    it('returns the title and a starter message for a known course', () => {
+      expect(contactFormService.coursePrefill('?course=scene-documentation', courseTitles)).toEqual(
+        {
+          courseTitle: 'Scene Documentation',
+          message: contactFormConstants.courseMessage('Scene Documentation')
+        }
+      );
+    });
+
+    it.each(['', '?course=', '?course=unknown', '?course=toString', '?other=scene-documentation'])(
+      'returns null for %j',
+      (search) => {
+        expect(contactFormService.coursePrefill(search, courseTitles)).toBeNull();
+      }
+    );
+  });
+
   describe('submit', () => {
     afterEach(() => {
       vi.restoreAllMocks();

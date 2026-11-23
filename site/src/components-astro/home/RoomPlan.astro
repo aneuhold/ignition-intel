@@ -1,0 +1,62 @@
+---
+/**
+ * Walls, openings, and furniture of the living room and kitchen used by every scene
+ * diagram, as three `data-draw-step` groups for an enclosing `<svg viewBox="0 0 640 500">`.
+ * `tone` sets how strongly the plan reads against the annotations drawn over it.
+ */
+interface Props {
+  tone?: 'strong' | 'faint';
+}
+
+const { tone = 'strong' } = Astro.props;
+
+const wall = tone === 'strong' ? 'stroke-foreground/80' : 'stroke-foreground/50';
+const fixture = tone === 'strong' ? 'stroke-foreground/45' : 'stroke-foreground/25';
+---
+
+  <g data-draw-step>
+    <!-- Exterior walls, outer and inner faces, with the door gap on the south wall. -->
+    <path class={wall} stroke-width="2" d="M140 420 H60 V60 H580 V420 H200"></path>
+    <path class={wall} d="M140 410 H70 V70 H570 V410 H200"></path>
+    <path class={wall} d="M140 410 V420 M200 410 V420"></path>
+    <!-- Partition between living room and kitchen. -->
+    <path class={wall} d="M377 70 V232 H383 V70"></path>
+  </g>
+
+  <g data-draw-step>
+    <!-- Windows: north wall and east wall. -->
+    <path class={wall} d="M290 60 V70 M420 60 V70 M290 65 H420"></path>
+    <path class={wall} d="M570 150 H580 M570 260 H580 M575 150 V260"></path>
+    <!-- Door leaf and swing. -->
+    <path class={wall} d="M200 410 V350"></path>
+    <path class={fixture} stroke-dasharray="3 4" d="M200 350 A60 60 0 0 0 140 410"></path>
+  </g>
+
+  <g data-draw-step>
+    <!-- Sofa against the west wall. -->
+    <rect class={fixture} x="80" y="170" width="46" height="150"></rect>
+    <path class={fixture} d="M96 170 V320 M80 186 H126 M80 304 H126"></path>
+    <!-- End table and lamp, at the origin. -->
+    <rect class={fixture} x="82" y="332" width="36" height="36"></rect>
+    <circle class={fixture} cx="100" cy="350" r="9"></circle>
+    <!-- Coffee table, armchair, TV stand, floor lamp. -->
+    <rect class={fixture} x="168" y="212" width="62" height="66"></rect>
+    <rect class={fixture} x="258" y="318" width="54" height="54"></rect>
+    <path class={fixture} d="M258 332 H312"></path>
+    <rect class={fixture} x="346" y="104" width="24" height="118"></rect>
+    <circle class={fixture} cx="104" cy="112" r="10"></circle>
+    <path class={fixture} d="M97 105 L111 119 M111 105 L97 119"></path>
+    <!-- Kitchen counters, range, sink, dining table and chairs. -->
+    <path class={fixture} d="M390 76 H564 V300 H534 V106 H390 Z"></path>
+    <rect class={fixture} x="440" y="78" width="38" height="26"></rect>
+    <circle class={fixture} cx="450" cy="86" r="4"></circle>
+    <circle class={fixture} cx="468" cy="86" r="4"></circle>
+    <circle class={fixture} cx="450" cy="97" r="4"></circle>
+    <circle class={fixture} cx="468" cy="97" r="4"></circle>
+    <rect class={fixture} x="538" y="180" width="22" height="50"></rect>
+    <circle class={fixture} cx="455" cy="322" r="38"></circle>
+    <rect class={fixture} x="445" y="268" width="20" height="12"></rect>
+    <rect class={fixture} x="445" y="364" width="20" height="12"></rect>
+    <rect class={fixture} x="401" y="312" width="12" height="20"></rect>
+    <rect class={fixture} x="497" y="312" width="12" height="20"></rect>
+  </g>

@@ -3,15 +3,20 @@ import { Font } from 'astro:assets';
 import { ClientRouter } from 'astro:transitions';
 import Seo from '@jdevalk/astro-seo-graph/Seo.astro';
 import '../styles/global.css';
+import SiteFooter from '$components-astro/SiteFooter.astro';
+import SiteHeader from '$components-astro/SiteHeader.astro';
+import type { DrawingSheet } from '$util/DrawingSheet.service';
 import { globalConstants } from '$util/globalConstants';
 import seoGraphService from '$util/SeoGraph.service';
 
 interface Props {
   title: string;
   description: string;
+  /** This page's sheet in the drawing set, shown in the footer title block. */
+  sheet: DrawingSheet;
 }
 
-const { title, description } = Astro.props;
+const { title, description, sheet } = Astro.props;
 
 if (!Astro.site) {
   throw new Error('Astro.site must be configured for canonical/OG/JSON-LD URLs.');
@@ -67,7 +72,17 @@ const graph = await seoGraphService.buildGraph({
     <ClientRouter />
     <slot name="head" />
   </head>
-  <body class="bg-background font-body text-foreground">
-    <slot />
+  <body class="flex min-h-screen flex-col bg-background font-body text-foreground antialiased">
+    <SiteHeader />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <SiteFooter sheet={sheet} />
+    <script>
+      import motionService from '$util/Motion.service';
+      import sceneDrawingService from '$util/SceneDrawing.service';
+
+      motionService.bindToPage(() => sceneDrawingService.attach(document.body));
+    </script>
   </body>
 </html>

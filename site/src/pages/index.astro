@@ -1,20 +1,164 @@
 ---
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactCta from '$components-astro/ContactCta.astro';
+import CourseSheet from '$components-astro/CourseSheet.astro';
+import HeroPlan from '$components-astro/home/HeroPlan.astro';
+import MethodWalkthrough from '$components-astro/home/MethodWalkthrough.astro';
+import Button from '$components-astro/ui/Button.astro';
+import Container from '$components-astro/ui/Container.astro';
+import DimensionLine from '$components-astro/ui/DimensionLine.astro';
+import Eyebrow from '$components-astro/ui/Eyebrow.astro';
+import Heading from '$components-astro/ui/Heading.astro';
+import Keynote from '$components-astro/ui/Keynote.astro';
+import Section from '$components-astro/ui/Section.astro';
 import siteContentService from '$util/SiteContent.service';
 
+/** How many course sheets the home page shows before linking to the full index. */
+const featuredCount = 3;
+
 const { title, tagline, heroImage, heroImageAlt = '' } = (await siteContentService.home()).data;
+const courses = await siteContentService.courses();
+const featured = courses.slice(0, featuredCount);
+const [firstCourse] = courses;
+
+const facts = [
+  { value: '30', unit: 'years', label: 'Fire service' },
+  { value: '3,500+', unit: '', label: 'Fire and explosion scenes' },
+  { value: '26', unit: 'years', label: 'Portland Fire & Rescue' },
+  { value: '2022', unit: '', label: 'IAAI Investigator of the Year' }
+];
+const textLink =
+  'font-display text-xs font-bold tracking-[0.2em] text-primary uppercase underline decoration-primary/40 underline-offset-8 transition-colors duration-(--duration-snap) ease-soft hover:decoration-primary';
 ---
 
 <BaseLayout
   title={`${title} | Fire & Arson Investigation Training`}
-  description="Ignition Intel offers fire and arson investigation courses and training, taught by Nicole Brewer. Placeholder description: update before launch."
+  description="Fire and arson investigation courses taught by Nicole Brewer, a working fire investigator and instructor with more than 3,500 fire and explosion investigations."
+  sheet={{ code: 'A-01', name: 'Home' }}
 >
-  <main>
-    {heroImage && (
-      <Image src={heroImage} alt={heroImageAlt} inferSize loading="eager" fetchpriority="high" />
-    )}
-    <h1>{title}</h1>
-    {tagline && <p>{tagline}</p>}
-  </main>
+  <section class="relative overflow-hidden bg-grid">
+    <Container class="grid items-center gap-14 py-16 lg:grid-cols-12 lg:gap-10 lg:py-24">
+      <div class="lg:col-span-5">
+        <Eyebrow code="A-01">Fire and arson investigation training</Eyebrow>
+        <div class="mt-8 flex items-start gap-4">
+          <Keynote mark={1} class="mt-1" />
+          <div>
+            <p class="font-display text-sm font-bold tracking-[0.2em] text-foreground/60 uppercase">
+              {title}
+            </p>
+            <Heading as="h1" size="xl" class="mt-2">{tagline ?? title}</Heading>
+          </div>
+        </div>
+        <p class="mt-8 max-w-md text-lg leading-relaxed text-foreground/80 sm:ml-11">
+          I'm Nicole Brewer. I investigate fires, more than 3,500 so far, and I teach the people who
+          investigate them: the method that holds up, and the habits that keep bias out of it.
+        </p>
+        {
+          firstCourse && (
+            <div class="mt-10 flex flex-col gap-5">
+              <div class="flex items-center gap-4">
+                <Keynote mark={2} />
+                <Button href={`/courses/${firstCourse.id}`}>
+                  Start with {firstCourse.data.title}
+                </Button>
+              </div>
+              <a href="/courses" class:list={[textLink, 'self-start sm:ml-11']}>
+                All {courses.length} courses
+              </a>
+            </div>
+          )
+        }
+      </div>
+      <figure class="lg:col-span-7">
+        {
+          heroImage ? (
+            <Image
+              src={heroImage}
+              alt={heroImageAlt}
+              inferSize
+              loading="eager"
+              fetchpriority="high"
+              class="h-auto w-full border border-foreground/20"
+            />
+          ) : (
+            <>
+              <HeroPlan />
+              <ul class="mt-4 space-y-2 font-display text-xs font-bold tracking-[0.14em] text-foreground uppercase sm:hidden">
+                <li class="flex items-center gap-3">
+                  <Keynote mark={1} />
+                  Area of origin
+                </li>
+                <li class="flex items-center gap-3">
+                  <Keynote mark={2} />
+                  Entry: every scene starts at the door
+                </li>
+              </ul>
+            </>
+          )
+        }
+        <figcaption
+          class="mt-4 flex items-center gap-3 border-t border-foreground/15 pt-3 font-display text-[0.7rem] font-bold tracking-[0.2em] text-foreground/60 uppercase"
+        >
+          <span class="shrink-0 text-primary">Fig. 1</span>
+          {heroImage ? heroImageAlt : 'Living room and kitchen, single story. Not to scale.'}
+        </figcaption>
+      </figure>
+    </Container>
+  </section>
+
+  <Section>
+    <div class="grid gap-14 lg:grid-cols-12 lg:gap-10">
+      <div class="lg:col-span-5">
+        <Eyebrow code="B-01">Who's teaching</Eyebrow>
+        <Heading class="mt-5">Thirty years of scenes. Every one documented.</Heading>
+        <p class="mt-5 text-lg leading-relaxed text-foreground/80">
+          I've been a firefighter, a fire inspector, and a sworn Fire/Arson Investigator, and I've
+          trained investigators along the way. I still work cases as a Principal Consultant at
+          Envista Forensics. What I teach comes from that work, and from the times I had to change
+          my mind.
+        </p>
+        <a href="/about" class:list={[textLink, 'mt-6 inline-block']}>My record</a>
+      </div>
+      <dl class="grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:col-span-6 lg:col-start-7 lg:self-center">
+        {
+          facts.map(({ value, unit, label }) => (
+            <div class="flex flex-col-reverse justify-end gap-3">
+              <dt>
+                <DimensionLine class="gap-x-0" />
+                <span class="mt-3 block font-display text-xs font-bold tracking-[0.2em] text-foreground/70 uppercase">
+                  {label}
+                </span>
+              </dt>
+              <dd class="font-display text-5xl font-bold tracking-tight text-foreground tabular-nums">
+                {value}
+                {unit && <span class="ml-1 text-base font-bold text-primary uppercase">{unit}</span>}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </Section>
+
+  <MethodWalkthrough />
+
+  <Section surface="grid">
+    <div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <Eyebrow code="C-00">Drawing index</Eyebrow>
+        <Heading class="mt-5">Courses</Heading>
+        <p class="mt-4 max-w-xl text-lg text-foreground/80">
+          For working investigators who want more, and for people learning the job. Each one ties
+          back to NFPA 921 and 1033.
+        </p>
+      </div>
+      <Button href="/courses" variant="secondary">Full index</Button>
+    </div>
+    <ul class="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {featured.map((course, index) => <CourseSheet course={course} index={index} />)}
+    </ul>
+  </Section>
+
+  <ContactCta />
 </BaseLayout>
