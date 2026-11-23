@@ -1,0 +1,22 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+/**
+ * The opening statement of a section or page: larger Lora at a reading
+ * measure, a step above body copy. Extra attributes pass through to the
+ * paragraph.
+ */
+type Props = HTMLAttributes<'p'>;
+
+const { class: className, ...attributes } = Astro.props;
+---
+
+<p
+  class:list={[
+    'max-w-[36rem] text-xl leading-normal text-pretty text-foreground sm:text-2xl sm:leading-snug',
+    className
+  ]}
+  {...attributes}
+>
+  <slot />
+</p>

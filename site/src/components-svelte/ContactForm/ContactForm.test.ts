@@ -4,6 +4,12 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderSvelteComponent } from '../../../testUtils/renderSvelteComponent';
 import contactFormService from './ContactForm.service';
 import ContactForm from './ContactForm.svelte';
+import { contactFormConstants } from './contactFormConstants';
+
+const courses = [
+  { slug: 'fire-origin-and-cause-fundamentals', title: 'Fire Origin and Cause Fundamentals' },
+  { slug: 'report-writing-and-testimony', title: 'Report Writing and Testimony' }
+];
 
 const installTurnstileMock = (): { triggerToken: (token: string) => void } => {
   let savedCallback: ((token: string) => void) | null = null;
@@ -24,6 +30,31 @@ describe('ContactForm', () => {
   afterEach(() => {
     cleanup();
     vi.restoreAllMocks();
+    window.history.replaceState({}, '', '/');
+  });
+
+  it('names the course and starts the message when arriving with ?course=<slug>', async () => {
+    installTurnstileMock();
+    window.history.replaceState({}, '', '/contact?course=report-writing-and-testimony');
+    renderSvelteComponent(ContactForm, { props: { courses } });
+
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('contact-form-course')).toHaveTextContent(
+        'Report Writing and Testimony'
+      )
+    );
+    expect(screen.getByTestId('contact-form-message')).toHaveValue(
+      contactFormConstants.courseStarterMessage('Report Writing and Testimony')
+    );
+  });
+
+  it('shows an empty form when arriving without a course', () => {
+    installTurnstileMock();
+    window.history.replaceState({}, '', '/contact');
+    renderSvelteComponent(ContactForm, { props: { courses } });
+
+    expect(screen.queryByTestId('contact-form-course')).not.toBeInTheDocument();
+    expect(screen.getByTestId('contact-form-message')).toHaveValue('');
   });
 
   it('renders the name, email, message, and honeypot inputs', () => {

@@ -16,5 +16,16 @@ export const contactFormConstants = {
     'The spam check could not load. Please refresh the page or check that challenges.cloudflare.com is not blocked.',
   genericValidationMessage: 'Please check your entries and try again.',
   submitIdleLabel: 'Send message',
-  submitBusyLabel: 'Sending…'
+  submitBusyLabel: 'Sending…',
+  /** Query parameter naming the course a visitor arrived from, by slug. */
+  courseQueryParam: 'course',
+  courseSubjectLabel: 'Re:',
+  /**
+   * Starter message for a visitor who arrived from a course page. They can
+   * edit it before sending.
+   *
+   * @param title The course title
+   */
+  courseStarterMessage: (title: string): string =>
+    `Hi Nicole,\n\nI'd like more information about ${title}.`
 };

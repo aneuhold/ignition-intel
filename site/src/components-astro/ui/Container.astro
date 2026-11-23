@@ -1,0 +1,15 @@
+---
+/**
+ * The page's max-width column with responsive side gutters. Every section and
+ * the header and footer sit inside one so their edges line up.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class:list={['mx-auto w-full max-w-6xl px-6 sm:px-10', className]}>
+  <slot />
+</div>

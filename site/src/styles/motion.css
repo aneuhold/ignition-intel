@@ -1,13 +1,18 @@
 /* Motion — 3 durations, 1 easing, named animations.
-   Tailwind generates duration-snap, duration-glide, duration-slow, ease-soft,
-   animate-fade-up, animate-fade-in.
+   Tailwind generates ease-soft, animate-fade-up and animate-fade-in. It has no
+   --duration-* theme namespace, so durations are used through the variable
+   form: duration-(--duration-snap), duration-(--duration-glide),
+   duration-(--duration-slow).
    The two-duration rule still applies for interactive bits (snap for hovers,
-   glide for transitions); --duration-slow exists only for the hero fade-in
-   so the photo doesn't visibly shift on first paint.
+   glide for transitions); --duration-slow exists only for entry motion: the
+   heading rise and the GSAP scroll reveals.
+   `static` emits every variable even when no utility uses it, because
+   PageMotion.service.ts reads them at runtime so GSAP and CSS share one set of
+   values.
    Expand when needed:
      - Additional easings (--ease-bounce) for a different feel.
      - Additional named animations (--animate-slide-up) per pattern. */
-@theme {
+@theme static {
   --duration-snap: 150ms;
   --duration-glide: 400ms;
   --duration-slow: 700ms;
@@ -16,12 +21,56 @@
   --animate-fade-in: fade-in var(--duration-slow) var(--ease-soft) both;
   --animate-slide-in-left: slide-in-left var(--duration-glide) var(--ease-soft) both;
   --animate-slide-in-right: slide-in-right var(--duration-glide) var(--ease-soft) both;
+  /* Page headings ease up into place once. Pure CSS so it runs from first
+     paint, with no script to wait for. Pair with motion-safe:. */
+  --animate-rise: rise var(--duration-slow) var(--ease-soft) both;
+}
+
+/* GSAP-only entry values, read by PageMotion.service.ts. Not Tailwind theme
+   namespaces, so they live on :root. The gap between staggered items, and how
+   far an item travels up as it fades in. */
+:root {
+  --stagger-reveal: 80ms;
+  --distance-reveal: 0.75rem;
+}
+
+/* Hover underline that draws left to right, on the element itself or when an
+   ancestor `.group` is hovered (a whole row as the link). Without motion the
+   underline appears at once. */
+@utility link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition: background-size var(--duration-glide) var(--ease-soft);
+
+  &:hover,
+  &:focus-visible,
+  :where(.group):hover &,
+  :where(.group):focus-visible & {
+    background-size: 100% 1px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
 @keyframes fade-up {
   from {
     opacity: 0;
     transform: translateY(8rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.3em);
   }
   to {
     opacity: 1;

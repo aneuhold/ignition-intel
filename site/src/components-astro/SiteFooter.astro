@@ -1,0 +1,97 @@
+---
+import { Image } from 'astro:assets';
+import logoFullTextGold from '../assets/logo-full-text-gold.svg';
+import Container from './ui/Container.astro';
+import Eyebrow from './ui/Eyebrow.astro';
+import { globalConstants } from '$util/globalConstants';
+import siteContentService from '$util/SiteContent.service';
+
+/**
+ * Site footer: the full logo and a one-line description, the page index, the
+ * public contact email, and any social links from the CMS.
+ */
+const [courses, { email }, { links }] = await Promise.all([
+  siteContentService.courses(),
+  siteContentService.contact().then((entry) => entry.data),
+  siteContentService.socialMediaLinks().then((entry) => entry.data)
+]);
+
+const pages = [
+  { href: '/', label: 'Home' },
+  { href: '/courses', label: 'Courses' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' }
+];
+
+const linkClass =
+  'link-underline text-foreground/75 transition-colors duration-(--duration-snap) ease-soft hover:text-foreground';
+---
+
+<footer class="mt-8 border-t border-foreground/10 bg-muted">
+  <Container class="grid gap-12 py-14 sm:py-16 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-x-16 xl:gap-x-24">
+    <div class="flex flex-col gap-4">
+      <Image src={logoFullTextGold} alt={globalConstants.siteName} class="h-7 w-auto self-start" />
+    </div>
+    <div class="grid gap-10 sm:grid-cols-3">
+      <div class="flex flex-col gap-4">
+        <Eyebrow as="h2" tone="muted">Pages</Eyebrow>
+        <ul class="flex flex-col gap-2 text-base">
+          {
+            pages.map(({ href, label }) => (
+              <li>
+                <a href={href} class={linkClass}>
+                  {label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="flex flex-col gap-4">
+        <Eyebrow as="h2" tone="muted">Courses</Eyebrow>
+        <ul class="flex flex-col gap-2 text-base">
+          {
+            courses.map((course, index) => (
+              <li class="flex gap-3">
+                <span class="pt-0.5 font-display text-sm text-primary tabular-nums">
+                  {siteContentService.courseNumber(index)}
+                </span>
+                <a href={`/courses/${course.id}`} class={linkClass}>
+                  {course.data.title}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="flex flex-col gap-4">
+        <Eyebrow as="h2" tone="muted">Contact</Eyebrow>
+        <ul class="flex flex-col gap-2 text-base">
+          <li>
+            <a href="/contact" class={linkClass}>Send a note</a>
+          </li>
+          <li>
+            <a href={`mailto:${email}`} class={linkClass}>{email}</a>
+          </li>
+          {
+            links.map(({ label, url }) => (
+              <li>
+                <a href={url} class={linkClass} rel="noopener">
+                  {label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </Container>
+  <Container class="pb-10">
+    <p
+      class="flex flex-col gap-2 border-t border-foreground/10 pt-6 font-display text-xs tracking-[0.08em] text-foreground/50 sm:flex-row sm:justify-between"
+    >
+      <span>&copy; {new Date().getFullYear()} {globalConstants.siteName}</span>
+      <span>{globalConstants.webManifestDescription}</span>
+    </p>
+  </Container>
+</footer>

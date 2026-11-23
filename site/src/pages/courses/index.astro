@@ -1,5 +1,10 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContactCta from '$components-astro/ContactCta.astro';
+import CourseIndex from '$components-astro/CourseIndex.astro';
+import Lede from '$components-astro/ui/Lede.astro';
+import PageHeader from '$components-astro/ui/PageHeader.astro';
+import Section from '$components-astro/ui/Section.astro';
 import siteContentService from '$util/SiteContent.service';
 
 const courses = await siteContentService.courses();
@@ -7,17 +12,32 @@ const courses = await siteContentService.courses();
 
 <BaseLayout
   title="Fire Investigation Training | Ignition Intel"
-  description="Fire and arson investigation courses and training offered by Ignition Intel. Placeholder description: update before launch."
+  description="Fire and arson investigation courses taught by Nicole Brewer, built on NFPA 921, 1033, and 1321 and on real case work."
 >
-  <main>
-    <h1>Courses.</h1>
-    <ul>
-      {courses.map((course) => (
-        <li>
-          <a href={`/courses/${course.id}`}>{course.data.title}</a>
-          <p>{course.data.description}</p>
-        </li>
-      ))}
-    </ul>
-  </main>
+  <PageHeader kicker="Courses" title="What I teach.">
+    <Lede>
+      Every course follows NFPA 921 and maps to the job performance requirements in NFPA 1033. Pick
+      one to see who it’s for, what we cover, and how long it runs.
+    </Lede>
+  </PageHeader>
+
+  <Section number="1.0" title="Index">
+    <CourseIndex courses={courses} topRule={false} class="-mt-6 sm:-mt-7" />
+  </Section>
+
+  <Section number="2.0" title="Format">
+    <div class="flex max-w-[38rem] flex-col gap-5 text-lg leading-relaxed text-foreground/85">
+      <p data-reveal>
+        I teach in person, for fire departments, police agencies, insurance and legal firms, and
+        anyone else who investigates fires or relies on people who do. Most courses run one to three
+        days.
+      </p>
+      <p data-reveal>
+        I can adjust the length and the case material to fit your team. If you need something that
+        isn’t listed here, ask.
+      </p>
+    </div>
+  </Section>
+
+  <ContactCta number="3.0" />
 </BaseLayout>

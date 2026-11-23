@@ -68,6 +68,16 @@ class SiteContentService {
   }
 
   /**
+   * Display number for the course at a zero-based position in `courses()`
+   * order, padded to two digits (e.g. `0` becomes `01`).
+   *
+   * @param index Zero-based position of the course
+   */
+  courseNumber(index: number): string {
+    return String(index + 1).padStart(2, '0');
+  }
+
+  /**
    * Throws a consistent "missing entry" error when a singleton lookup comes
    * back undefined, narrowing the result to a present entry.
    *

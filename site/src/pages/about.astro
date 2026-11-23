@@ -1,18 +1,43 @@
 ---
 import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactCta from '$components-astro/ContactCta.astro';
+import FactList from '$components-astro/FactList.astro';
+import Container from '$components-astro/ui/Container.astro';
+import DocumentGrid from '$components-astro/ui/DocumentGrid.astro';
+import Lede from '$components-astro/ui/Lede.astro';
+import PageHeader from '$components-astro/ui/PageHeader.astro';
+import Prose from '$components-astro/ui/Prose.astro';
 import siteContentService from '$util/SiteContent.service';
 
 const entry = await siteContentService.about();
+const { heading, facts } = entry.data;
 const { Content } = await render(entry);
 ---
 
 <BaseLayout
   title="About Nicole Brewer | Ignition Intel"
-  description="About Ignition Intel and fire investigation instructor Nicole Brewer. Placeholder description: update before launch."
+  description="Nicole Brewer, DFS, IAAI-CFI(V), CFEI, investigates fires as a Principal Consultant at Envista Forensics and teaches fire investigators. 30 years in the fire service, 26 with Portland Fire & Rescue."
 >
-  <main>
-    <h1>{entry.data.heading}</h1>
-    <Content />
-  </main>
+  <PageHeader kicker="About" title={heading}>
+    <Lede>
+      I investigate fires, and I teach the people who investigate them. I’ve done both for most of
+      my 30 years in the fire service.
+    </Lede>
+  </PageHeader>
+
+  <section class="py-10 sm:py-14">
+    <Container>
+      <DocumentGrid marginClass="lg:sticky lg:top-10 lg:self-start">
+        <FactList slot="margin" facts={facts} />
+        <div data-reveal>
+          <Prose>
+            <Content />
+          </Prose>
+        </div>
+      </DocumentGrid>
+    </Container>
+  </section>
+
+  <ContactCta />
 </BaseLayout>

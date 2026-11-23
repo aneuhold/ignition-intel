@@ -1,0 +1,29 @@
+---
+/**
+ * The two-column document grid: a narrow margin column for labels, numbers,
+ * and plain facts, beside the main reading column. Stacks below `lg`.
+ * Fill the margin through the `margin` slot and the reading column through
+ * the default slot.
+ */
+interface Props {
+  class?: string;
+  /** Extra classes for the margin column (e.g. making it sticky). */
+  marginClass?: string;
+}
+
+const { class: className, marginClass } = Astro.props;
+---
+
+<div
+  class:list={[
+    'grid gap-y-8 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-x-16 xl:gap-x-24',
+    className
+  ]}
+>
+  <div class:list={['min-w-0', marginClass]}>
+    <slot name="margin" />
+  </div>
+  <div class="min-w-0">
+    <slot />
+  </div>
+</div>
